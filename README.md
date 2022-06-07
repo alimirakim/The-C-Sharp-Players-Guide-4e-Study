@@ -433,6 +433,28 @@ TODO Add notes starting with below
 * Comments let you put text in a program that the computer ignores, but that helps programmers understand or remember what the code does.
 * Anything after two slashes (`//`) on a line is a comment, as is anything between `/*` and `*/`.
 
+Uses:
+* Describe how a tricky piece of code works.
+* Leave TODO reminders of things that still need to be done.
+* Document how a specific thing works or should be used.
+* Temporarily remove code from compiler's view.
+
+**Snippet: Comments**
+```csharp
+// This is a comment where I can describe what happens next.
+Console.WriteLine("Hello World!");
+
+Console.WriteLine("Hello again!"); // This is also a comment.
+
+Console.WriteLine("H!"); /* This is a comment that ends here... */
+
+/* This is a multiline comment.
+   It spans multiple lines.
+   Isn't it neat? */
+
+Console.WriteLine("H! " /* Here comes the good part! */ + username); 
+```
+
 #### How to Make Good Comments
 
 ##### Challenge: Thing Namer 3000
@@ -452,7 +474,7 @@ Console.WriteLine("The " + b + " " + a + " of " + c + " " + d + "!");
 * Rebuild the program above on your computer.
 * Add comments near each of the four variables that describe what they store. You must use at least one of each comment type (`//` and `/* */`).
 * Find the bug in the text displayed and fix it.
-* **Ansew this question:** Aside from comments, what is one other thing you could do to make this code more understandable.
+* **Answer this question:** Aside from comments, what is one other thing you could do to make this code more understandable.
 
 ### Level 5: Variables
 #### Speedrun
