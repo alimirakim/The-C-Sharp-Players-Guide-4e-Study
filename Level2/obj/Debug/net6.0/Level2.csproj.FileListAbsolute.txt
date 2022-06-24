@@ -1,0 +1,15 @@
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/bin/Debug/net6.0/Level2
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/bin/Debug/net6.0/Level2.deps.json
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/bin/Debug/net6.0/Level2.runtimeconfig.json
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/bin/Debug/net6.0/Level2.dll
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/bin/Debug/net6.0/Level2.pdb
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.csproj.AssemblyReference.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.GeneratedMSBuildEditorConfig.editorconfig
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.AssemblyInfoInputs.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.AssemblyInfo.cs
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.csproj.CoreCompileInputs.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.dll
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/refint/Level2.dll
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.pdb
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/Level2.genruntimeconfig.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Level2/obj/Debug/net6.0/ref/Level2.dll

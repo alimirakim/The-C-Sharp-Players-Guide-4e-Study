@@ -69,165 +69,6 @@ C. Debugging Your Code
 
 ---
 
-### Level 6: The C# Type System
-#### Speedrun
-* Types of variables and values matter in C#. They are not interchangeable.
-* There are eight integer types for storing integers of differing sizes and ranges: `int`, `short`, `long`, `byte`, `sbyte`, `uint`, `ushort`, and `ulong`.
-* The `char` type stores single characters.
-* The `string` type stores longer text.
-* There are three types for storing real numbers: `float`, `double`, and `decimal`.
-* The `bool` type stores truth values (true and false) used in logic.
-* These types are the building blocks of a much larger type system.
-* Using `var` for a variable's type tells the compiler to infer its type from the surrounding code, so you do not have to type it out. (But it still has a specific type.)
-* The `System.Convert` class is a useful class to convert from one type to another.
-
-#### Representing Data in Binary
-
-
-#### Integer Types
-
-##### Declaring and Using Variables with Integer Types
-
-
-##### The Digit Separator
-
-
-##### Choosing Between the Integer Types
-
-
-##### Binary and Hexadecimal Literals
-
-
-#### Text: Characters and Strings
-
-
-#### Floating-Point Types
-
-
-##### Scientific Notion
-
-
-#### The `bool` Type
-
-
-##### Challenge: The Variable Shop
-**Objectives:**
-* Build a program with a variable of all fourteen types described in this level.
-* Assign each of them a value using a literal of the correct type.
-* Use `Console.WriteLine` to display the contents of each variable.
-
-##### Challenge: The Variable Shop Returns
-**Objectives:**
-* Modify the *Variable Shop* program to assign a new, different literal value to each of the 14 original variables. Do not declare any additional variables.
-* Use `Console.WriteLine` to display the updated contents of each variable.
-
-#### Type Inference
-
-
-#### The `Convert` Class
-
-
----
-
-### Level 7: Math
-#### Speedrun
-* Addition (`+`), subtraction (`-`), multiplication (`*`), division (`/`), and remainder (`%`) can all be used to do math in expressions: `int a = 3 + 2 / 4 * 6;`
-* The `+` and `-` operators can also be used to indicate a sign (or negate a value): `+3`, `-2`, or `-a`.
-* The order of operations matches the math world. Multiplication and division happen before addition and subtraction, and things are evaluated left to right.
-* Change the order by using parentheses to group things you want to be done first.
-* Compound assignment operators (`+=`, `-=`, `*=`, `/=`, `%=`) are shortcuts that adjust a variable with a math operation. `a += 3;` is the same as `a = a + 3;`
-* The increment and decrement operators add and subtract one: `a++; b--;`
-* Each of the numeric types defines special values for their ranges (`int.MaxValue`, `double.MinValue`, etc.), and the floating-point types also define `PositiveInfinity`, `NegativeInfinity`, and `NaN`.
-* Integer division drops remainders while floating-point division does not. Dividing by zero in either system is bad.
-* You can convert between types by casting: `int x = (int)3.3;`
-* The `Math` and `MathF` classes contain a collection of utility methods for dealing with common math operations such as `Abs` for absolute value, `Pow` and `Sqrt` for powers and square roots, and `Sin`, `Cos`, and `Tan` for the trigonometry functions sine, cosine, and tanget, and a definition of pi(`Math.PI`)
-
-#### Operations and Operators
-
-
-#### Addition, Subtraction, Multiplication, and Division
-
-
-#### Compound Expressions and Order of Operations
-
-
-##### Challenge: The Triangle Farmer
-*Area = base x height / 2*
-**Objectives:**
-* Write a program that lets you input the triangle's base size and height.
-* Compute the area of a triangle by turning the above equation into code.
-* Write the result of the computation.
-
-#### Special Number Values
-
-
-#### Integer Division vs Floating-Point Division
-
-
-#### Division by Zero
-
-
-#### More Operators
-
-
-##### Unary `+` and `-` Operators
-
-
-##### The Remainder Operator
-
-
-##### Challenge: The Four Sisters and the Duckbear
-TODO Add relevant parts of description.
-**Objectives:**
-* Create a program that lets the user enter the number of chocolate eggs gathered that day.
-* Using `/` and `%`, compute how many eggs each sister should get and how many are left over for the duckbear.
-* **Answer this question:** What are three total egg counts where the duckbear gets more than each sister does? Use the program you created to help you find the answer.
-
-#### Updating Variables
-
-
-##### Increment and Decrement Operators
-
-
-##### Challenge: The Dominion of Kings
-**Objectives:**
-* Create a program that allows the user to enter how many provinces, duchies, and estates they have.
-* Add up the user's total score, giving 1 point per estate, 3 per duchy, and 6 per province.
-* Display the point total to the user.
-
-##### Prefix and Postfix Increment and Decrement Operators
-
-#### Working with Different Types and Casting
-
-
-#### Overflow and Underflow
-
-
-#### The `Math` and `MathF` Classes
-
-
-##### Pi and e
-
-
-##### Powers and Square Roots
-
-
-##### Absolute Value
-
-
-##### Trigonometrics Functions
-
-
-##### `Min`, `Max`, and `Clamp`
-
-
-##### More
-
-
-##### The `MathF` Class
-
-
-
 ### Level 8: Console 2.0
 #### Speedrun
 * The `Console` class can write a line without wrapping (`Write`), wait for a single keypress (`ReadKey`), change colors (`ForegroundColor`, `BackgroundColor`), clear the entire console window (`Clear`), change the window title (`Title`), and play retro 80's beep sounds (`Beep`).
@@ -239,29 +80,92 @@ TODO Add relevant parts of description.
 
 
 ##### The `Write` Method
+**Sample: `Console.Write`**
+```cs
+Console.Write("What is your name, human? "); // Notice the space at the end.
+string userName = Console.ReadLine(); 
 
+// Console:
+// What is your name, human? AMK
+```
 
 ##### The `ReadKey` Method
+**Sample: `Console.ReadKey`**
+```cs
+Console.WriteLine("Press any key when you're ready to begin.");
+// Problem: Typed key shows on screen.
+Console.ReadKey();
+// Console:
+// Press any key when you're ready to begin.
+// j
+
+Console.WriteLine("Press any key when you're ready to begin.");
+// Solution: bool-type param controls if typed key should be 'intercepted' to not be visible
+Console.ReadKey(true);
+```
 
 
 ##### Changing Colors
+**Sample: Changing Console Colors**
+```cs
+Console.BackgroundColor = ConsoleColor.Yellow;
+Console.ForegroundColor = ConsoleColor.Black;
+```
 
 
 ##### The `Clear` Method
-
+**Sample: `Console.Clear`**
+```cs
+Console.Clear(); // Wipes all text on console screen and will update background to newly-set color.
+```
 
 ##### Changing the Window Title
-
+**Sample: `Console.Title`**
+```cs
+Console.Title = "Hello World!"; // Defaults to filename, ex: C:\Users\AMK\Source\Repos\HelloWorld\HelloWorld\bin\Debug\net5.0\HelloWorld.exe
+```
 
 ##### The `Beep` Method
+**Sample: Console.Beep**
+```cs
+Console.Beep();
 
+Console.Beep(440, 1000); // (frequency, duration)
+// Higher frequency means higher pitch. 440 is a nice middle pitch
+// Duration is in milliseconds. 1000ms is 1 second.
+```
 
-#### Sharpening Your Strong Skills
+#### Sharpening Your String Skills
 
 ##### Escape Sequences
+**Sample: Escape with backslash**
+```cs
+// Problem
+// Console.WriteLine("""); // ERROR: Bad quotation marks!
+
+// Solution
+Console.WriteLine("\"");
+
+Console.WriteLine("Hello!\n\tThis is on a new line and tabbed! \rThis is a carriage return and goes back to the start of the line!");
+
+Console.WriteLine("C:\\Users\\AMK\\Desktop\\MyFile.txt"); // C:\Users\AMK\Desktop\MyFile.txt
+```
+
+**Sample: Vebatim string literal**
+```cs
+Console.WriteLine(@"C:\Users\AMK\Desktop\MyFile.txt"); // C:\Users\AMK\Desktop\MyFile.txt
+```
 
 
 ##### String Interpolation
+**Sample: String concatenation vs interpolation`**
+```cs
+// string concatenation
+Console.Write("My favorite number is " + myFavoriteNumber + ".");
+
+// string interpolation
+Console.Write($"My favorite number is {myFavoriteNumber}.");
+```
 
 
 ##### Alignment
