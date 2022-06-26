@@ -1,0 +1,15 @@
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/bin/Debug/net6.0/Challenges
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/bin/Debug/net6.0/Challenges.deps.json
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/bin/Debug/net6.0/Challenges.runtimeconfig.json
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/bin/Debug/net6.0/Challenges.dll
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/bin/Debug/net6.0/Challenges.pdb
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.csproj.AssemblyReference.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.GeneratedMSBuildEditorConfig.editorconfig
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.AssemblyInfoInputs.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.AssemblyInfo.cs
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.csproj.CoreCompileInputs.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.dll
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/refint/Challenges.dll
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.pdb
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/Challenges.genruntimeconfig.cache
+/Users/alimirakim/projects/The-C-Sharp-Players-Guide-4e-Study/Challenges/obj/Debug/net6.0/ref/Challenges.dll
