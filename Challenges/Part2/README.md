@@ -1,1 +1,1 @@
-TODO Add speedruns for these chaptgers
+<!-- TODO Add speedrun notes for these chaptgers -->

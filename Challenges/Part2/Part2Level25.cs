@@ -10,7 +10,6 @@ public static class Part2Level25
     PackingInventory();
   }
 
-
   /// <summary>
   /// Challenge 1/1: Packing Inventory 
   ///<br/> You know you have a long, dangerous journey ahead of you to travel to and repair the Fountain of Objects. To prepare for the trip, you decide to build some classes and objects to manage your inventory.

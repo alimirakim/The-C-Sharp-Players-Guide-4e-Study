@@ -30,7 +30,7 @@ public static class Part2Level15
   }
 
   // ANSWERS TO QUESTIONS
-  public static string _answer1 = "";
-  public static string _answer2 = "";
+  private static string _answer1 = "data and operations on that data";
+  private static string _answer2 = "True";
 
 }
