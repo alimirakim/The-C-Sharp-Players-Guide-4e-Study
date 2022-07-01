@@ -169,6 +169,12 @@ Console.Write($"My favorite number is {myFavoriteNumber}.");
 
 
 ##### Alignment
+**Sample: Alignment syntax**
+```cs
+string name1 = Console.ReadLine();
+string name2 = Console.ReadLine();
+
+```
 
 
 ##### Formatting
