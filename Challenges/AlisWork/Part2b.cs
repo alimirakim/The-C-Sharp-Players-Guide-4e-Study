@@ -538,9 +538,9 @@ public class ARobot
   /// [x] Change your abstract `RobotCommand` class into an `IRobotCommand` interface.
   /// [x] Remove the unnecessary `public` and `abstract` keywords from the `Run` method.
   /// [x] Change the `Robot` class to use `IRobotCommand` instead of `RobotCommand`.
-  /// [X] Make all of your commands implement this new interface instead of extending the `RobotCommand` class that no longer exists. You will also want to remove the `override` keywords in these classes.
-  /// [] Ensure your program still compiles and runs.
-  /// [] Answer this question: Do you feel this is an improvement over using an abstract base class? Why or why not?
+  /// [x] Make all of your commands implement this new interface instead of extending the `RobotCommand` class that no longer exists. You will also want to remove the `override` keywords in these classes.
+  /// [x] Ensure your program still compiles and runs.
+  /// [x] Answer this question: Do you feel this is an improvement over using an abstract base class? Why or why not?
   /// </summary>
   public static void RoboticInterface()
   {

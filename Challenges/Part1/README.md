@@ -16,6 +16,8 @@ Check [x] each chapter as you go to track progress! :)
 13. [ ] Methods
 14. [ ] Memory Management
 
+---
+
 ## Level 1: The C# Programming Language
 * C# is a general-purpose programming language. You can make almost anything with it.
 * C# runs on .NET, which is many things: a runtime that supports your program, a library of code to build upon, and a set of tools to aid in constructing programs.

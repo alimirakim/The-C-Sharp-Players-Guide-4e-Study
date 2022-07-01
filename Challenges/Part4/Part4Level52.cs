@@ -1,40 +1,22 @@
-namespace Template;
 
 /// <summary>
-///<br/> PART 4: THE ENDGAME
-///</summary>
-public static class PartFour
+/// LEVEL 52: The Final Battle
+/// </summary>
+public static class Part4Level52
 {
   public static void CallAll()
   {
-    // Core
-    BuildingCharacter();
-    TheTrueProgrammer();
-    ActionsAndPlayers();
-    Attacks();
-    DamageAndHP();
-    Death();
-    BattleSeries();
-    TheUncodedOne();
-    ThePlayerDecides();
-
-    // Expansions
-    TheGamesStatus();
-    Items();
-    Gear();
-    StolenInventory();
-    VinFletcher();
-    AttackModifiers();
-    DamageTypes();
-    MakingItYourOwn();
-    RestoringBalance();
+    TheFinalBattle(); // 
   }
 
+  public static void TheFinalBattle()
+  {
+    Utils.WriteTitle("The Final Battle");
 
-  // *************************************************************************************************
+
+  }
 
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 1/9: Building Character 
   ///<br/> 
   ///<br/> 
@@ -48,10 +30,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 2/9: The True Programmer 
   ///<br/> 
   ///<br/> 
@@ -65,10 +44,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 3/9: Actions and Players 
   ///<br/> 
   ///<br/> 
@@ -82,10 +58,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 4/9: Attacks 
   ///<br/> 
   ///<br/> 
@@ -99,10 +72,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 5/9: Damage and HP 
   ///<br/> 
   ///<br/> 
@@ -116,10 +86,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 6/9: Death 
   ///<br/> 
   ///<br/> 
@@ -133,10 +100,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 7/9: Battle Series 
   ///<br/> 
   ///<br/> 
@@ -150,10 +114,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 8/9: The Uncoded One 
   ///<br/> 
   ///<br/> 
@@ -167,10 +128,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Core) 9/9: The Player Decides 
   ///<br/> 
   ///<br/> 
@@ -184,10 +142,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 1/9: The Game's Status 
   ///<br/> 
   ///<br/> 
@@ -201,10 +156,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 2/9: Items 
   ///<br/> 
   ///<br/> 
@@ -218,10 +170,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 3/9: Gear 
   ///<br/> 
   ///<br/> 
@@ -235,10 +184,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 4/9: Stolen Inventory 
   ///<br/> 
   ///<br/> 
@@ -252,10 +198,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 5/9: Vin Fletcher 
   ///<br/> 
   ///<br/> 
@@ -269,10 +212,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 6/9: Attack Modifiers 
   ///<br/> 
   ///<br/> 
@@ -286,10 +226,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 7/9: Damage Types 
   ///<br/> 
   ///<br/> 
@@ -303,10 +240,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 8/9: Making it Your Own 
   ///<br/> 
   ///<br/> 
@@ -320,10 +254,7 @@ public static class PartFour
 
   }
 
-  // *************************************************************************************************
-
   /// <summary>
-  ///<br/> LEVEL 52: The Final Battle
   /// Boss Battle (Expansion) 9/9: Restoring Balance 
   ///<br/> 
   ///<br/> 

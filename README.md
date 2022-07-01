@@ -43,7 +43,7 @@
 31. [ ] The Fountain of Objects
 32. [ ] Some Useful Types
 
-## Part 3: Advanced Features
+## Part 3: Advanced Topics
 33. [ ] Managing Larger Programs
 34. [ ] Methods Revisited
 35. [ ] Error Handling and Exceptions

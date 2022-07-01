@@ -7,6 +7,11 @@
 CallPart1();
 CallPart2();
 
+// TODO Add Part 3-5 challenges
+// CallPart3();
+// CallPart4();
+// CallPart5();
+
 void CallPart1()
 {
 Part1Level1.CallAll();
@@ -44,4 +49,35 @@ void CallPart2()
   Part2Level32.CallAll();
 }
 
-// TODO Add Part 3 challenges
+// void CallPart3()
+// {
+//   Part3Level33.CallAll();
+//   Part3Level34.CallAll();
+//   Part3Level35.CallAll();
+//   Part3Level36.CallAll();
+//   Part3Level37.CallAll();
+//   Part3Level38.CallAll();
+//   Part3Level39.CallAll();
+//   Part3Level40.CallAll();
+//   Part3Level41.CallAll();
+//   Part3Level44.CallAll();
+//   Part3Level45.CallAll();
+//   Part3Level46.CallAll();
+//   Part3Level47.CallAll();
+//   Part3Level48.CallAll();
+//   Part3Level49.CallAll();
+//   Part3Level50.CallAll();
+//   Part3Level51.CallAll();
+// }
+
+// void CallPart4()
+// {
+//   Part4Level52.CallAll();
+// }
+
+// void CallPart5()
+// {
+//   Part5BonusLevelA.CallAll();
+//   Part5BonusLevelB.CallAll();
+//   Part5BonusLevelC.CallAll();
+// }

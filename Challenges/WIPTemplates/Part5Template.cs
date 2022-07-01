@@ -12,17 +12,6 @@ public static class PartFive
     KnowledgeCheckDebugging();
   }
 
-  public static void WriteTitle(string title)
-  {
-    string divider = "";
-    for (int i = 0; i < title.Length; i++)
-      divider += "-";
-
-    Console.WriteLine("");
-    Console.WriteLine(title);
-    Console.WriteLine(divider);
-  }
-
   // *************************************************************************************************
 
   ///<summary>
@@ -31,7 +20,7 @@ public static class PartFive
   /// </summary>
   public static void KnowledgeCheckVisualStudio()
   {
-    WriteTitle("Knowledge Check - Visual Studio");
+    Utils.WriteTitle("Knowledge Check - Visual Studio");
 
 
   }
@@ -44,7 +33,7 @@ public static class PartFive
   /// </summary>
   public static void KnowledgeCheckCompilerErrors()
   {
-    WriteTitle("Knowledge Check - Compiler Errors");
+    Utils.WriteTitle("Knowledge Check - Compiler Errors");
 
 
   }
@@ -57,7 +46,7 @@ public static class PartFive
   /// </summary>
   public static void KnowledgeCheckDebugging()
   {
-    WriteTitle("Knowledge Check - Debugging");
+    Utils.WriteTitle("Knowledge Check - Debugging");
 
 
   }

@@ -1,4 +1,3 @@
-<!-- TODO Add speedrun notes for these chaptgers -->
 ## Part 2: Object-Oriented Programming
 
 Check [x] each chapter as you go to track progress! :)
@@ -20,6 +19,8 @@ Check [x] each chapter as you go to track progress! :)
 30. [ ] Generics
 31. [ ] The Fountain of Objects
 32. [ ] Some Useful Types
+
+---
 
 ## Level 15: Object-Oriented Concepts
 * Object-oriented programming allows you to separate large programs into individual components called objects, each responsible for a small slice of the overall program.
