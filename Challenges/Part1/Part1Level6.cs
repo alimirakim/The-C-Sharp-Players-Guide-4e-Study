@@ -52,39 +52,39 @@ public static class Part1Level6
     Utils.WriteTitle("Knowledge Check - Type System");
     Console.WriteLine("Check your knowledge with the following questions: ");
 
-    Console.WriteLine("1. True/False. The int type can store any possible integer. ");
+    Console.Write("1. True/False. The int type can store any possible integer. ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer1}");
 
-    Console.WriteLine("\n2. Order the following by how large their range is, from smallest to largest: short, long, int, byte. ");
+    Console.Write("\n2. Order the following by how large their range is, from smallest to largest: short, long, int, byte. ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer2}");
 
-    Console.WriteLine("\n3. True/False. The byte type is signed. ");
+    Console.Write("\n3. True/False. The byte type is signed. ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer3}");
 
-    Console.WriteLine("\n4. Which can store higher numbers, int or uint? ");
+    Console.Write("\n4. Which can store higher numbers, int or uint? ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer4}");
 
-    Console.WriteLine("\n5. What three types can store floating-point numbers? ");
+    Console.Write("\n5. What three types can store floating-point numbers? ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer5}");
 
-    Console.WriteLine("\n6. Which of the options in question 5 can hold the largest numbers? ");
+    Console.Write("\n6. Which of the options in question 5 can hold the largest numbers? ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer6}");
 
-    Console.WriteLine("\n7. Which of the options in question 5 is most precise? ");
+    Console.Write("\n7. Which of the options in question 5 is most precise? ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer7}");
 
-    Console.WriteLine("\n8. What type goes the literal value \"8\" (including the quotes) have? ");
+    Console.Write("\n8. What type goes the literal value \"8\" (including the quotes) have? ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer8}");
 
-    Console.WriteLine("\n9. What type stores true or false values? ");
+    Console.Write("\n9. What type stores true or false values? ");
     Console.ReadLine();
     Console.WriteLine($"Answer: {_answer9}");
   }

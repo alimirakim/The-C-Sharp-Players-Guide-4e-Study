@@ -17,11 +17,11 @@ public static class Part1Level1
     Utils.WriteTitle("Knowledge Check - C#");
     Console.WriteLine("Check your knowledge with the following questions: ");
 
-    Console.WriteLine("1. True/False. C# is a special-purpose language optimized for making web applications. ");
+    Console.Write("1. True/False. C# is a special-purpose language optimized for making web applications. ");
     string? reply1 = Console.ReadLine();
     Console.WriteLine($"Answer: {_answer1}");
 
-    Console.WriteLine("\n2. What is the name of the framework that C# runs on? ");
+    Console.Write("\n2. What is the name of the framework that C# runs on? ");
     string? reply2 = Console.ReadLine();
     Console.WriteLine($"Answer: {_answer2}");
 
