@@ -82,7 +82,7 @@ Check [x] each chapter as you go to track progress! :)
 ---
 
 ### Level 8: Console 2.0
-#* The `Console` class can write a line without wrapping (`Write`), wait for a single keypress (`ReadKey`), change colors (`ForegroundColor`, `BackgroundColor`), clear the entire console window (`Clear`), change the window title (`Title`), and play retro 80's beep sounds (`Beep`).
+* The `Console` class can write a line without wrapping (`Write`), wait for a single keypress (`ReadKey`), change colors (`ForegroundColor`, `BackgroundColor`), clear the entire console window (`Clear`), change the window title (`Title`), and play retro 80's beep sounds (`Beep`).
 * Escape sequences start with a `\` and tell the computer to intepret the following letter differently. `\n` is a new line, `\t` is a tab, `\"` is a quote within a string literal.
 * An `@` before a string ignores any would-be escape sequences `@"C:\Users\Me\File.txt"`.
 * A `$` before a string means curly braces contain code: `$"a:{a} sum:{a+b}"`.
@@ -90,7 +90,7 @@ Check [x] each chapter as you go to track progress! :)
 ---
 
 ### Level 9: Decision Making
-#* An `if` statement lets some code run (or not) based on a condition. `if (condition) DoSomething;`
+* An `if` statement lets some code run (or not) based on a condition. `if (condition) DoSomething;`
 * An `else` statement identifies code to run otherwise.
 * Combine `if` and `else` statements to pick from one of several branches of code.
 * A block statement lets you put many statements into a single bundle. An `if` statement can work around a block statement: `if (condition) { DoSomething; DoSomethingElse; }`
@@ -101,14 +101,14 @@ Check [x] each chapter as you go to track progress! :)
 ---
 
 ### Level 10:  Switches
-#* Switches are an alternative to `if` statements with lots of parts.
+* Switches are an alternative to `if` statements with lots of parts.
 * The statement form: `switch (number) { case 0: DoStuff(); break;  case 1: DoStuff(); break; default: DoStuff(); break; }`
 * The expression form: `number switch { 0 => "zero", 1 => "one", _ => "other" }`
 
 ---
 
 ### Level 11:  Looping
-#* Loops repeat code.
+* Loops repeat code.
 * `while` loop: `while (condition) { ... }`
 * `do`/`while` loop: `do { ... }  while (condition);`
 * `for` loop: `for (initialization, condition, update) { ... }`
@@ -117,7 +117,7 @@ Check [x] each chapter as you go to track progress! :)
 ---
 
 ### Level 12:  Arrays
-#* Arrays contain multiple values of the same type. `int[] scores = new int[3];`
+* Arrays contain multiple values of the same type. `int[] scores = new int[3];`
 * Square brackets access elements in an array, starting with 0: `scores[2] = scores[0] + scores[1];`
 * Indexing from end: `int last = scores[^1];`
 * Getting a range: `int[] someScores = scores[1..3];`
@@ -130,7 +130,7 @@ Check [x] each chapter as you go to track progress! :)
 ---
 
 ### Level 13:  Methods
-#* Methods let you name and reuse a chunk of code: `void CountToTen() { ... }`
+* Methods let you name and reuse a chunk of code: `void CountToTen() { ... }`
 * Parameters allow a method to work with different data each time it is called: `void CountTo(int amount) { ... }`
 * Methods can produce a result with a return value: `int GetNumber() { return 2; }`
 * Two methods can have the same name (an overload) if their parameters are different.
@@ -140,7 +140,7 @@ Check [x] each chapter as you go to track progress! :)
 ---
 
 ### Level 14:  Memory Management
-#* When you get done using memory, it needs to be cleaned up.
+* When you get done using memory, it needs to be cleaned up.
 * The stack: When a method is called, enough space is reserved for its local variables and parameters (its stack frame). When you return from a method, space is reclaimed and reused. The stack's memory management strategy is most straightforward when data is always a known size.
 * The heap: When data is needed, a free spot in memory is found. A reference is used to keep track of objects placed on the heap.
 * The garbage collector has the task of inspecting things on the heap to see if they are still in use. If not, it lets the heap memory be reused.

@@ -129,30 +129,39 @@ Check [x] each chapter as you go to track progress! :)
 * A struct is a custom type that defines a simple data structure without complex behavior: `public struct Point { ... }`. Structs are not focused on behavior but can have properties and methods.
 * Compared to classes: structs are value types, automatically have value semantics, and cannot be used in inheritance.
 * Make structs small, immutable, and ensure the default value is legitimate.
-* 
+* All the built-in types are aliases for other Structs (and a few classes). For example, `int` is shorthand for `System.Int32`.
+* Value types can be stored in reference-typed variables (`object thing = 3;`) but will cause the value to be `"boxed"` and placed on the heap.
 
 ---
 
 ## Level 29: Records
-* 
-* 
+* Records are compact notation to represent objects that are data-centric, immutable, and with value semantics: `public record Point(float X, float Y);`
+* You can add additional members to a record or replace the synthesized members: `public record Rectangle(float Width, float Height) { public float Area => Width * Height; }`
+* A `with` expression lets you create a new record object from an existing one with tweaks: `Point modified = p with { X = -2 };`
 
 ---
 
 ## Level 30: Generics
-* 
-* 
+* Generics solve the problem of needing to make classes or methods that would differ only by the types they use. Generics leave placeholders for types that can be filled in when used.
+* Defining a generic class: `public class List<T> { public T GetItemAt(int index) { ... } ... }`
+* You can also make generic methods and generic types with multiple type parameters.
+* Constraints allow you to limit what can be used for a generic type argument while enabling you to know more about the types being used: `class List<T> where T : ISomeInterface { }`
 
 ---
 
 ## Level 31: The Fountain of Objects
-* 
-* 
+* This level contains no new C# information. It is a large multi-part program to complete to hone your programming skills.
 
 ---
 
 ## Level 32: Some Useful Types
-* 
-* 
-
----
+* `Random` generates pseudo-random numbers.
+* `DateTime` gets the current time and stores time and date values.
+* `TimeSpan` represents a length of time.
+* `Guid` is used to store a globally unique identifier.
+* `List<T>` is a popular and versatile generic collection--use it instead of arrays for most things.
+* `IEnumerable<T>` is an interface for almost any collection type. The basis of `foreach` loops.
+* `Dictionary<TKey, TValue>` can look up one piece of information from another.
+* `Nullable<T>` is a struct that can express the concept of a missing value for value types.
+* `ValueTuple` is the secret sauce behind tuples in C#.
+* `StringBuilder` is a less memory-intensive way to build strings a little at a time.
