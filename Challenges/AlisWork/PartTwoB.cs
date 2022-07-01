@@ -20,8 +20,8 @@ public static class PartTwoB
     // TOC
     // PackingInventory();
     // LabelingInventory();
-    TheOldRobot();
-    RoboticInterface();
+    // TheOldRobot();
+    // RoboticInterface();
     RoomCoordinates();
     WarPreparations();
     ColoredItems();
@@ -52,7 +52,7 @@ public static class PartTwoB
 
     public void WriteItem()
     {
-      Console.Write($"{ToString(), -16}");
+      Console.Write($"{ToString(),-16}");
       Console.Write($"Volume: {$"{Volume:0.00}",-8}");
       Console.WriteLine($"Weight: {$"{Weight:0.0}lb",-8}");
     }
@@ -65,40 +65,40 @@ public static class PartTwoB
     public override string ToString() => "Arrow";
   }
 
-public class Bow : InventoryItem 
-  { 
+  public class Bow : InventoryItem
+  {
     public Bow() : base(1, 4) { }
     public override string ToString() => "Bow";
   }
 
-public class Rope : InventoryItem 
-{ 
-  public Rope() : base(1, (float)1.5) { }
-  public override string ToString() => "Rope";
+  public class Rope : InventoryItem
+  {
+    public Rope() : base(1, (float)1.5) { }
+    public override string ToString() => "Rope";
   }
-public class Water : InventoryItem 
-{ 
-  public Water() : base(2, 3) { }
-  public override string ToString() => "Water";
+  public class Water : InventoryItem
+  {
+    public Water() : base(2, 3) { }
+    public override string ToString() => "Water";
   }
-public class FoodRations : InventoryItem 
-{ 
-  public FoodRations() : base(1, (float)0.5) { }
-  public override string ToString() => "FoodRations";
+  public class FoodRations : InventoryItem
+  {
+    public FoodRations() : base(1, (float)0.5) { }
+    public override string ToString() => "FoodRations";
   }
-public class Sword : InventoryItem 
-{ 
-  public Sword() : base(5, 3) { }
-  public override string ToString() => "Sword";
+  public class Sword : InventoryItem
+  {
+    public Sword() : base(5, 3) { }
+    public override string ToString() => "Sword";
   }
 
-public class Pack
+  public class Pack
   {
     public InventoryItem[] Items { get; init; } = new InventoryItem[1];
     public int MaxCapacity { get; }
-    public float MaxWeight {get;}
-    public float MaxVolume {get;}
-    public int ItemCount 
+    public float MaxWeight { get; }
+    public float MaxVolume { get; }
+    public int ItemCount
     {
       get
       {
@@ -131,7 +131,7 @@ public class Pack
           sumVolume += Items[i].Volume;
         }
 
-          return sumVolume;
+        return sumVolume;
       }
     }
 
@@ -165,12 +165,12 @@ public class Pack
         }
       }
 
-        return false;
+      return false;
     }
 
     public void WritePackMaxAllowance() => Console.WriteLine($"Max Capacity: {MaxCapacity} Max Volume: {MaxVolume:0.00} Weight: {MaxWeight:0.0}");
 
-    public void WritePackState() => Console.WriteLine($"{$"Item Slots: {ItemCount}/{MaxCapacity}",-18} Volume: {$"{Volume:0.00}",-8} Weight: {$"{Weight:0.0}lb", -8}");
+    public void WritePackState() => Console.WriteLine($"{$"Item Slots: {ItemCount}/{MaxCapacity}",-18} Volume: {$"{Volume:0.00}",-8} Weight: {$"{Weight:0.0}lb",-8}");
 
     public void WritePackContents()
     {
@@ -179,7 +179,7 @@ public class Pack
 
       for (int i = 0; i < Items.Length; i++)
       {
-        Console.Write(i+1);
+        Console.Write(i + 1);
         Console.Write(". ");
         if (Items[i] != null) Items[i].WriteItem();
         else Console.WriteLine("(Empty Slot) ");
@@ -244,7 +244,7 @@ public class Pack
       WritePackContents();
     }
 
-}
+  }
 
 
   ///<summary>
@@ -390,7 +390,7 @@ public class Pack
   {
     public override void Run(Robot robot) => robot.X += robot.IsPowered ? 1 : 0;
   }
-  
+
   ///<summary>
   /// LEVEL 26: Polymorphism 
   /// Challenge 2/2: The Old Robot 
@@ -449,7 +449,7 @@ public class Pack
     void Run(ARobot robot);
   }
 
-public class ARobot
+  public class ARobot
   {
     public int X { get; set; } = 0;
     public int Y { get; set; } = 0;
@@ -554,6 +554,27 @@ public class ARobot
 
   // *************************************************************************************************
 
+  public struct Coordinate
+  {
+    public int Row { get; }
+    public int Column { get; }
+
+    public Coordinate(int row, int column)
+    {
+      Row = row;
+      Column = column;
+    }
+
+    public bool CheckIsAdjacent(Coordinate coordinate)
+    {
+      bool isRowOrColumnSame = coordinate.Row == Row || coordinate.Column == Column;
+      bool isRowAdjacent = coordinate.Row == Row + 1 || coordinate.Row == Row - 1;
+      bool isColumnAdjacent = coordinate.Column == Column + 1 || coordinate.Column == Column - 1;
+      if (isRowOrColumnSame && isRowAdjacent ^ isColumnAdjacent) return true;
+      else return false;
+    }
+  }
+
   ///<summary>
   /// LEVEL 28: Structs
   /// Challenge 1/1: Room Coordinates 
@@ -562,19 +583,38 @@ public class ARobot
   /// Locations of the room may be represented as a row and column, and you take it upon yourself to try to capture this concept with a new struct definition.
   /// 
   /// **Objectives:** 
-  /// [] Create a `Coordinate` struct that can represent a room coordinate with a row and column.
-  /// [] Ensure `Coordinate` is immutable.
-  /// [] Make a method to determine if one coordinate is adjacent to another (differing only by a single row or a single column).
-  /// [] Write a main method that creates a few coordinates and determines if they are adjacent to each other to prove that it is working correctly.
+  /// [x] Create a `Coordinate` struct that can represent a room coordinate with a row and column.
+  /// [x] Ensure `Coordinate` is immutable.
+  /// [x] Make a method to determine if one coordinate is adjacent to another (differing only by a single row or a single column).
+  /// [x] Write a main method that creates a few coordinates and determines if they are adjacent to each other to prove that it is working correctly.
   /// </summary>
   public static void RoomCoordinates()
   {
     WriteTitle("Room Coordinates");
 
+    Coordinate coordA = new Coordinate(1, 1);
+    Coordinate coordB = new Coordinate(1, 2);
+    Coordinate coordC = new Coordinate(2, 2);
+    Coordinate coordD = new Coordinate(3, 2);
+    Coordinate coordE = new Coordinate(0, 1);
+    Coordinate coordF = new Coordinate(1, 0);
 
+    Console.WriteLine($"{nameof(coordA)} is adjacent to {nameof(coordA)}? {coordA.CheckIsAdjacent(coordA)}");
+    Console.WriteLine($"{nameof(coordA)} is adjacent to {nameof(coordB)}? {coordA.CheckIsAdjacent(coordB)}");
+    Console.WriteLine($"{nameof(coordA)} is adjacent to {nameof(coordC)}? {coordA.CheckIsAdjacent(coordC)}");
+    Console.WriteLine($"{nameof(coordA)} is adjacent to {nameof(coordD)}? {coordA.CheckIsAdjacent(coordD)}");
+    Console.WriteLine($"{nameof(coordA)} is adjacent to {nameof(coordE)}? {coordA.CheckIsAdjacent(coordE)}");
+    Console.WriteLine($"{nameof(coordA)} is adjacent to {nameof(coordF)}? {coordA.CheckIsAdjacent(coordF)}");
   }
 
+
   // *************************************************************************************************
+
+  public enum SwordMaterial { Wood, Bronze, Iron, Steel, Binarium }
+  public enum SwordGemstone { None, Emerald, Amber, Sapphire, Diamond, Bitstone }
+
+  public record RSword(SwordMaterial Material, SwordGemstone Gemstone, int Length = 20, int CrossguardWidth = 5);
+
 
   ///<summary>
   /// LEVEL 29: Records 
@@ -582,20 +622,49 @@ public class ARobot
   /// As you pass through the city of Rocaard, two blacksmiths, Cygnus and Lyra, approach you. "We know where this is headed. A confrontation with the Uncoded One's forces," Lyra says. Cygnus continues, "You're going to need an army at your side--one prepared to do battle. We forge swords, and we will do everything we can to support your cause." Lyra interjects, "*Our* cause. We need the Power of Programming to flow unfettered too. We want to help. But we're only going to be able to equip an army if you can help us build a program to aid in crafting swords." They describe the program that would help speed up their sword forging, and you dive in to help.
   /// 
   /// **Objectives:** 
-  /// [] Swords can be made out of any of the following materials: wood, bronze, iron, steel, and the rare binarium. Create an enumeration to represent the material type.
-  /// [] Swords can have a gemstone attached to them that, through Cygnus and Lyra's touch, give them strange powers. Gemstone types include emerald, amber, sapphire, diamond, and the rare bitstone, but not all swords will have a gemstone attached. Create an enumeration to represent gemstone type (or lack thereof).
-  /// [] Create a `Sword` record, which defines a sword by its material, gemstone, length, and crossguard width.
-  /// [] In your main program, create a basic `Sword` instance made out of iron and with no gemstone. Then create two variations on the basic sword with `with` expressions.
-  /// [] Display all three sword instances on the command line with code like `Console.WriteLine(original);`.
+  /// [x] Swords can be made out of any of the following materials: wood, bronze, iron, steel, and the rare binarium. Create an enumeration to represent the material type.
+  /// [x] Swords can have a gemstone attached to them that, through Cygnus and Lyra's touch, give them strange powers. Gemstone types include emerald, amber, sapphire, diamond, and the rare bitstone, but not all swords will have a gemstone attached. Create an enumeration to represent gemstone type (or lack thereof).
+  /// [x] Create a `Sword` record, which defines a sword by its material, gemstone, length, and crossguard width.
+  /// [x] In your main program, create a basic `Sword` instance made out of iron and with no gemstone. Then create two variations on the basic sword with `with` expressions.
+  /// [x] Display all three sword instances on the command line with code like `Console.WriteLine(original);`.
   /// </summary>
   public static void WarPreparations()
   {
     WriteTitle("War Preparations");
 
+    RSword basicSword = new RSword(SwordMaterial.Iron, SwordGemstone.None);
+    RSword galaxyBrainSword = basicSword with { Material = SwordMaterial.Binarium };
+    RSword fancySword = basicSword with { Material = SwordMaterial.Bronze, Gemstone = SwordGemstone.Amber };
+
+    Console.WriteLine(basicSword);
+    Console.WriteLine(galaxyBrainSword);
+    Console.WriteLine(fancySword);
 
   }
 
   // *************************************************************************************************
+
+  public class GSword { public override string ToString() { return "Sword"; } }
+  public class GBow { public override string ToString() { return "Bow"; } }
+  public class GAxe { public override string ToString() { return "Axe"; } }
+
+  public class ColoredItem<T>
+  {
+    ConsoleColor Color { get; }
+
+    public ColoredItem(ConsoleColor color)
+    {
+      Color = color;
+    }
+
+    public void Display()
+    {
+      Console.ForegroundColor = Color;
+      // TODO Why does this not work Greeeeem :C 
+      Console.WriteLine(this.ToString());
+      Console.ResetColor();
+    }
+  }
 
   ///<summary>
   /// LEVEL 30: Generics 
@@ -610,16 +679,22 @@ public class ARobot
   /// You want to be able to associate a color with these items (or any item type). You could make `ColoredSword` derived from `Sword` that adds a `Color` property, but doing this for all three item types will be painstaking. Instead, you define a new generic `ColoredItem` class that does this for any item.
   /// 
   /// **Objectives:** 
-  /// [] Put the three class definitions above into a new project.
-  /// [] Define a generic class to represent a colored item. It must have properties for the item itself (generic in type) and a `ConsoleColor` associated with it.
-  /// [] Add a `public static void Display()` method to your colored item type that changes the console's foreground color to the item's color and displays the item in that color.
+  /// [x] Put the three class definitions above into a new project.
+  /// [x] Define a generic class to represent a colored item. It must have properties for the item itself (generic in type) and a `ConsoleColor` associated with it.
+  /// [] Add a `void Display()` method to your colored item type that changes the console's foreground color to the item's color and displays the item in that color.
   /// [] In your main method, create a new colored item containing a blue sword, a red bow, and a green axe. Display all three items to see each item displayed in its color.
   /// </summary>
   public static void ColoredItems()
   {
     WriteTitle("Colored Items");
 
+    ColoredItem <GSword> blueSword = new ColoredItem<GSword>(ConsoleColor.DarkBlue);
+    ColoredItem<GBow> redBow = new ColoredItem<GBow>(ConsoleColor.DarkRed);
+    ColoredItem<GAxe> greenAxe = new ColoredItem<GAxe>(ConsoleColor.DarkGreen);
 
+    blueSword.Display();
+    redBow.Display();
+    greenAxe.Display();
   }
 
   // *************************************************************************************************
@@ -666,6 +741,7 @@ public class ARobot
   ///   What do you want to do? move east
   ///   ----------------------------------------------
   ///   You are in the room at (Row=0, Column=2).
+  ///   
   ///   You hear water dripping in this room. The Fountain of Objects is here!
   ///   What do you want to do? enable fountain
   ///   ----------------------------------------------

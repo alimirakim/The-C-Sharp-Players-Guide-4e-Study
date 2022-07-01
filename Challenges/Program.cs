@@ -1,16 +1,21 @@
-﻿
+﻿using Complete;
+
 // Instructions:
 // cd into Challenges/ folder.
 // Run `dotnet run` on command line.
 // You should see the titles of each challenge. Fill out the empty methods to fulfill each challenge's objectives and see the results.
 // Comment out levels that you don't need to see anymore.
-CallPart1();
-CallPart2();
+
+
+// CallPart1();
+// CallPart2();
 
 // TODO Add Part 3-5 challenges
 // CallPart3();
 // CallPart4();
 // CallPart5();
+
+Complete.PartTwoB.CallAll();
 
 void CallPart1()
 {

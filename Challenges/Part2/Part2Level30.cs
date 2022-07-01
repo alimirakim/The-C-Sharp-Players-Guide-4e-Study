@@ -24,7 +24,7 @@ public static class Part2Level30
   ///<br/> **Objectives:** 
   ///<br/> [] Put the three class definitions above into a new project.
   ///<br/> [] Define a generic class to represent a colored item. It must have properties for the item itself (generic in type) and a `ConsoleColor` associated with it.
-  ///<br/> [] Add a `public static void Display()` method to your colored item type that changes the console's foreground color to the item's color and displays the item in that color.
+  ///<br/> [] Add a `void Display()` method to your colored item type that changes the console's foreground color to the item's color and displays the item in that color.
   ///<br/> [] In your main method, create a new colored item containing a blue sword, a red bow, and a green axe. Display all three items to see each item displayed in its color.
   /// </summary>
   public static void ColoredItems()
