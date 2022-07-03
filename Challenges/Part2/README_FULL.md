@@ -11,45 +11,90 @@ Part 2 looks at the following:
       - [Knowledge Check: Objects](#knowledge-check-objects)
   - [Level 16: Enumerations](#level-16-enumerations)
     - [Speedrun](#speedrun)
-        - [Snippet: Representing Seasons with Value Types, Not Enumerations](#snippet-representing-seasons-with-value-types-not-enumerations)
+        - [Snippet: Attempt without Enums - Representing Seasons](#snippet-attempt-without-enums---representing-seasons)
     - [Enumeration Basics](#enumeration-basics)
       - [Defining an Enumeration](#defining-an-enumeration)
-        - [Snippet: Where to Define New Types Including Enumerations](#snippet-where-to-define-new-types-including-enumerations)
-        - [Snippet: Defining an Enumeration](#snippet-defining-an-enumeration)
-        - [Snippet: Enumeration Alternative Style](#snippet-enumeration-alternative-style)
+        - [Snippet: Where to Define New Types Including Enums](#snippet-where-to-define-new-types-including-enums)
+        - [Snippet: Defining an Enum (Compact Style)](#snippet-defining-an-enum-compact-style)
+        - [Snippet: Defining an Enum (Expanded Style)](#snippet-defining-an-enum-expanded-style)
       - [Using an Enumeration](#using-an-enumeration)
-        - [Snippet: Declaring Variable with Enumeration Type](#snippet-declaring-variable-with-enumeration-type)
-        - [Snippet: Using Enumeration Members as Values](#snippet-using-enumeration-members-as-values)
-        - [Snippet: Using Comparison Operators with Enum-Type Variables](#snippet-using-comparison-operators-with-enum-type-variables)
+        - [Snippet: Declaring Variables with Enum Type](#snippet-declaring-variables-with-enum-type)
+        - [Snippet: Using Enum Members as Values](#snippet-using-enum-members-as-values)
+        - [Snippet: Using Comparison Operators with Enum Variables](#snippet-using-comparison-operators-with-enum-variables)
       - [Revisiting `ConsoleColor`](#revisiting-consolecolor)
-        - [Snippet: Built-In Enumeration `ConsoleColor`](#snippet-built-in-enumeration-consolecolor)
+        - [Snippet: Example of a Built-In Enumeration, `ConsoleColor`](#snippet-example-of-a-built-in-enumeration-consolecolor)
       - [Challenge: Simula's Test](#challenge-simulas-test)
     - [Underlying Types](#underlying-types)
         - [Snippet: Changing an Enum's Underlying Type](#snippet-changing-an-enums-underlying-type)
         - [Snippet: Override an Enum's Default `int` Values](#snippet-override-an-enums-default-int-values)
         - [Snippet: Casting Between `int`s and Enums](#snippet-casting-between-ints-and-enums)
         - [My Snippet: Enum with a Blank Default Value](#my-snippet-enum-with-a-blank-default-value)
-        - [Snippet: Casting an Enum onto an Invalid `int`](#snippet-casting-an-enum-onto-an-invalid-int)
+        - [Snippet: Casting an Enum with an Invalid `int`](#snippet-casting-an-enum-with-an-invalid-int)
   - [Level 17: Tuples](#level-17-tuples)
+        - [Snippet: Attempt without Tuples - Representing High Scores](#snippet-attempt-without-tuples---representing-high-scores)
     - [The Basics of Tuples](#the-basics-of-tuples)
+        - [Snippet: Defining a Tuple Variable](#snippet-defining-a-tuple-variable)
+        - [Snippet: Using `var` to Simplify Long Tuple Type Names](#snippet-using-var-to-simplify-long-tuple-type-names)
+        - [Snippet: Accessing Tuple Values](#snippet-accessing-tuple-values)
+        - [Snippet: Valid vs Invalid Types with a Tuple](#snippet-valid-vs-invalid-types-with-a-tuple)
     - [Tuple Element Names](#tuple-element-names)
+        - [Snippet: Assigning Names to Tuple Members (without `var`)](#snippet-assigning-names-to-tuple-members-without-var)
+        - [Snippet: Mixing Assigned and Default Tuple Member Names](#snippet-mixing-assigned-and-default-tuple-member-names)
+        - [Snippet: Assigning Names to Tuple Members (with `var`)](#snippet-assigning-names-to-tuple-members-with-var)
+        - [Snippet: Failed Attempt - Assigning Names to Tuple Members (`var`-style but without `var`)](#snippet-failed-attempt---assigning-names-to-tuple-members-var-style-but-without-var)
     - [Tuples and Methods](#tuples-and-methods)
+        - [Snippet: Tuple as a Method Parameter Type](#snippet-tuple-as-a-method-parameter-type)
+        - [Snippet: Tuple as a Method Return Type](#snippet-tuple-as-a-method-return-type)
+        - [Snippet: Inferring Tuple's Types and Names From Method's Return Type](#snippet-inferring-tuples-types-and-names-from-methods-return-type)
+        - [Snippet: Using Different Tuple Member Names for Same Tuple in Various Contexts](#snippet-using-different-tuple-member-names-for-same-tuple-in-various-contexts)
     - [More Tuple Examples](#more-tuple-examples)
+        - [Snippet: Tuple Representing a Point in 2D Space](#snippet-tuple-representing-a-point-in-2d-space)
+        - [Snippet: Using Enums in Tuples](#snippet-using-enums-in-tuples)
+        - [Snippet: A Big Tuple Representing a 4x4 Matrix (often used in games)](#snippet-a-big-tuple-representing-a-4x4-matrix-often-used-in-games)
+        - [Snippet: Array of Tuples](#snippet-array-of-tuples)
     - [Deconstructing Tuples](#deconstructing-tuples)
+        - [Snippet: Grabbing Data Out of a Tuple - by Name](#snippet-grabbing-data-out-of-a-tuple---by-name)
+        - [Snippet: Deconstructing a Tuple](#snippet-deconstructing-a-tuple)
+        - [Snippet: Deconstructing a Tuple and Declaring Simultaneously](#snippet-deconstructing-a-tuple-and-declaring-simultaneously)
+        - [Snippet: Swapping Contents of Two Variables with Tuple Deconstruction](#snippet-swapping-contents-of-two-variables-with-tuple-deconstruction)
       - [Ignoring Elements with Discards](#ignoring-elements-with-discards)
+        - [Snippet: Using a Discard Variable](#snippet-using-a-discard-variable)
     - [Tuples and Equality](#tuples-and-equality)
+        - [Snippet: Tuples Demonstrating Value Equality](#snippet-tuples-demonstrating-value-equality)
+        - [Snippet: Tuples Ignore Member Names For Equality Checks](#snippet-tuples-ignore-member-names-for-equality-checks)
+        - [Snippet: Printing Tuples to the Console](#snippet-printing-tuples-to-the-console)
       - [Challenge: Simula's Soups](#challenge-simulas-soups)
   - [Level 18: Classes](#level-18-classes)
     - [Defining a New Class](#defining-a-new-class)
+        - [Snippet: Creating a Score Class](#snippet-creating-a-score-class)
+        - [Snippet: Creating a Class with Methods](#snippet-creating-a-class-with-methods)
     - [Instances of Classes](#instances-of-classes)
+        - [Snippet:](#snippet)
+        - [Snippet:](#snippet-1)
+        - [Snippet:](#snippet-2)
     - [Constructors](#constructors)
+        - [Snippet:](#snippet-3)
+      - [Default Constructors and Default Field Values](#default-constructors-and-default-field-values)
+        - [Snippet:](#snippet-4)
       - [Constructors with Parameters](#constructors-with-parameters)
+        - [Snippet:](#snippet-5)
+        - [Snippet:](#snippet-6)
       - [Multiple Constructors](#multiple-constructors)
+        - [Snippet:](#snippet-7)
       - [Initializing Fields Inline](#initializing-fields-inline)
+        - [Snippet:](#snippet-8)
+        - [Snippet:](#snippet-9)
       - [Name Hiding](#name-hiding)
+        - [Snippet:](#snippet-10)
+        - [Snippet:](#snippet-11)
+        - [Snippet:](#snippet-12)
       - [The `this` Keyword](#the-this-keyword)
+        - [Snippet:](#snippet-13)
       - [Calling Other Constructors with `this`](#calling-other-constructors-with-this)
+        - [Snippet:](#snippet-14)
       - [Leaving Off the Class Name](#leaving-off-the-class-name)
+        - [Snippet:](#snippet-15)
+        - [My Snippet:](#my-snippet)
     - [Object-Oriented Design](#object-oriented-design)
       - [Challenge: Vin Fletcher's Arrows](#challenge-vin-fletchers-arrows)
   - [Level 19: Information Hiding](#level-19-information-hiding)
@@ -222,7 +267,7 @@ Essential rule in C# programming: **Use the right type for everything you create
 * Define your enumerations after your main method and other methods or in a separate file.
 * After defining an enumeration, you can use it for a variable's type: `Season now = Seasons.Winter;`
 
-##### Snippet: Representing Seasons with Value Types, Not Enumerations
+##### Snippet: Attempt without Enums - Representing Seasons
 ```cs
 // with ints
 int current = 2; // Summer
@@ -238,7 +283,7 @@ if (today == "Fall") Console.WriteLine("Winter is coming.");
 > * *enumerate* - To list off things, one by one.
 
 #### Defining an Enumeration
-##### Snippet: Where to Define New Types Including Enumerations
+##### Snippet: Where to Define New Types Including Enums
 ```cs
 using System;
 
@@ -247,12 +292,12 @@ Console.WriteLine("Hello World!");
 // <-- Add enumerations here.
 ```
 
-##### Snippet: Defining an Enumeration
+##### Snippet: Defining an Enum (Compact Style)
 ```cs
 enum Season { Winter, Spring, Summer, Fall } // New types MUST go after other code in the main method (or in another file)
 ```
 
-##### Snippet: Enumeration Alternative Style
+##### Snippet: Defining an Enum (Expanded Style)
 ```cs
 enum {
   Winter, // default value
@@ -264,17 +309,17 @@ enum {
 
 #### Using an Enumeration
 
-##### Snippet: Declaring Variable with Enumeration Type
+##### Snippet: Declaring Variables with Enum Type
 ```cs
 Season current;
 ```
 
-##### Snippet: Using Enumeration Members as Values
+##### Snippet: Using Enum Members as Values
 ```cs
 Season current = Season.Summer;
 ```
 
-##### Snippet: Using Comparison Operators with Enum-Type Variables
+##### Snippet: Using Comparison Operators with Enum Variables
 ```cs
 using System;
 
@@ -290,7 +335,7 @@ enum Season { Winter, Spring, Summer, Fall }
 
 
 #### Revisiting `ConsoleColor`
-##### Snippet: Built-In Enumeration `ConsoleColor`
+##### Snippet: Example of a Built-In Enumeration, `ConsoleColor`
 ```cs
 Console.BackgroundColor = ConsoleColor.Yellow;
 ```
@@ -341,7 +386,7 @@ enum Season {
 }
 ```
 
-##### Snippet: Casting an Enum onto an Invalid `int`
+##### Snippet: Casting an Enum with an Invalid `int`
 ```cs
 Season now = (Season)822;
 ```
@@ -355,30 +400,204 @@ Season now = (Season)822;
 * Deconstruction unpacks tuples into multiple variables: `(double x double y) = MakePoint();`
 * Two tuple values are equal if their corresponding items are all equal.
 
-### The Basics of Tuples
+> * *composite type* - A type made by assembling other elements to form a new type. Tuples, classes, and structs are all composite types.
 
+__My Note: Usually people name tuple members with lowerCamelCase similar to methods, not UpperCamelCase like the book shows.The lower casing is because of deconstruction into variables is common.__
+
+##### Snippet: Attempt without Tuples - Representing High Scores
+```cs
+string[] names = new string[3] { "R2-D2", "C-3PO", "GONK" };
+int[] scores   = new int[3]    { 12420,      8543,     -1 };
+int[] level    = new int[3]    { 15,            9,      1 };
+```
+
+### The Basics of Tuples
+> * *tuple* - (pronounced like "TOO-ples" or "TUP-ples") A simple data structure that stores a set of related values of different types as a single unit. The name comes from the math world as a generalization of the naming pattern *double*, *triple*, *quadruple*, *quintuple*, etc. These are also sometimes referred to by the number of items in them: a 2-tuple for one with two things, an 8-tuple for one with eight things, etc.
+
+The simplest tool for creating composite types in C#.
+
+##### Snippet: Defining a Tuple Variable
+```cs
+(string, int, int) score = ("R2-D2", 12420, 15);
+```
+
+##### Snippet: Using `var` to Simplify Long Tuple Type Names
+```cs
+var score = ("R2-D2", 12420, 15);
+```
+
+##### Snippet: Accessing Tuple Values
+```cs
+Console.WriteLine($"Name:{score.Item1} Level:{score.Item3} Score:{score.Item2}");
+```
+
+##### Snippet: Valid vs Invalid Types with a Tuple
+```cs
+// valid
+(string, int, int) score1 = ("R2-D2", 12420, 15);
+var score2 = score1;
+
+// invalid
+(string, int) partialScore = score1;      // Not the same number of items.
+(int, int, string) mixedUpScore = score1; // Items in a different order.
+```
 
 ### Tuple Element Names
 
+##### Snippet: Assigning Names to Tuple Members (without `var`)
+```cs
+(string Name, int Points, int Level) score = ("R2-D2", 12420, 15);
+Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+```
+
+ ##### Snippet: Mixing Assigned and Default Tuple Member Names
+ ```cs
+ (string Name, int, int) score = ("R2-D2", 12420, 15);
+ Console.WriteLine($"Name:{score.Name} Level:{score.Item3} Score:{score.Item2}");
+ ```
+ 
+ ##### Snippet: Assigning Names to Tuple Members (with `var`)
+ ```cs
+ var score = (Name: "R2-D2", Points: 12420, Level: 15);
+ Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score{score.Points}");
+ ```
+
+ ##### Snippet: Failed Attempt - Assigning Names to Tuple Members (`var`-style but without `var`)
+ ```cs
+ (string, int P, int L) score = (Name: "R2-D2", Points: 12420, Level: 15); // Names applied to the tuple's values (Name, Point, Level) are ignored without `var`
+ Console.WriteLine($"Name{score.Item1} Level:{score.L} Score:{score.P}"); // Only names applied to the tuple's types will work
+ ```
 
 ### Tuples and Methods
+##### Snippet: Tuple as a Method Parameter Type
+```cs
+void DisplayScore((string Name, int Points, int Level) score) // Parameters cannot use var!
+{
+    Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+}
+```
 
+##### Snippet: Tuple as a Method Return Type
+```cs
+(string Name, int Points, int Level) GetScore() => ("R2-D2", 12420, 15);
+```
+
+##### Snippet: Inferring Tuple's Types and Names From Method's Return Type
+```cs
+var score = GetScore();
+Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+```
+
+##### Snippet: Using Different Tuple Member Names for Same Tuple in Various Contexts
+```cs
+(string One, int Two, int Three) score = GetScore();
+DisplayScore(score);
+
+(string N, int P, int L) GetScore() => ("R2-D2", 12420, 15);
+
+void DisplayScore((string Name, int Points, int Level) score)
+{
+    Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+}
+```
 
 ### More Tuple Examples
+##### Snippet: Tuple Representing a Point in 2D Space
+```cs
+(double X, double Y) point = (2.0, 4.0);
+```
 
+##### Snippet: Using Enums in Tuples
+```cs
+enum TileType { Grass, Water, Rock }
+var tile = (Row: 2, Column: 4, Type: TileType.Grass);
+```
+
+##### Snippet: A Big Tuple Representing a 4x4 Matrix (often used in games)
+```cs
+var matrix = (M11: 1, M12: 0, M13: 0, M14: 0,
+              M21: 0, M22: 1, M23: 0, M24: 0,
+              M31: 0, M32: 0, M33: 1, M34: 0,
+              M41: 0, M42: 0, M43: 0, M44: 1);
+```
+
+##### Snippet: Array of Tuples
+```cs
+(string Name, int Points, int Level)[] CreateHighScores()
+{
+    return new (string, int, int)[3]
+    {
+        ("R2-D2", 12420, 15),
+        ("C-3PO",  8543,  9),
+        ("GONK",     -1,  1),
+    }
+}
+```
 
 ### Deconstructing Tuples
+> * *deconstruction* or *unpacking* - Extracting the elements out of a tuple or other type into separate individual variables.
 
+##### Snippet: Grabbing Data Out of a Tuple - by Name
+```cs
+var score = (Name: "R2-D2", Points: 12420, Level: 15);
+
+string playerName = score.Name;
+```
+
+##### Snippet: Deconstructing a Tuple
+```cs
+string name;
+int points;
+int level;
+(name, points, level) = score;
+Console.WriteLine($"{name} reached level {level} with {points} points.");
+```
+
+##### Snippet: Deconstructing a Tuple and Declaring Simultaneously
+```cs
+(string name, int points, int level) = score;
+```
+
+##### Snippet: Swapping Contents of Two Variables with Tuple Deconstruction
+```cs
+double x = 4;
+double y = 2;
+(x, y) = (y, x); // x is 4, y is 2
+```
 
 #### Ignoring Elements with Discards
+> * *discard* - An underscore character (`_`), used in places where a variable is expected, that tells the compiler to generate a throwaway variable in its place. Alternatively, used in pattern matching to indicate that anything is a match.
 
+##### Snippet: Using a Discard Variable
+```cs
+(string name, int points, _) = score;
+```
 
 ### Tuples and Equality
+##### Snippet: Tuples Demonstrating Value Equality
+```cs
+(int, int) a = (1, 2);
+(int, int) b = (1, 2);
+
+Console.WriteLine(a == b); // True
+Console.WriteLine(a != b); // False
+```
+##### Snippet: Tuples Ignore Member Names For Equality Checks
+```cs
+var a = (X: 2, Y: 4);
+var b = (U: 2, V: 4);
+Console.WriteLine(a == b); // True
+```
+##### Snippet: Printing Tuples to the Console
+```cs
+(string Crew, string Pirate, int Berries) nami = ("Straw Hat Pirates", "Nami", 300_000_000);
+Console.WriteLine(nami) // ("Straw Hat Pirates", "Nami", 300_000_000) ?!?!?!?! TODO TEST THIS OUT
+```
 
 
 #### Challenge: Simula's Soups
-
-
+* Create an array of tuples where each tuple is composed of enums.
+* Print resulting tuples to the console.
 
 ---
 
@@ -388,41 +607,312 @@ Season now = (Season)822;
 * Constructors define how new instances are created: `public Score(int p) { points = p; }`
 * Classes are reference types.
 
-### Defining a New Class
+> * *object-oriented design* - Deciding how to split a large program into multiple objects and how to have them coordinate with each other.
+> * *class* - A category of types, formed by combining fields (data) and methods (operations on that data). The most versatile type you can define. Creates a blueprint that instances of the type use. All classes are reference types.
+> * *instance* - An object of a specific type. A `string` instance is an object whose type is `string`.
 
+
+### Defining a New Class
+> * *field* or *instance variable* - A variable declared as a member of a class or other type, as opposed to a local variable or parameter. For fields not marked as static, each instance will have its own copy. Making fields `private` facilitates the principle of abstraction.
+> * *encapsulation* - Combining fields (data) and methods (operations on the data) into a single cohesive bundle. A fundamental principle of object-oriented programming.
+
+
+##### Snippet: Creating a Score Class
+```cs
+using System;
+
+// <-- Your main method goes here.
+
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+}
+
+// <-- Other classes and enumerations can go here.
+```
+
+##### Snippet: Creating a Class with Methods
+```cs
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
+
+__Object-Oriented Principle #1: Encapsulation--Combining data and operations on that data (methods) into a well-defined unit (like a class).__
 
 ### Instances of Classes
+##### Snippet: 
+```cs
+Score best = new Score();
 
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
+
+##### Snippet: 
+```cs
+Score best = newScore();
+
+best.name = "R2-D2";
+best.points = 12420;
+best.level = 15;
+
+if (best.EarnedStar())
+    Console.WriteLine("You earned a star!");
+```
+
+##### Snippet: 
+```cs
+Score a = new Score();
+a.name = "R2-D2";
+a.points = 12420;
+a.level = 15;
+
+Score b = new Score();
+b.name = "C-3PO";
+b.points = 8543;
+b.level = 8;
+
+if (a.EarnedStar())
+    Console.WriteLine($"{a.name} earned a star!");
+if (b.EarnedStar())
+    Console.WriteLine($"{b.name} earned a star!");
+```
 
 ### Constructors
 
+##### Snippet: 
+```cs
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+
+    public Score()
+    {
+        name = "Unknown";
+        points = 0;
+        level = 1;
+    }
+
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
+
+#### Default Constructors and Default Field Values
+
+##### Snippet: 
+```cs
+public Score() { }
+```
 
 #### Constructors with Parameters
 
+##### Snippet: 
+```cs
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+
+    public Score(string n, int p, int l) // That's a lowercase 'L', not a 1.
+    {
+        name = n;
+        points = p;
+        level = l;
+    }
+    
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
+
+##### Snippet: 
+```cs
+Score score = new Score("R2-D2", 12420, 15);
+```
 
 #### Multiple Constructors
+##### Snippet: 
+```cs
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
 
+    public Score()
+    {
+        name = "Unknown";
+        points = 0;
+        level = 1;
+    }
+
+    public Score(string n, int p, int l) // That's a lowercase 'L', not a 1.
+    {
+        name = n;
+        points = p;
+        level = l;
+    }
+    
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
 
 #### Initializing Fields Inline
+##### Snippet: 
+```cs
+class Score
+{
+    public string name = "Unknown";
+    public int points = 0;
+    public int level = 1;
+
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
+
+##### Snippet: 
+```cs
+class Score
+{
+    public string name = "Unknown";
+    public int points = 0;
+    public int level = 1;
+
+    public Score()
+    {
+        name = "Mystery";
+    }
+
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
+
 
 
 #### Name Hiding
+> * *name hiding* - When a local variable or parameter shares the same name as a field, making the field not directly accessible. The field may still be accessed using the `this` keyword.
+
+##### Snippet: 
+```cs
+public Score(string n, int p, int l)
+{
+    name = n;
+    points = p;
+    level = l;
+}
+```
+
+##### Snippet: 
+```cs
+public Score(string name, int points, int level)
+{
+    name = name; // These are not going to do what you want!
+    points = points;
+    level = level;
+}
+```
+
+##### Snippet: 
+```cs
+class Score
+{
+    public string _name;
+    public int _points;
+    public int _level;
+
+    public Score(string name, int points, int level)
+    {
+        _name = name;
+        _points = points;
+        _level = level;
+    }
+}
+```
+
 
 
 #### The `this` Keyword
+##### Snippet: 
+```cs
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+
+    public Score(string name, int points, int level)
+    {
+        this.name = name;
+        this.points = points;
+        this.level = level;
+    }
+}
+```
+
 
 
 #### Calling Other Constructors with `this`
+##### Snippet: 
+```cs
+class Score
+{
+    public string _name;
+    public int _points;
+    public int _level;
+
+    public Score() : this("Unknown", 0, 1)
+    {
+    }
+
+    public Score(string name, int points, int level)
+    {
+        _name = name;
+        _points = points;
+        _level = level;
+    }
+}
+```
 
 
 #### Leaving Off the Class Name
+
+##### Snippet: 
+```cs
+Score first = new();
+Score second = new("R2-D2", 12420, 15);
+```
+
+##### My Snippet: 
+```cs
+var first = new Score();
+var second = new Score("R2-D2", 12420, 15);
+```
 
 
 ### Object-Oriented Design
 
 
 #### Challenge: Vin Fletcher's Arrows
-
+* Define a new class type
+* Include instance variables
+* Include a constructor that allows setting the instance variables on initialization.
+* Add a method that returns a calculation based on the instance variable values.
 
 ---
 
@@ -634,7 +1124,7 @@ Season now = (Season)822;
 * Inheritance lets you derive new classes based on existing ones. The new class inherits everything except constructors from the base class. `class Derived : Base { ... }`
 * Classes derive from `object` by default, and everything eventually derives from `object` even if another class is explicitly stated.
 * Constructors in a derived class must call out the constructor they are using from the base class unless they are using the parameterless constructor (if it exists): `public Derived(int x) : base(x) { ... }`
-* Derives class instances can be used where the base class is stated: `Base x = new Derived();`
+* Derived class instances can be used where the base class is stated: `Base x = new Derived();`
 * The `protected` accessibility modifier makes things accessible in the class and any derived classes.
 
 ### Inheritance and the `object` class

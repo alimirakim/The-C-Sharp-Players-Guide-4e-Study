@@ -1,24 +1,24 @@
 ## Part 2: Object-Oriented Programming
 
 Check [x] each chapter as you go to track progress! :)
-15. [ ] Object-Oriented Concepts
-16. [ ] Enumerations
-17. [ ] Tuples
-18. [ ] Classes
-19. [ ] Information Hiding
-20. [ ] Properties
-21. [ ] Static
-22. [ ] Null References
-23. [ ] Object-Oriented Design
-24. [ ] The Catacombs of the Class
-25. [ ] Inheritance
-26. [ ] Polymorphism
-27. [ ] Interfaces
-28. [ ] Structs
-29. [ ] Records
-30. [ ] Generics
-31. [ ] The Fountain of Objects
-32. [ ] Some Useful Types
+- 15. [ ] Object-Oriented Concepts
+- 16. [ ] Enumerations
+- 17. [ ] Tuples
+- 18. [ ] Classes
+- 19. [ ] Information Hiding
+- 20. [ ] Properties
+- 21. [ ] Static
+- 22. [ ] Null References
+- 23. [ ] Object-Oriented Design
+- 24. [ ] The Catacombs of the Class
+- 25. [ ] Inheritance
+- 26. [ ] Polymorphism
+- 27. [ ] Interfaces
+- 28. [ ] Structs
+- 29. [ ] Records
+- 30. [ ] Generics
+- 31. [ ] The Fountain of Objects
+- 32. [ ] Some Useful Types
 
 ---
 
