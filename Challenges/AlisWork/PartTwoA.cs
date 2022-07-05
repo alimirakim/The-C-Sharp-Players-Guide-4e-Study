@@ -1,3 +1,5 @@
+using System;
+
 namespace Complete;
 
 public static class PartTwoA
@@ -80,13 +82,13 @@ public static class PartTwoA
   ///<br/> 
   ///<br/> The program below shows what using this might look like:
   ///<br/> 
-  ///<br/> **Sample Program:**
+  ///<br/> SAMPLE PROGRAM:
   ///<br/>   The chest is locked. What do you want to do? unlock 
   ///<br/>   The chest is unlocked. What do you want to do? open
   ///<br/>   The chest is open. What do you want to do? close
   ///<br/>   The chest is unlocked. What do you want to do?
   ///<br/>   
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Define an enumeration for the state of the chest. 
   ///<br/> [x] Make a variable whose type is this new enumeration.
   ///<br/> [x] Write code to allow you to manipulate the chest with the `lock`, `unlock`, `open`, and `close` commands, but ensure that you don't transition between states that don't support it.
@@ -137,7 +139,7 @@ public static class PartTwoA
   ///<br/> 
   ///<br/> She pulls out three small pots and begins making three different food pots, explaining what she's doing "I can make soup stew and gumbo. I can use mushrooms, chicken, carrots, or potatoes and I can add spicy, salty, or sweet seasoning to each. Why don't you whip up a little program to help us keep track of what we make."
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Define enumerations for the three variations of food type (soup, stew, gumbo) the main ingredient (mushrooms, chicken, carrots, potatoes), and seasoning (spicy, salty, sweet).
   ///<br/> [ ] Make an array of length 3 to store tuples represent the soups, where each tuple is composed of three elements, one of each of the above enumeration types. 
   ///<br/> [ ] Allow the user to enter a type, the main ingredient, and one seasoning from the allowed choices for each of the three pots (repeat it three times, one for each spot in the array).
@@ -293,7 +295,7 @@ public static class PartTwoA
   ///<br/> 
   ///<br/> His costs are as follows: for arrowheads, steel costs 10 gold, wood costs three gold, and obsidian costs 5 gold. For fletching, plastic costs 10 gold, turkey feathers cost 5 gold, and goose feathers cost 3 gold. For the shaft, the price depends on the length: 0.05 gold per centimeter.
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Define a new `Arrow` class that has instance variables for arrowhead type, fletching type, and length. (Hint: Arrowhead types and fletching types might be good enumerations.)
   ///<br/> [x] Allow a user to pick the arrowhead, fletching type, and length and then create a new `Arrow` instance. 
   ///<br/> [x] Add a `GetCost` method that returns its cost as a `float` based on the numbers above, and use this to display the arrows cost.
@@ -395,7 +397,7 @@ public static class PartTwoA
   ///<br/> Challenge 1/1: Vin's Trouble 
   ///<br/> "Master Programmer!" Vin Fletcher shouts at you as he races to catch up to you. "I have a problem. I created an arrow for a young man who took it and changed its length to be half as long as I had built it to be. It no longer fit in his bow correctly and misfired. It sliced his hand pretty bad. He'll survive, but is there any way we can make sure somebody doesn't change an arrow's length when they walk away from my shop? I don't want to be the cause of such self-inflicted pain." With your knowledge of information hiding, you know you can help.
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Modify your `Arrow` class to have `private` instead of `public` instance variables. 
   ///<br/> [x] Add in getter methods for each of the instance variables that you have.
   ///<br/> </summary>
@@ -518,7 +520,7 @@ public static class PartTwoA
   ///<br/> Challenge 1/1: The Properties of Arrows 
   ///<br/> Vin Fletcher once again has run to catch up to you for help with this arrows. "My apologies, Programmer! This will be the last time I bother you. My cousin, Flynn Vetcher, is the only other arrow maker in the area. He doesn't care for his craft and makes wildly dangerous and overpriced arrows. But people keep buying them because they think my `GetLength()` methods are harder to work with than his public `_length` fields. I don't want to give up the protections we just gave these arrows, but I overheard you say something about properties. Maybe you could use those to make my arrows easier to work with?"
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [ ] Modify your `Arrow` class use properties instead of `GetX` and `SetX` methods. 
   ///<br/> [ ] Ensure the whole program can still run, and then can keep creating arrows with it.
   ///<br/> </summary>
@@ -650,7 +652,7 @@ public static class PartTwoA
   ///<br/> 
   ///<br/> You can make static methods so that making these as specific variations of arrows is easy.
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [ ] Modify your `Arrow` class one final time to include static methods of the form `public static Arrow CreateEliteArrow() { ... }` for each of the following three above arrow types.
   ///<br/> [ ] Modify the program to allow a user to choose one of these predefined types for a custom arrow. If they select one of the predefined styles, produce an `Arrow` instance using one of the new static methods. If they choose to make a custom arrow, use the original code to get their custom data about the desired arrow.
   ///<br/> </summary>
@@ -693,7 +695,7 @@ public static class PartTwoA
   ///<br/> Boss Battle 1/9: The Point 
   ///<br/> The first pedestal asks you to create a `Point` class to store a point into two dimensions. Each point is represented by an x-coordinate (referred to as x), a side-to-side distance from a special central point called the origin, and a y-coordinate (referred to as y), an up-and-down distance away from the origin.
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Define a new `Point` class with properties for `X` and `Y`.
   ///<br/> [x] Add a constructor to create a point from a specific x- and y-coordinate.
   ///<br/> [x] Add a parameterless constructor to create a point at the origin (0, 0).
@@ -755,7 +757,7 @@ public static class PartTwoA
   ///<br/> 
   ///<br/> The pedestal also includes some color names, with a set of numbers indicating their specific values for each channel. These are commonly used colors: White (255, 255, 255), Black (0, 0, 0), Red (255, 0, 0), Orange (255, 165, 0), Yellow (255, 255, 0), Green (0, 128 0), Blue (0, 0, 255), Purple (128, 0, 128).
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Define a new `Color` class with properties for its red, green, and blue channels.
   ///<br/> [x] Add appropriate constructors that make sense for creating new `Color` objects.
   ///<br/> [x] Create static properties to define the eight commonly used colors for easy access.
@@ -831,7 +833,7 @@ public static class PartTwoA
   ///<br/> Boss Battle 3/9: The Card 
   ///<br/> The digital Realms of C# have playing cards like ours but with some differences. Each card has a color (red, green, blue, yellow) and a rank (the numbers 1 through 10, followed by the symbols $, %, ^, and &). The third pedestal requires that you create a class to represent a card of this nature. 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Define enumerations for card colors and card ranks.
   ///<br/> [x] Define a `Card` class to represent a card with a color and a rank, as described above.
   ///<br/> [x] Add properties or methods that tell you if a card is a number or a symbol card (the equivalent of a face card).
@@ -973,7 +975,7 @@ public static class PartTwoA
   ///<br/> - When a door is created, is must be given an initial passcode.
   ///<br/> - Additionally, you should be able to change the passcode by supplying the current code and a new one.The passcode should only change if the correct, current code is given.
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [x] Define a `Door` class that can keep track of whether it's locked, open, or closed.
   ///<br/> [ ] Make it so you can perform the four transitions defined above with methods.
   ///<br/> [x] Build a constructor that requires the starting numeric passcode.
@@ -1079,7 +1081,7 @@ public static class PartTwoA
   ///<br/> 
   ///<br/> This might be useful information! You are grateful to whoever left it behind. It is signed simply "A."
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [ ] Define a new `PasswordValidator` class that can be given a password and determine, based on the rules above, if the password follows the rules and is valid.
   ///<br/> [ ] Make your main method loop forever, asking for a password and reporting whether the password is allowed using an instance of the `PasswordValidator` class.
   ///<br/> </summary>
@@ -1103,7 +1105,7 @@ public static class PartTwoA
   ///<br/> - The game must display who won the round.
   ///<br/> - The game will keep running rounds until the window is closed but needs to remember the historical record of how many times each player won and how many draws there were.
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [ ] Use CRC cards (or a suitable alternative) to outline the objects and classes that may be needed to make the game of Rock-Paper-Scissors. You do not need to create this full game; just come up with a potential design as a starting point.
   ///<br/> </summary>
   public static void RockPaperScissors()
@@ -1153,7 +1155,7 @@ public static class PartTwoA
   ///<br/> - The game needs to be able to generate random puzzles to solve.
   ///<br/> - The game needs to track and display how many moves the player has made so far.
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [ ] Use CRC cards (or a suitable alternative) to outline the objects and classes that may be needed to make the game of 15-Puzzle. You do not need to create this full game; just come up with a potential design as a starting point.
   ///<br/> [ ] Answer this question: Would your design need to change if we also wanted 3x3 or 5x5 boards?
   ///<br/> </summary>
@@ -1171,7 +1173,7 @@ public static class PartTwoA
   ///<br/> Boss Battle 8/9: Hangman 
   ///<br/> The third pedestal in the room requires you to provide an object-oriented design for the game of Hangman. In Hangman, the computer picks a random word for the player to guess. The player then proceeds to guess the word by selecting letters from the alphabet, which get filled in, progressively revealing the word. The player can only get so many letters wrong (a letter that isn't in the word) before losing the game. An example run of this game could look like this:
   ///<br/> 
-  ///<br/> **Sample Program:**
+  ///<br/> SAMPLE PROGRAM:
   ///<br/>   Word: _ _ _ _ _ _ _ _ _ | Remaining: 5 | Incorrect:  | Guess: e
   ///<br/>   Word: _ _ _ _ _ _ _ _ E | Remaining: 5 | Incorrect:  | Guess: i
   ///<br/>   Word: I _ _ _ _ _ _ _ E | Remaining: 5 | Incorrect:  | Guess: u
@@ -1193,7 +1195,7 @@ public static class PartTwoA
   ///<br/> - The game needs to detect a win for the player (all letters have been guessed).
   ///<br/> - The game needs to detect a loss for the player (out of incorrect guesses).
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [ ] Use CRC cards (or a suitable alternative) to outline the objects and classes that may be needed to make the game of Hangman. You do not need to create this full game; just come up with a potential design as a starting point.
   ///<br/> </summary>
   public static void Hangman()
@@ -1406,7 +1408,7 @@ public static class PartTwoA
   ///<br/> - When the game is over, the outcome is displayed to the players.
   ///<br/> - The state of the board must be displayed to the player after each play. Hint: One possible way to show the board could be like this:
   ///<br/> 
-  ///<br/> **Sample Program:**
+  ///<br/> SAMPLE PROGRAM:
   ///<br/>   It is X's turn.
   ///<br/>      | X |   
   ///<br/>   ---|---|---
@@ -1415,7 +1417,7 @@ public static class PartTwoA
   ///<br/>    O |   |   
   ///<br/>    What square do you want to play in?
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> [ ] Build the Tic-Tac-Toe as described in the requirements above. Starting with CRC cards is recommended, but the goal is to make working software, not CRC cards.
   ///<br/> [ ] Answer this question: How might you modify your completed program if running multiple rounds was a requirement (for example, a best-out-of-five series)?
   ///<br/> </summary>

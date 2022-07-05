@@ -1,3 +1,5 @@
+using System;
+
 namespace Complete;
 
 public static class PartOne

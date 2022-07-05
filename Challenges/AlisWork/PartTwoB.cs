@@ -1,4 +1,6 @@
 
+using System;
+
 namespace Complete;
 
 public static class PartTwoB
@@ -15,26 +17,40 @@ public static class PartTwoB
     Console.WriteLine(divider);
   }
 
+  public enum TestyEnum { First=1, Second, Third}
+
   public static void CallAll()
   {
-    // TOC
+    TestyEnum testy = default;
+    TestyEnum testerinos = (TestyEnum)500;
+    Console.WriteLine(testerinos);
+
+    string result = testy switch
+    {
+      TestyEnum.First => "first!",
+      TestyEnum.Second => "second sucks",
+      TestyEnum.Third => "i am last :C",
+      _ => "what am i",
+    };
+    Console.WriteLine(result);
+
     // PackingInventory();
     // LabelingInventory();
     // TheOldRobot();
     // RoboticInterface();
-    RoomCoordinates();
-    WarPreparations();
-    ColoredItems();
-    TheFountainOfObjects();
-    SmallMediumOrLarge();
-    Pits();
-    Maelstroms();
-    Amaroks();
-    GettingArmed();
-    GettingHelp();
-    TheRobotPilot();
-    TimeInTheCavern();
-    ListsOfCommands();
+    // RoomCoordinates();
+    // WarPreparations();
+    // ColoredItems();
+    // TheFountainOfObjects();
+    // SmallMediumOrLarge();
+    // Pits();
+    // Maelstroms();
+    // Amaroks();
+    // GettingArmed();
+    // GettingHelp();
+    // TheRobotPilot();
+    // TimeInTheCavern();
+    // ListsOfCommands();
   }
 
   // *************************************************************************************************
@@ -681,8 +697,8 @@ public static class PartTwoB
   /// **Objectives:** 
   /// [x] Put the three class definitions above into a new project.
   /// [x] Define a generic class to represent a colored item. It must have properties for the item itself (generic in type) and a `ConsoleColor` associated with it.
-  /// [] Add a `void Display()` method to your colored item type that changes the console's foreground color to the item's color and displays the item in that color.
-  /// [] In your main method, create a new colored item containing a blue sword, a red bow, and a green axe. Display all three items to see each item displayed in its color.
+  /// [x] Add a `void Display()` method to your colored item type that changes the console's foreground color to the item's color and displays the item in that color.
+  /// [x] In your main method, create a new colored item containing a blue sword, a red bow, and a green axe. Display all three items to see each item displayed in its color.
   /// </summary>
   public static void ColoredItems()
   {

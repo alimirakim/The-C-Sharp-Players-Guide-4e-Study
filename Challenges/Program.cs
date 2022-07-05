@@ -1,10 +1,35 @@
-﻿using Complete;
+﻿
+using System;
+using Template;
 
 // Instructions:
 // cd into Challenges/ folder.
 // Run `dotnet run` on command line.
 // You should see the titles of each challenge. Fill out the empty methods to fulfill each challenge's objectives and see the results.
 // Comment out levels that you don't need to see anymore.
+
+
+Book book = new Book();
+book.Part1.Sections = new SectionGroup[] {
+  new Level1(),
+  new Level2(),
+  new Level3(),
+  new Level4(),
+};
+
+book.WriteTitle(true);
+book.Run();
+
+// TYPE DEFINITIONS
+public class Level : SectionGroup
+{
+  private string _speedrun;
+  public Level(string title, Section[]? sections = null, string speedrun="") 
+  : base(title, SectionGroupType.Level, sections ?? new Section[] { })
+  {
+    _speedrun = speedrun;
+  }
+}
 
 
 // CallPart1();
@@ -15,44 +40,45 @@
 // CallPart4();
 // CallPart5();
 
-Complete.PartTwoB.CallAll();
+// Complete.PartTwoA.CallAll();
+// Complete.PartTwoB.CallAll();
 
-void CallPart1()
-{
-Part1Level1.CallAll();
-Part1Level2.CallAll();
-Part1Level3.CallAll();
-Part1Level5.CallAll();
-Part1Level6.CallAll();
-Part1Level7.CallAll();
-Part1Level8.CallAll();
-Part1Level9.CallAll();
-Part1Level10.CallAll();
-Part1Level11.CallAll();
-Part1Level12.CallAll();
-Part1Level13.CallAll();
-Part1Level14.CallAll();
-}
+// void CallPart1()
+// {
+// Level1.CallAll();
+// Level2.CallAll();
+// Level3.CallAll();
+// Level5.CallAll();
+// Level6.CallAll();
+// Level7.CallAll();
+// Level8.CallAll();
+// Level9.CallAll();
+// Level10.CallAll();
+// Level11.CallAll();
+// Level12.CallAll();
+// Level13.CallAll();
+// Level14.CallAll();
+// }
 
-void CallPart2()
-{
-  Part2Level15.CallAll();
-  Part2Level16.CallAll();
-  Part2Level17.CallAll();
-  Part2Level18.CallAll();
-  Part2Level19.CallAll();
-  Part2Level20.CallAll();
-  Part2Level21.CallAll();
-  Part2Level24.CallAll();
-  Part2Level25.CallAll();
-  Part2Level26.CallAll();
-  Part2Level27.CallAll();
-  Part2Level28.CallAll();
-  Part2Level29.CallAll();
-  Part2Level30.CallAll();
-  Part2Level31.CallAll();
-  Part2Level32.CallAll();
-}
+// void CallPart2()
+// {
+// Part2Level15.CallAll();
+//   Level16.CallAll();
+//   Level17.CallAll();
+//   Level18.CallAll();
+//   Level19.CallAll();
+//   Level20.CallAll();
+//   Level21.CallAll();
+//   Level24.CallAll();
+//   Level25.CallAll();
+//   Level26.CallAll();
+//   Level27.CallAll();
+//   Level28.CallAll();
+//   Level29.CallAll();
+//   Level30.CallAll();
+//   Level31.CallAll();
+//   Level32.CallAll();
+// }
 
 // void CallPart3()
 // {
@@ -86,3 +112,22 @@ void CallPart2()
 //   Part5BonusLevelB.CallAll();
 //   Part5BonusLevelC.CallAll();
 // }
+
+public enum SectionGroupType
+{
+  Book,
+  Part,
+  Level,
+}
+
+public enum SectionType
+{
+  Group,
+  Challenge,
+  BossBattle,
+  KnowledgeCheck,
+  SpeedrunCheck,
+  GlossaryCheck,
+  Snippet,
+  Experiment
+}

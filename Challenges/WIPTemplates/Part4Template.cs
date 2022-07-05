@@ -38,7 +38,7 @@ public static class PartFour
   /// Boss Battle (Core) 1/9: Building Character 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void BuildingCharacter()
@@ -55,7 +55,7 @@ public static class PartFour
   /// Boss Battle (Core) 2/9: The True Programmer 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheTrueProgrammer()
@@ -72,7 +72,7 @@ public static class PartFour
   /// Boss Battle (Core) 3/9: Actions and Players 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void ActionsAndPlayers()
@@ -89,7 +89,7 @@ public static class PartFour
   /// Boss Battle (Core) 4/9: Attacks 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void Attacks()
@@ -106,7 +106,7 @@ public static class PartFour
   /// Boss Battle (Core) 5/9: Damage and HP 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void DamageAndHP()
@@ -123,7 +123,7 @@ public static class PartFour
   /// Boss Battle (Core) 6/9: Death 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void Death()
@@ -140,7 +140,7 @@ public static class PartFour
   /// Boss Battle (Core) 7/9: Battle Series 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void BattleSeries()
@@ -157,7 +157,7 @@ public static class PartFour
   /// Boss Battle (Core) 8/9: The Uncoded One 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheUncodedOne()
@@ -174,7 +174,7 @@ public static class PartFour
   /// Boss Battle (Core) 9/9: The Player Decides 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void ThePlayerDecides()
@@ -191,7 +191,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 1/9: The Game's Status 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheGamesStatus()
@@ -208,7 +208,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 2/9: Items 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void Items()
@@ -225,7 +225,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 3/9: Gear 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void Gear()
@@ -242,7 +242,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 4/9: Stolen Inventory 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void StolenInventory()
@@ -259,7 +259,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 5/9: Vin Fletcher 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void VinFletcher()
@@ -276,7 +276,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 6/9: Attack Modifiers 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void AttackModifiers()
@@ -293,7 +293,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 7/9: Damage Types 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void DamageTypes()
@@ -310,7 +310,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 8/9: Making it Your Own 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void MakingItYourOwn()
@@ -327,7 +327,7 @@ public static class PartFour
   /// Boss Battle (Expansion) 9/9: Restoring Balance 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void RestoringBalance()

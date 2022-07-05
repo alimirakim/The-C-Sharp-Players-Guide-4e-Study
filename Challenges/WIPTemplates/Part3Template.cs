@@ -64,7 +64,7 @@ public static class PartThree
   /// Challenge 1/2: The Feud 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheFeud()
@@ -81,7 +81,7 @@ public static class PartThree
   /// Challenge 2/2: Dueling Traditions 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void DuelingTraditions()
@@ -98,7 +98,7 @@ public static class PartThree
   /// Challenge 1/2: Safer Number Crunching 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void SaferNumberCrunching()
@@ -128,7 +128,7 @@ public static class PartThree
   /// Challenge 2/2: Better Random 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void BetterRandom()
@@ -145,7 +145,7 @@ public static class PartThree
   /// Challenge 1/1: Exepti's Game 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void ExeptisGame()
@@ -162,7 +162,7 @@ public static class PartThree
   /// Challenge 1/1: The Sieve 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheSieve()
@@ -192,7 +192,7 @@ public static class PartThree
   /// Challenge 1/1: The Automatic Tree Harvester 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheAutomaticTreeHarvester()
@@ -222,7 +222,7 @@ public static class PartThree
   /// Challenge 1/1: The Lambda Sieve 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheLambdaSieve()
@@ -239,7 +239,7 @@ public static class PartThree
   /// Challenge 1/1: The Long Game 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheLongGame()
@@ -256,7 +256,7 @@ public static class PartThree
   /// Challenge 1/1: The Potion Masters of Pattren 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void ThePotionMastersOfPattren()
@@ -286,7 +286,7 @@ public static class PartThree
   /// Challenge 1/3: Navigating Operand City 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void NavigatingOperandCity()
@@ -303,7 +303,7 @@ public static class PartThree
   /// Challenge 2/3: Indexing Operand City 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void IndexingOperandCity()
@@ -320,7 +320,7 @@ public static class PartThree
   /// Challenge 3/3: Converting Directions to Offsets 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void ConvertingDirectionsToOffsets()
@@ -350,7 +350,7 @@ public static class PartThree
   /// Challenge 1/1: The Three Lenses 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheThreeLenses()
@@ -367,7 +367,7 @@ public static class PartThree
   /// Challenge 1/1: The Repeating Stream 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheRepeatingStream()
@@ -397,7 +397,7 @@ public static class PartThree
   /// Challenge 1/2: Asynchronous Random Words 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void AsynchronousRandomWords()
@@ -414,7 +414,7 @@ public static class PartThree
   /// Challenge 2/2: Many Random Words 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void ManyRandomWords()
@@ -431,7 +431,7 @@ public static class PartThree
   /// Challenge 1/2: Uniter of Adds 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void UniterOfAdds()
@@ -448,7 +448,7 @@ public static class PartThree
   /// Challenge 2/2: The Robot Factory 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheRobotFactory()
@@ -491,7 +491,7 @@ public static class PartThree
   /// Challenge 1/2: Colored Console 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void ColoredConsole()
@@ -508,7 +508,7 @@ public static class PartThree
   /// Challenge 2/2: The Great Humanizer 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void TheGreatHumanizer()
@@ -525,7 +525,7 @@ public static class PartThree
   /// Knowledge Check Compiling 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void KnowledgeCheckCompiling()
@@ -555,7 +555,7 @@ public static class PartThree
   /// Challenge 1/1: Altar of Publication 
   ///<br/> 
   ///<br/> 
-  ///<br/> **Objectives:** 
+  ///<br/> OBJECTIVES: 
   ///<br/> 
   /// </summary>
   public static void AltarOfPublication()
