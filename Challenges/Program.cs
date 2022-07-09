@@ -8,28 +8,87 @@ using Template;
 // You should see the titles of each challenge. Fill out the empty methods to fulfill each challenge's objectives and see the results.
 // Comment out levels that you don't need to see anymore.
 
-
 Book book = new Book();
+
 book.Part1.Sections = new SectionGroup[] {
   new Level1(),
   new Level2(),
   new Level3(),
   new Level4(),
+  new Level5(),
+  new Level6(),
+  // new Level7(),
+  // new Level8(),
+  // new Level9(),
+  // new Level10(),
+  // new Level11(),
+  // new Level12(),
+  // new Level13(),
+  // new Level14(),
 };
+
+// book.Part2.Sections = new SectionGroup[] {
+//   new Level10(),
+//   new Level11(),
+//   new Level12(),
+//   new Level13(),
+//   new Level14(),
+//   new Level15(),
+//   new Level16(),
+//   new Level17(),
+//   new Level18(),
+//   new Level19(),
+//   new Level20(),
+//   new Level21(),
+//   new Level22(),
+//   new Level23(),
+//   new Level24(),
+//   new Level25(),
+//   new Level26(),
+//   new Level27(),
+//   new Level28(),
+//   new Level29(),
+//   new Level30(),
+//   new Level31(),
+//   new Level32(),
+// };
+
+// book.Part3.Sections = new SectionGroup[] {
+//   new Level33(),
+//   new Level34(),
+//   new Level35(),
+//   new Level36(),
+//   new Level37(),
+//   new Level38(),
+//   new Level39(),
+//   new Level40(),
+//   new Level41(),
+//   new Level42(),
+//   new Level43(),
+//   new Level44(),
+//   new Level45(),
+//   new Level46(),
+//   new Level47(),
+//   new Level48(),
+//   new Level49(),
+//   new Level50(),
+//   new Level51(),
+// };
+
+// book.Part4.Sections = new SectionGroup[] {
+//   new Level52(),
+//   new Level53(),
+// };
+
+// book.Part5.Sections = new SectionGroup[] {
+//   new BonusLevelA(),
+//   new BonusLevelB(),
+//   new BonusLevelC(),
+// };
 
 book.WriteTitle(true);
 book.Run();
 
-// TYPE DEFINITIONS
-public class Level : SectionGroup
-{
-  private string _speedrun;
-  public Level(string title, Section[]? sections = null, string speedrun="") 
-  : base(title, SectionGroupType.Level, sections ?? new Section[] { })
-  {
-    _speedrun = speedrun;
-  }
-}
 
 
 // CallPart1();

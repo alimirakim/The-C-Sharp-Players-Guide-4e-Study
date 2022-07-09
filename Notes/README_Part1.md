@@ -1,20 +1,19 @@
 # Part 1: The Basics
 
-Add TOC here
-1. The C# Programming Language
-2. Getting an IDE
-3. Hello World: Your First Program
-4. Comments
-5. Variables
-6. The C# Type System
-7. Math
-8. Console 2.0
-9. Decision Making
-10. Switches
-11. Looping
-12. Arrays
-13. Methods
-14. Memory Management
+- 1. The C# Programming Language
+- 2. Getting an IDE
+- 3. Hello World: Your First Program
+- 4. Comments
+- 5. Variables
+- 6. The C# Type System
+- 7. Math
+- 8. Console 2.0
+- 9. Decision Making
+- 10. Switches
+- 11. Looping
+- 12. Arrays
+- 13. Methods
+- 14. Memory Management
 
 ## Level 1: The C# Programming Language
 ### Speedrun

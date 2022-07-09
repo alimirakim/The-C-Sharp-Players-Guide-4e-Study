@@ -14,7 +14,7 @@
 04. [x] Comments
 05. [x] Variables
 06. [x] The C# Type System
-07. [x]  Math
+07. [x] Math
 08. [x] Console 2.0
 09. [x] Decision Making
 10. [x] Switches
