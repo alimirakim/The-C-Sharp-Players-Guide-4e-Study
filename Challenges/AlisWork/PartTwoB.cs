@@ -720,7 +720,7 @@ public static class PartTwoB
   /// Boss Battle (Core) 1/7: The Fountain of Objects 
   /// The game The Fountain of Objects is a 2D grid-based world full of rooms. Most rooms are empty, but a few are unique rooms. One room is the cavern entrance. One room is the fountain room, containing the Fountain of Objects.
   /// 
-  /// The player moves through the cavern system, one room at a time to find the Fountain of Objects. They activat it and then return to the entrance room. If they do this without falling into a pit, they win the game.
+  /// The player moves through the cavern system, one room at a time to find the Fountain of Objects. They activate it and then return to the entrance room. If they do this without falling into a pit, they win the game.
   /// 
   /// Unnatural darkness pervades the caverns, preventing both natural and human-made light. The player must navigate the caverns in the dark, relying on their sense of smell and hearing to determine what room they are in and what dangers lurk in nearby rooms.
   /// 
