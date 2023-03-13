@@ -17,40 +17,25 @@ public static class PartTwoB
     Console.WriteLine(divider);
   }
 
-  public enum TestyEnum { First=1, Second, Third}
-
   public static void CallAll()
   {
-    TestyEnum testy = default;
-    TestyEnum testerinos = (TestyEnum)500;
-    Console.WriteLine(testerinos);
-
-    string result = testy switch
-    {
-      TestyEnum.First => "first!",
-      TestyEnum.Second => "second sucks",
-      TestyEnum.Third => "i am last :C",
-      _ => "what am i",
-    };
-    Console.WriteLine(result);
-
-    // PackingInventory();
-    // LabelingInventory();
-    // TheOldRobot();
-    // RoboticInterface();
-    // RoomCoordinates();
-    // WarPreparations();
-    // ColoredItems();
-    // TheFountainOfObjects();
-    // SmallMediumOrLarge();
-    // Pits();
-    // Maelstroms();
-    // Amaroks();
-    // GettingArmed();
-    // GettingHelp();
-    // TheRobotPilot();
-    // TimeInTheCavern();
-    // ListsOfCommands();
+    PackingInventory();
+    LabelingInventory();
+    TheOldRobot();
+    RoboticInterface();
+    RoomCoordinates();
+    WarPreparations();
+    ColoredItems();
+    TheFountainOfObjects();
+    SmallMediumOrLarge();
+    Pits();
+    Maelstroms();
+    Amaroks();
+    GettingArmed();
+    GettingHelp();
+    TheRobotPilot();
+    TimeInTheCavern();
+    ListsOfCommands();
   }
 
   // *************************************************************************************************
@@ -262,6 +247,150 @@ public static class PartTwoB
 
   }
 
+    public class NewInventoryItem
+    {
+        public string Name { get; }
+        public float Weight { get; }
+        public float Volume { get; }
+
+        public NewInventoryItem(string name, float weight, float volume)
+        {
+            Name = name;
+            Weight = weight;
+            Volume = volume;
+        }
+    }
+
+    public class NewArrow : NewInventoryItem
+    {
+        public NewArrow()
+        {
+            Name = "Arrow";
+            Weight = 0.1;
+            Volume = 0.05;
+        }
+    }
+
+    public class NewBow : NewInventoryItem
+    {
+        public NewBow()
+        {
+            Name = "Bow";
+            Weight = 1.0;
+            Volume = 4.0;
+        }
+    }
+
+    public class NewPack
+    {
+        public static FillPackPrompt()
+        {
+            NewPack pack = new NewPack(5, 20, 20);
+            pack.WritePackSize();
+
+            do
+            {
+                Console.WriteLine(@"What would you like in the pack?
+                1 - Arrow
+                2 - Bow
+                etc..");
+                string option = Console.ReadLine();
+                NewInventoryItem? newItem = option switch
+                {
+                    case "1" => new NewArrow(),
+                    case "2" => new NewBow(),
+                    default => null;
+
+                }
+
+            } while (!pack.CheckIsPackFull())
+
+            Console.WriteLine("Yay, your pack is full!");
+            pack.WritePackContents();
+
+        }
+
+        public NewInventoryItem[] NewPackItems { get; }
+        public float MaxWeight { get; }
+        public float MaxVolume { get; }
+        public float CurrentWeight 
+        { 
+            get 
+            {
+                float currentWeight = 0;
+                foreach (NewInventoryItem item in NewPackIems) currentWeight += item.Weight;
+                return currentWeight;
+            }
+        }
+        public float CurrentVolume
+        {
+            get
+            {
+                float currentVolume = 0;
+                foreach (NewInventoryItem item in NewPackItems) currentVolume += item.Volume;
+                return currentVolume;
+            }
+        }
+        public uint CurrentItemCount
+        {
+
+        }
+
+
+
+
+
+
+
+
+        public NewPack(uint numberOfItems, float maxWeight, float maxVolume)
+        {
+            NewPackItems = new NewInventoryItem[numberOfItems];
+            MaxWeight = maxWeight;
+            MaxVolume = maxVolume;
+        }
+
+        public void WritePackSize() => Console.WriteLine($"Your pack is big enough to hold {Convert.ToString(NewPackItems.Length)} items, {Convert.ToString(MaxWeight)}lbs in weight, and {Convert.ToString(MaxVolume)} in volume.");
+    public void WritePackContents() => Console.WriteLine("TODO");
+
+        public bool Add(NewInventoryItem item)
+        {
+            bool isPackFull = CheckIsPackFull(item);
+            if (isPackFull)
+            {
+                Console.WriteLine("You can't add that item. It won't fit in the pack.");
+            }
+
+        }
+
+        public bool CheckIsVolumeValid(float startVolume = 0)
+        {
+            float accVolume = startVolume;
+            foreach (NewInventoryItem item in NewPackItems) accVolume += item.Volume;
+            if (accVolume > MaxVolume) return false;
+            return true;
+        }
+
+        public bool CheckIsWeightValid(float startWeight = 0)
+        {
+            float accWeight = startWeight;
+            foreach (NewInventoryItem item in NewPackItems) accWeight += item.Weight;
+            if (accWeight > MaxWeight) return false;
+            return true;
+        }
+
+        public bool CheckIsPackFull(NewInventoryItem? item)
+        {
+            // TODO Check for how many valid items in array
+            bool isPackNotFull = true;
+
+            bool isVolumeValid = CheckIsVolumeValid(item ? item.Volume : 0);
+            bool isWeightValid = CheckIsWeightValid(item ? item.Weight : 0);
+            if (!isPackNotFull || !isVolumeValid || !isWeightValid) return false;
+
+            return true;
+        }
+    }
 
   ///<summary>
   /// LEVEL 25: Inheritance 
@@ -779,8 +908,35 @@ public static class PartTwoB
   {
     WriteTitle("The Fountain of Objects");
 
+    // maze - keeping track of the maze layout, tracking object locations inside the maze
+    // player + prompts - see, hear, smell
+    // fountain + entrance
+    // game loop
+
 
   }
+
+public record MazeObject(char Letter, string Description);
+
+public class Maze
+{
+    public char[,] Grid { get; init; }
+
+    public Maze(int rows, int columns)
+    {
+        Grid = new char[rows, columns];
+    }
+
+    public bool PlaceObject(MazeObject object, int row, int column)
+    {
+        // TODO
+    }
+
+    public void DrawMaze()
+    {
+
+    }
+}
 
   // *************************************************************************************************
 
