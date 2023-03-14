@@ -19,18 +19,18 @@ public static class PartTwoA
   public static void CallAll()
   {
     // TOC
-    KnowledgeCheckObjects();
+    // KnowledgeCheckObjects();
     // SimulasTest();
     // SimulasSoups();
     // VinFletchersArrows();
-    VinsTrouble();
-    ThePropertiesOfArrows();
+    // VinsTrouble();
+    // ThePropertiesOfArrows();
     // ArrowFactories();
-    ThePoint();
-    TheColor();
-    TheCard();
-    // TheLockedDoor();
-    // ThePasswordValidator();
+    // ThePoint();
+    // TheColor();
+    // TheCard();
+    TheLockedDoor();
+    ThePasswordValidator();
     RockPaperScissors();
     FifteenPuzzle();
     Hangman();

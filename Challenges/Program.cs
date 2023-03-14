@@ -1,6 +1,6 @@
 ﻿
 using System;
-using Template;
+// using Template;
 
 // Instructions:
 // cd into Challenges/ folder.
@@ -8,24 +8,30 @@ using Template;
 // You should see the titles of each challenge. Fill out the empty methods to fulfill each challenge's objectives and see the results.
 // Comment out levels that you don't need to see anymore.
 
-Book book = new Book();
+// ALMYKI'S CHALLENGE ANSWERS
+// Complete.PartOne.CallAll();
+// Complete.PartTwoA.CallAll();
+// Complete.PartTwoB.CallAll();
+Complete.PartTwoC.CallAll();
 
-book.Part1.Sections = new SectionGroup[] {
-  new Level1(),
-  new Level2(),
-  new Level3(),
-  new Level4(),
-  new Level5(),
-  new Level6(),
-  // new Level7(),
-  // new Level8(),
-  // new Level9(),
-  // new Level10(),
-  // new Level11(),
-  // new Level12(),
-  // new Level13(),
-  // new Level14(),
-};
+//Book book = new Book();
+
+//book.Part1.Sections = new SectionGroup[] {
+//new Level1(),
+//new Level2(),
+//new Level3(),
+//new Level4(),
+//new Level5(),
+//new Level6(),
+// new Level7(),
+// new Level8(),
+// new Level9(),
+// new Level10(),
+// new Level11(),
+// new Level12(),
+// new Level13(),
+// new Level14(),
+//};
 
 // book.Part2.Sections = new SectionGroup[] {
 //   new Level10(),
@@ -86,8 +92,8 @@ book.Part1.Sections = new SectionGroup[] {
 //   new BonusLevelC(),
 // };
 
-book.WriteTitle(true);
-book.Run();
+//book.WriteTitle(true);
+// book.Run();
 
 
 
@@ -98,9 +104,6 @@ book.Run();
 // CallPart3();
 // CallPart4();
 // CallPart5();
-
-// Complete.PartTwoA.CallAll();
-// Complete.PartTwoB.CallAll();
 
 // void CallPart1()
 // {
