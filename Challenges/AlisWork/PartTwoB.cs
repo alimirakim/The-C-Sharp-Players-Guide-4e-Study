@@ -761,76 +761,82 @@ public static class PartTwoB
   public static void TheFountainOfObjects()
   {
     WriteTitle("The Fountain of Objects");
-    GameFountainOfObjects game = new GameFountainOfObjects((1,0), 5, 6);
+
+    GameFountainOfObjects game = new GameFountainOfObjects(5, 4, (1, 1));
     game.RunGame();
   }
 
-    public enum PlayerAction { Unknown, Quit, North, East, South, West, EnableFountain }
-    public enum CavernLocation { Empty, Entrance, Fountain }  
-    
     public class GameFountainOfObjects
     {
         // properties
-        public CavernLocation[,] CavernGrid { get; init; }
+        public bool IsGameActive { get; set; } = true;
+        public bool IsFountainActive { get; set; } = false;
+        public int CurrentRow { get; set; } = 0;
+        public int CurrentCol { get; set; } = 0;
+        public CavernLocation[,] Cavern { get; set; } = new CavernLocation[5,5];
 
         // constructor
-        public GameFountainOfObjects((ushort, ushort) fountainLocation, ushort rowCount= 4, ushort colCount=4)
+        public GameFountainOfObjects(int rowCount, int colCount, (int, int) fountainCoordinates)
         {
-            (ushort r, ushort c) = fountainLocation;
+            (int x, int y) = fountainCoordinates;
 
-            // Safeguards game board size and validity of fountain location
-            if (rowCount > 100) rowCount = 4;
-            if (colCount > 100) colCount = 4;
-            if (r > rowCount || c > colCount)
-            {
-                r = rowCount;
-                c = colCount;
-            }
-
-            // initiates property
-            CavernGrid = new CavernLocation[rowCount,colCount];
-
-            // Adds locations into the multidimensional array
-
-
-            CavernGrid[r,c] = CavernLocation.Fountain;
-            CavernGrid[0,0] = CavernLocation.Entrance;
+            Cavern = new CavernLocation[rowCount, colCount];
+            Cavern[0,0] = CavernLocation.Entrance;
+            Cavern[x,y] = CavernLocation.Fountain;
         }
 
         // methods
-        public bool DescribeRoom(bool isFountainActive, CavernLocation location)
-        {
-            if (location == CavernLocation.Entrance)
-            { 
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("You see light coming from the cavern entrance. ");
-                if (isFountainActive)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("You activated the Fountain of Objects and escaped with your life!");
-                    Console.WriteLine("You win!");
-                    return true;
-                }
-            }
-
-            if (location == CavernLocation.Fountain)
-            {
-                Console.ForegroundColor = ConsoleColor.DarkCyan;
-                if (isFountainActive)
-                {
-                    Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
-                } else
-                {
-                    Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
-
-                }
-            }
-            return false;
-        }
-
         public void RunGame()
         {
+            IntroduceGame();
+            
+             while (IsGameActive)
+            {
+                DescribeRoom();
+
+                if (CheckWin()) 
+                {
+                    IsGameActive = false;
+                    break;
+                }
+
+                PlayerAction action = PromptPlayerAction();
+                switch (action)
+                {
+                    case PlayerAction.Quit:
+                        IsGameActive = false;
+                        break;
+
+                    case PlayerAction.Menu:
+                        DescribeMenu();
+                        break;
+
+                    case PlayerAction.EnableFountain:
+                        AttemptEnableFountain();
+                        break;
+
+                    case PlayerAction.North:
+                    case PlayerAction.East:
+                    case PlayerAction.South:
+                    case PlayerAction.West:
+                        AttemptMove(action);
+                        break;
+
+                    default:
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("You can't do that.");
+                        Console.WriteLine("");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        break;
+                }
+            }
+             Console.ReadLine();
+        }
+
+        public void IntroduceGame()
+        {
             Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("");
             Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
             Console.WriteLine("============================");
             Console.WriteLine(@"
@@ -838,152 +844,131 @@ Welcome, hero. You have entered a cavern filled with maze-like runes.
 You must find the fountain of objects, activate, and return to the entrance safely to win.
 Good luck...
 ");
-        
-            // Only used for testing
-            // WriteCavernGrid();
-
-            bool isGameActive = true;
-            bool isFountainActive = false;
-
-            ushort rowLocation = 0;
-            ushort colLocation = 0;
-            CavernLocation currentLocation = CavernGrid[rowLocation, colLocation];
-
-            while (isGameActive)
-            {
-            // State room location
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"You are in the room at (Row={rowLocation} Column={colLocation}).");
 
-            // Observe room details
-                    bool hasWon = DescribeRoom(isFountainActive, currentLocation);
-                    if (hasWon)
-                    {
-                        Console.ReadLine();
-                        isGameActive = false;
+            Console.WriteLine("menu:");
+            DescribeMenu();
+        }
+
+        public void DescribeRoom()
+        {   
+            Console.WriteLine($"You are in the room at (Row={CurrentRow} Column={CurrentCol}).");
+
+            CavernLocation location = Cavern[CurrentRow, CurrentCol];
+            switch (location)
+            {
+                case CavernLocation.Entrance:
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("You see light coming from the cavern entrance. ");
+
+                    if (IsFountainActive) Console.WriteLine(@"
+You activated the Fountain of Objects and escaped with your life!
+You win!");
                     break;
-                    }
 
-            // Prompt user action
+                case CavernLocation.Fountain:
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    if (IsFountainActive) Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
+                    else Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
+                    break;
+
+                default:
+                    Console.WriteLine("The room is empty.");
+                    break;
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public void DescribeMenu()
+        {
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("quit | menu | go north | go east | go south | go west | enable fountain");
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public PlayerAction PromptPlayerAction()
+        {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("What do you want to do? ");
-                Console.ForegroundColor = ConsoleColor.Magenta;
+            
+            Console.ForegroundColor = ConsoleColor.Magenta;
             string playerMove = Console.ReadLine();
-                Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("=================================");
-            PlayerAction? action = playerMove switch
+
+            PlayerAction action = playerMove switch
             {
-                "north" => PlayerAction.North,
-                "east" => PlayerAction.East,
-                "south" => PlayerAction.South,
-                "west" => PlayerAction.West,
+                "go north" => PlayerAction.North,
+                "go east" => PlayerAction.East,
+                "go south" => PlayerAction.South,
+                "go west" => PlayerAction.West,
                 "enable fountain" => PlayerAction.EnableFountain,
+                "menu" => PlayerAction.Menu,
                 "quit" => PlayerAction.Quit,
-                _ => null,
+                _ => PlayerAction.Unknown,
             };
 
-            // Carry out user action
-            switch (action)
-                {
-                    case PlayerAction.Quit:
-                        isGameActive = false;
-                        break;
-                    case PlayerAction.EnableFountain:
-                        if (currentLocation == CavernLocation.Fountain)
-                        { 
-                            if (isFountainActive == true)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!\n");
-                                Console.ForegroundColor = ConsoleColor.White;
-                            }
-                            else
-                            {
-                                isFountainActive = true;
-                            }
-                        } else
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-                        break;
-                    case PlayerAction.North:
-                    case PlayerAction.East:
-                    case PlayerAction.South:
-                    case PlayerAction.West:
-                        (ushort targetRow, ushort targetCol) = action switch
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("=================================");
 
-                        {
-                            PlayerAction.North => ((ushort)(rowLocation + 1), rowLocation),
-                            PlayerAction.East => (rowLocation, (ushort)(colLocation + 1)),
-                            PlayerAction.South => ((ushort)(rowLocation - 1), colLocation),
-                            PlayerAction.West => (rowLocation, (ushort)(colLocation - 1)),
-                            _ => (rowLocation, colLocation),
-                        };
+            return action;
+        }
 
-                            Console.Write(targetRow);
-                        if (targetRow > 100 && targetCol == 0)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-                        else if (targetRow > CavernGrid.GetLength(1) || targetCol > CavernGrid.GetLength(0))
-                        {
-                            Console.ForegroundColor = ConsoleColor.DarkGray;
-                            Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
-                            Console.ForegroundColor = ConsoleColor.White;
-                        }
-                        else
-                        {
-                            rowLocation = targetRow;
-                            colLocation = targetCol;
-                            currentLocation = CavernGrid[rowLocation, colLocation];
-                            Console.WriteLine("You walk into the " + action + " room.");
-                        }
-                        
-                        break;
-                    default:
-                        Console.WriteLine("I don't understand.");
-                        break;
+        public void AttemptEnableFountain()
+        {
+            bool isFountainHere = Cavern[CurrentRow, CurrentCol] == CavernLocation.Fountain;
+
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            if (isFountainHere)
+            {
+                if (!IsFountainActive) {
+                    IsFountainActive = true;
+                    Console.WriteLine("You activated the Fountain of Objects! Good job!");
                 }
+                else Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
+            }
+            else Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
+
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+            
+        public void AttemptMove(PlayerAction action)
+        {
+            (int targetRow, int targetCol) = action switch
+            {
+                PlayerAction.North => (CurrentRow + 1, CurrentCol),
+                PlayerAction.East => (CurrentRow, CurrentCol + 1),
+                PlayerAction.South => (CurrentRow - 1, CurrentCol),
+                PlayerAction.West => (CurrentRow, CurrentCol - 1),
+                _ => (CurrentRow, CurrentCol)
+            };
+            
+            bool isTargetOutside = targetRow == -1 && targetCol == 0;
+            bool isTargetOutOfBounds = targetRow > Cavern.GetLength(1) || targetRow < 0 || targetCol > Cavern.GetLength(0) || targetCol < 0;
+
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
+            if (isTargetOutside) Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
+            else if (isTargetOutOfBounds) Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
+            else
+            {
+                CurrentRow = targetRow;
+                CurrentCol = targetCol;
+                Console.WriteLine("You walk into the " + action + " room.");
+            }
+
+            Console.WriteLine("");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public bool CheckWin()
+        {
+            bool isPlayerAtEntrance = Cavern[CurrentRow, CurrentCol] == CavernLocation.Entrance;
+            return IsFountainActive && isPlayerAtEntrance;
         }
     }
-
-        public void WriteCavernGrid()
-        {
-            Console.WriteLine("CAVERN GRID:");
-            for (int i = 0; i < CavernGrid.GetLength(0); i++) {
-                for (int j = 0; j < CavernGrid.GetLength(1); j++)
-                {
-                    Console.Write("0");
-                    Console.Write(CavernGrid[i,j]);
-                }
-                Console.WriteLine();
-            }
-        }
-}
-
-
-
-  // *************************************************************************************************
-
-  ///<summary>
-  /// LEVEL 32: Some Useful Types 
-  /// Challenge /: The Robot Pilot 
-  /// When we first made the Hunting the Manticore game in Level 14, we required two human players: one to set up the Manticore's range from the  city and the other to destroy it. With `System.Random`, we can turn this into a single-player game by randomly picking the range for the   Manticore.
-  /// 
-  /// **Objectives:** 
-  /// [] Modify your Hunting the Manticore game to be a single-player game by having the computer pick a random range between 0 and 100.
-  /// [] Answer this question: How might you use inheritance, polymorphism, or interfaces to allow the game to be either a single player (the   computer randomly chooses the starting location and direction) or two players (the second human determines the starting location and direction)?
-  /// </summary>
-  public static void TheRobotPilot()
-  {
-    WriteTitle("The Robot Pilot");
-
-
-  }
 
   // *************************************************************************************************
 
@@ -1105,6 +1090,24 @@ Good luck...
   public static void GettingHelp()
   {
     WriteTitle("Getting Help");
+
+
+  }
+
+  // *************************************************************************************************
+
+  ///<summary>
+  /// LEVEL 32: Some Useful Types 
+  /// Challenge /: The Robot Pilot 
+  /// When we first made the Hunting the Manticore game in Level 14, we required two human players: one to set up the Manticore's range from the  city and the other to destroy it. With `System.Random`, we can turn this into a single-player game by randomly picking the range for the   Manticore.
+  /// 
+  /// **Objectives:** 
+  /// [] Modify your Hunting the Manticore game to be a single-player game by having the computer pick a random range between 0 and 100.
+  /// [] Answer this question: How might you use inheritance, polymorphism, or interfaces to allow the game to be either a single player (the   computer randomly chooses the starting location and direction) or two players (the second human determines the starting location and direction)?
+  /// </summary>
+  public static void TheRobotPilot()
+  {
+    WriteTitle("The Robot Pilot");
 
 
   }
