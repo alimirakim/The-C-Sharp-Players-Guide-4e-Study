@@ -723,12 +723,12 @@ public static class PartTwoB
   ///     0    1    2    3
   ///          Column
   ///        
-  /// [] The games flow works like this: The player is told what they can sense in the dark (see, here, smell). Then the player gets a chance to perform some action by typing it in. Then their chosen action is resolved (the player moves, the state of things in the game changes, checking for a win or loss, etc.). Then the loop repeats.
-  /// [] Most rooms are empty rooms, and there is nothing to sense. 
-  /// [] The player is in one of the rooms and can move between them by running the following commands: "move north", "move south", "move east", and "move west". The player should not be able to move past the edge of the map.
-  /// [] The room at (Row=0, Column=0) is the cavern entrance (and exit). The player should start here. The player can sense light coming from outside the cavern when in this room. ("You see light in this room coming from outside the cavern. This is the entrance.") 
-  /// [] The room at (Row=0, Column=2) is the fountain room, containing the Fountain of Objects itself. The Fountain can be either enabled or disabled. The player can hear the fountain but hears different things depending on if it is on or not.("You hear water dripping in this room. The Fountain of Objects is here!" or "You hear the rushing waters from the Fountain of Objects. It has been reactivated!" The fountain is off initially in the fountain room. The player can type the command "enable fountain" to enable it. If the player is not in the fountain room, there should be no effect, and the player should be told so.
-  /// [] The player wins by moving to the fountain room, enabling the Fountain of Objects, and then moving to the cavern entrance. If the player is in the entrance and the fountain is on, the player wins.
+  /// [x] The games flow works like this: The player is told what they can sense in the dark (see, here, smell). Then the player gets a chance to perform some action by typing it in. Then their chosen action is resolved (the player moves, the state of things in the game changes, checking for a win or loss, etc.). Then the loop repeats.
+  /// [x] Most rooms are empty rooms, and there is nothing to sense. 
+  /// [x] The player is in one of the rooms and can move between them by running the following commands: "move north", "move south", "move east", and "move west". The player should not be able to move past the edge of the map.
+  /// [x] The room at (Row=0, Column=0) is the cavern entrance (and exit). The player should start here. The player can sense light coming from outside the cavern when in this room. ("You see light in this room coming from outside the cavern. This is the entrance.") 
+  /// [x] The room at (Row=0, Column=2) is the fountain room, containing the Fountain of Objects itself. The Fountain can be either enabled or disabled. The player can hear the fountain but hears different things depending on if it is on or not.("You hear water dripping in this room. The Fountain of Objects is here!" or "You hear the rushing waters from the Fountain of Objects. It has been reactivated!" The fountain is off initially in the fountain room. The player can type the command "enable fountain" to enable it. If the player is not in the fountain room, there should be no effect, and the player should be told so.
+  /// [x] The player wins by moving to the fountain room, enabling the Fountain of Objects, and then moving to the cavern entrance. If the player is in the entrance and the fountain is on, the player wins.
   /// [] Use different colors to display the different types of text in the console window. For example, narrative items (intro, ending, etc.) may be magenta, descriptive text in white, input from the user in cyan, text describing entrance light in yellow, messages about the fountain in blue.
   /// An example of what the program might look like is shown below:
   /// **Sample Program:**
@@ -763,13 +763,6 @@ public static class PartTwoB
     WriteTitle("The Fountain of Objects");
     GameFountainOfObjects game = new GameFountainOfObjects((1,0), 5, 6);
     game.RunGame();
-
-    // maze - keeping track of the maze layout, tracking object locations inside the maze
-    // player + prompts - see, hear, smell
-    // fountain + entrance
-    // game loop
-
-
   }
 
 
@@ -796,8 +789,7 @@ public static class PartTwoB
 //    }
 //}
     public enum PlayerAction { Unknown, Quit, North, East, South, West, EnableFountain }
-    public enum CavernLocationType { Entrance, Fountain }
-    public record CavernLocation(CavernLocationType Location, string Description);
+    public enum CavernLocation { Empty, Entrance, Fountain }
 
 public class GameFountainOfObjects
 {
@@ -822,17 +814,39 @@ public class GameFountainOfObjects
             CavernGrid = new CavernLocation[rowCount,colCount];
 
             // Adds locations into the multidimensional array
-            CavernLocation entrance = new CavernLocation(CavernLocationType.Entrance, "You see light coming from the cavern entrance. ");
-            CavernLocation fountain = new CavernLocation(CavernLocationType.Fountain, "You hear water dripping in this room. The Fountain of Objects is here!");
 
-            CavernGrid[r,c] = fountain;
-            CavernGrid[0,0] = entrance;
+
+            CavernGrid[r,c] = CavernLocation.Fountain;
+            CavernGrid[0,0] = CavernLocation.Entrance;
         }
 
         // methods
-        public void DescribeRoom(CavernLocationType locationType, bool isFountainActive)
+        public bool DescribeRoom(bool isFountainActive, CavernLocation location)
         {
+            if (location == CavernLocation.Entrance)
+            { 
+                Console.WriteLine("You see light coming from the cavern entrance. ");
+                if (isFountainActive)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("You activated the Fountain of Objects and escaped with your life!");
+                    Console.WriteLine("You win!");
+                    return true;
+                }
+            }
 
+            if (location == CavernLocation.Fountain)
+            {
+                if (isFountainActive)
+                {
+                    Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
+                } else
+                {
+                    Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
+
+                }
+            }
+            return false;
         }
 
         public void RunGame()
@@ -851,7 +865,7 @@ Good luck...
 
             ushort rowLocation = 0;
             ushort colLocation = 0;
-            CavernLocation? currentLocation = CavernGrid[rowLocation, colLocation];
+            CavernLocation currentLocation = CavernGrid[rowLocation, colLocation];
 
             while (isGameActive)
             {
@@ -859,16 +873,18 @@ Good luck...
             Console.WriteLine($"You are in the room at (Row={rowLocation} Column={colLocation}).");
 
             // Observe room details
-            if (currentLocation != null)
-            {
-                    Console.WriteLine(currentLocation.Description);
-            }
+                    bool hasWon = DescribeRoom(isFountainActive, currentLocation);
+                    if (hasWon)
+                    {
+                        Console.ReadLine();
+                        isGameActive = false;
+                    break;
+                    }
 
             // Prompt user action
-            Console.WriteLine();
-            Console.WriteLine("=================================");
-            Console.WriteLine("What direction do you want to go?");
+            Console.Write("What do you want to do? ");
             string playerMove = Console.ReadLine();
+            Console.WriteLine("=================================");
             PlayerAction? action = playerMove switch
             {
                 "north" => PlayerAction.North,
@@ -887,16 +903,15 @@ Good luck...
                         isGameActive = false;
                         break;
                     case PlayerAction.EnableFountain:
-                        if (currentLocation?.Location == CavernLocationType.Fountain)
+                        if (currentLocation == CavernLocation.Fountain)
                         { 
                             if (isFountainActive == true)
                             {
-                                Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
+                                Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!\n");
                             }
                             else
                             {
                                 isFountainActive = true;
-                                Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
                             }
                         } else
                         {
@@ -944,7 +959,7 @@ Good luck...
                 for (int j = 0; j < CavernGrid.GetLength(1); j++)
                 {
                     Console.Write("0");
-                    Console.Write(CavernGrid[i,j]?.Location);
+                    Console.Write(CavernGrid[i,j]);
                 }
                 Console.WriteLine();
             }
