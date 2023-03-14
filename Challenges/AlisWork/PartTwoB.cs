@@ -19,13 +19,13 @@ public static class PartTwoB
 
   public static void CallAll()
   {
-    PackingInventory();
-    LabelingInventory();
-    TheOldRobot();
-    RoboticInterface();
-    RoomCoordinates();
-    WarPreparations();
-    ColoredItems();
+    // PackingInventory();
+    // LabelingInventory();
+    // TheOldRobot();
+    // RoboticInterface();
+    // RoomCoordinates();
+    // WarPreparations();
+    // ColoredItems();
     TheFountainOfObjects();
     SmallMediumOrLarge();
     Pits();
@@ -244,153 +244,7 @@ public static class PartTwoB
 
       WritePackContents();
     }
-
   }
-
-    public class NewInventoryItem
-    {
-        public string Name { get; }
-        public float Weight { get; }
-        public float Volume { get; }
-
-        public NewInventoryItem(string name, float weight, float volume)
-        {
-            Name = name;
-            Weight = weight;
-            Volume = volume;
-        }
-    }
-
-    public class NewArrow : NewInventoryItem
-    {
-        public NewArrow()
-        {
-            Name = "Arrow";
-            Weight = 0.1;
-            Volume = 0.05;
-        }
-    }
-
-    public class NewBow : NewInventoryItem
-    {
-        public NewBow()
-        {
-            Name = "Bow";
-            Weight = 1.0;
-            Volume = 4.0;
-        }
-    }
-
-    public class NewPack
-    {
-        public static FillPackPrompt()
-        {
-            NewPack pack = new NewPack(5, 20, 20);
-            pack.WritePackSize();
-
-            do
-            {
-                Console.WriteLine(@"What would you like in the pack?
-                1 - Arrow
-                2 - Bow
-                etc..");
-                string option = Console.ReadLine();
-                NewInventoryItem? newItem = option switch
-                {
-                    case "1" => new NewArrow(),
-                    case "2" => new NewBow(),
-                    default => null;
-
-                }
-
-            } while (!pack.CheckIsPackFull())
-
-            Console.WriteLine("Yay, your pack is full!");
-            pack.WritePackContents();
-
-        }
-
-        public NewInventoryItem[] NewPackItems { get; }
-        public float MaxWeight { get; }
-        public float MaxVolume { get; }
-        public float CurrentWeight 
-        { 
-            get 
-            {
-                float currentWeight = 0;
-                foreach (NewInventoryItem item in NewPackIems) currentWeight += item.Weight;
-                return currentWeight;
-            }
-        }
-        public float CurrentVolume
-        {
-            get
-            {
-                float currentVolume = 0;
-                foreach (NewInventoryItem item in NewPackItems) currentVolume += item.Volume;
-                return currentVolume;
-            }
-        }
-        public uint CurrentItemCount
-        {
-
-        }
-
-
-
-
-
-
-
-
-        public NewPack(uint numberOfItems, float maxWeight, float maxVolume)
-        {
-            NewPackItems = new NewInventoryItem[numberOfItems];
-            MaxWeight = maxWeight;
-            MaxVolume = maxVolume;
-        }
-
-        public void WritePackSize() => Console.WriteLine($"Your pack is big enough to hold {Convert.ToString(NewPackItems.Length)} items, {Convert.ToString(MaxWeight)}lbs in weight, and {Convert.ToString(MaxVolume)} in volume.");
-    public void WritePackContents() => Console.WriteLine("TODO");
-
-        public bool Add(NewInventoryItem item)
-        {
-            bool isPackFull = CheckIsPackFull(item);
-            if (isPackFull)
-            {
-                Console.WriteLine("You can't add that item. It won't fit in the pack.");
-            }
-
-        }
-
-        public bool CheckIsVolumeValid(float startVolume = 0)
-        {
-            float accVolume = startVolume;
-            foreach (NewInventoryItem item in NewPackItems) accVolume += item.Volume;
-            if (accVolume > MaxVolume) return false;
-            return true;
-        }
-
-        public bool CheckIsWeightValid(float startWeight = 0)
-        {
-            float accWeight = startWeight;
-            foreach (NewInventoryItem item in NewPackItems) accWeight += item.Weight;
-            if (accWeight > MaxWeight) return false;
-            return true;
-        }
-
-        public bool CheckIsPackFull(NewInventoryItem? item)
-        {
-            // TODO Check for how many valid items in array
-            bool isPackNotFull = true;
-
-            bool isVolumeValid = CheckIsVolumeValid(item ? item.Volume : 0);
-            bool isWeightValid = CheckIsWeightValid(item ? item.Weight : 0);
-            if (!isPackNotFull || !isVolumeValid || !isWeightValid) return false;
-
-            return true;
-        }
-    }
 
   ///<summary>
   /// LEVEL 25: Inheritance 
@@ -907,6 +761,8 @@ public static class PartTwoB
   public static void TheFountainOfObjects()
   {
     WriteTitle("The Fountain of Objects");
+    GameFountainOfObjects game = new GameFountainOfObjects((1,0), 5, 6);
+    game.RunGame();
 
     // maze - keeping track of the maze layout, tracking object locations inside the maze
     // player + prompts - see, hear, smell
@@ -916,27 +772,195 @@ public static class PartTwoB
 
   }
 
-public record MazeObject(char Letter, string Description);
 
-public class Maze
+
+//    public record MazeObject(char Letter, string Description);
+//
+//public class Maze
+//{
+//    public char[,] Grid { get; init; }
+//
+//    public Maze(int rows, int columns)
+//    {
+//        Grid = new char[rows, columns];
+//    }
+//
+//    public bool PlaceObject(MazeObject object, int row, int column)
+//    {
+//        // TODO
+//    }
+//
+//    public void DrawMaze()
+//    {
+//
+//    }
+//}
+    public enum PlayerAction { Unknown, Quit, North, East, South, West, EnableFountain }
+    public enum CavernLocationType { Entrance, Fountain }
+    public record CavernLocation(CavernLocationType Location, string Description);
+
+public class GameFountainOfObjects
 {
-    public char[,] Grid { get; init; }
+        // properties
+        public CavernLocation[,] CavernGrid { get; init; }
 
-    public Maze(int rows, int columns)
-    {
-        Grid = new char[rows, columns];
+        // constructor
+        public GameFountainOfObjects((ushort, ushort) fountainLocation, ushort rowCount= 4, ushort colCount=4)
+        {
+            (ushort r, ushort c) = fountainLocation;
+
+            // Safeguards game board size and validity of fountain location
+            if (rowCount > 100) rowCount = 4;
+            if (colCount > 100) colCount = 4;
+            if (r > rowCount || c > colCount)
+            {
+                r = rowCount;
+                c = colCount;
+            }
+
+            // initiates property
+            CavernGrid = new CavernLocation[rowCount,colCount];
+
+            // Adds locations into the multidimensional array
+            CavernLocation entrance = new CavernLocation(CavernLocationType.Entrance, "You see light coming from the cavern entrance. ");
+            CavernLocation fountain = new CavernLocation(CavernLocationType.Fountain, "You hear water dripping in this room. The Fountain of Objects is here!");
+
+            CavernGrid[r,c] = fountain;
+            CavernGrid[0,0] = entrance;
+        }
+
+        // methods
+        public void DescribeRoom(CavernLocationType locationType, bool isFountainActive)
+        {
+
+        }
+
+        public void RunGame()
+        {
+            Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
+            Console.WriteLine("============================");
+            Console.WriteLine(@"Welcome, hero. You have entered a cavern filled with maze-like runes.
+You must find the fountain of objects, activate, and return to the entrance safely to win.
+Good luck...
+");
+        
+            WriteCavernGrid();
+
+            bool isGameActive = true;
+            bool isFountainActive = false;
+
+            ushort rowLocation = 0;
+            ushort colLocation = 0;
+            CavernLocation? currentLocation = CavernGrid[rowLocation, colLocation];
+
+            while (isGameActive)
+            {
+            // State room location
+            Console.WriteLine($"You are in the room at (Row={rowLocation} Column={colLocation}).");
+
+            // Observe room details
+            if (currentLocation != null)
+            {
+                    Console.WriteLine(currentLocation.Description);
+            }
+
+            // Prompt user action
+            Console.WriteLine();
+            Console.WriteLine("=================================");
+            Console.WriteLine("What direction do you want to go?");
+            string playerMove = Console.ReadLine();
+            PlayerAction? action = playerMove switch
+            {
+                "north" => PlayerAction.North,
+                "east" => PlayerAction.East,
+                "south" => PlayerAction.South,
+                "west" => PlayerAction.West,
+                "enable fountain" => PlayerAction.EnableFountain,
+                "quit" => PlayerAction.Quit,
+                _ => null,
+            };
+
+            // Carry out user action
+            switch (action)
+                {
+                    case PlayerAction.Quit:
+                        isGameActive = false;
+                        break;
+                    case PlayerAction.EnableFountain:
+                        if (currentLocation?.Location == CavernLocationType.Fountain)
+                        { 
+                            if (isFountainActive == true)
+                            {
+                                Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
+                            }
+                            else
+                            {
+                                isFountainActive = true;
+                                Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
+                            }
+                        } else
+                        {
+                            Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
+                        }
+                        break;
+                    case PlayerAction.North:
+                    case PlayerAction.East:
+                    case PlayerAction.South:
+                    case PlayerAction.West:
+                        (ushort targetRow, ushort targetCol) = action switch
+
+                        {
+                            PlayerAction.North => ((ushort)(rowLocation + 1), rowLocation),
+                            PlayerAction.East => (rowLocation, (ushort)(colLocation + 1)),
+                            PlayerAction.South => ((ushort)(rowLocation - 1), colLocation),
+                            PlayerAction.West => (rowLocation, (ushort)(colLocation - 1)),
+                            _ => (rowLocation, colLocation),
+                        };
+
+                        if (targetRow > CavernGrid.GetLength(1) || targetCol > CavernGrid.GetLength(0))
+                        {
+                            Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
+                        }
+                        else
+                        {
+                            rowLocation = targetRow;
+                            colLocation = targetCol;
+                            currentLocation = CavernGrid[rowLocation, colLocation];
+                            Console.WriteLine("You walk into the " + action + " room.");
+                        }
+                        
+                        break;
+                    default:
+                        Console.WriteLine("I don't understand.");
+                        break;
+                }
+        }
     }
 
-    public bool PlaceObject(MazeObject object, int row, int column)
-    {
-        // TODO
-    }
+        public void WriteCavernGrid()
+        {
+            Console.WriteLine("CAVERN GRID:");
+            for (int i = 0; i < CavernGrid.GetLength(0); i++) {
+                for (int j = 0; j < CavernGrid.GetLength(1); j++)
+                {
+                    Console.Write("0");
+                    Console.Write(CavernGrid[i,j]?.Location);
+                }
+                Console.WriteLine();
+            }
+        }
 
-    public void DrawMaze()
-    {
 
-    }
+
 }
+
+public class Player
+{
+    // methods for every doable action?
+
+}
+
+
 
   // *************************************************************************************************
 
