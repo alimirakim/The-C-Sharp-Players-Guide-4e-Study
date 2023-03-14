@@ -729,7 +729,7 @@ public static class PartTwoB
   /// [x] The room at (Row=0, Column=0) is the cavern entrance (and exit). The player should start here. The player can sense light coming from outside the cavern when in this room. ("You see light in this room coming from outside the cavern. This is the entrance.") 
   /// [x] The room at (Row=0, Column=2) is the fountain room, containing the Fountain of Objects itself. The Fountain can be either enabled or disabled. The player can hear the fountain but hears different things depending on if it is on or not.("You hear water dripping in this room. The Fountain of Objects is here!" or "You hear the rushing waters from the Fountain of Objects. It has been reactivated!" The fountain is off initially in the fountain room. The player can type the command "enable fountain" to enable it. If the player is not in the fountain room, there should be no effect, and the player should be told so.
   /// [x] The player wins by moving to the fountain room, enabling the Fountain of Objects, and then moving to the cavern entrance. If the player is in the entrance and the fountain is on, the player wins.
-  /// [] Use different colors to display the different types of text in the console window. For example, narrative items (intro, ending, etc.) may be magenta, descriptive text in white, input from the user in cyan, text describing entrance light in yellow, messages about the fountain in blue.
+  /// [x] Use different colors to display the different types of text in the console window. For example, narrative items (intro, ending, etc.) may be magenta, descriptive text in white, input from the user in cyan, text describing entrance light in yellow, messages about the fountain in blue.
   /// An example of what the program might look like is shown below:
   /// **Sample Program:**
   ///   You are in the room at (Row=0, Column=0).
@@ -765,34 +765,11 @@ public static class PartTwoB
     game.RunGame();
   }
 
-
-
-//    public record MazeObject(char Letter, string Description);
-//
-//public class Maze
-//{
-//    public char[,] Grid { get; init; }
-//
-//    public Maze(int rows, int columns)
-//    {
-//        Grid = new char[rows, columns];
-//    }
-//
-//    public bool PlaceObject(MazeObject object, int row, int column)
-//    {
-//        // TODO
-//    }
-//
-//    public void DrawMaze()
-//    {
-//
-//    }
-//}
     public enum PlayerAction { Unknown, Quit, North, East, South, West, EnableFountain }
-    public enum CavernLocation { Empty, Entrance, Fountain }
-
-public class GameFountainOfObjects
-{
+    public enum CavernLocation { Empty, Entrance, Fountain }  
+    
+    public class GameFountainOfObjects
+    {
         // properties
         public CavernLocation[,] CavernGrid { get; init; }
 
@@ -825,6 +802,7 @@ public class GameFountainOfObjects
         {
             if (location == CavernLocation.Entrance)
             { 
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("You see light coming from the cavern entrance. ");
                 if (isFountainActive)
                 {
@@ -837,6 +815,7 @@ public class GameFountainOfObjects
 
             if (location == CavernLocation.Fountain)
             {
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
                 if (isFountainActive)
                 {
                     Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
@@ -851,14 +830,17 @@ public class GameFountainOfObjects
 
         public void RunGame()
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
             Console.WriteLine("============================");
-            Console.WriteLine(@"Welcome, hero. You have entered a cavern filled with maze-like runes.
+            Console.WriteLine(@"
+Welcome, hero. You have entered a cavern filled with maze-like runes.
 You must find the fountain of objects, activate, and return to the entrance safely to win.
 Good luck...
 ");
         
-            WriteCavernGrid();
+            // Only used for testing
+            // WriteCavernGrid();
 
             bool isGameActive = true;
             bool isFountainActive = false;
@@ -870,6 +852,7 @@ Good luck...
             while (isGameActive)
             {
             // State room location
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"You are in the room at (Row={rowLocation} Column={colLocation}).");
 
             // Observe room details
@@ -882,8 +865,11 @@ Good luck...
                     }
 
             // Prompt user action
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("What do you want to do? ");
+                Console.ForegroundColor = ConsoleColor.Magenta;
             string playerMove = Console.ReadLine();
+                Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("=================================");
             PlayerAction? action = playerMove switch
             {
@@ -907,7 +893,9 @@ Good luck...
                         { 
                             if (isFountainActive == true)
                             {
+                                Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!\n");
+                                Console.ForegroundColor = ConsoleColor.White;
                             }
                             else
                             {
@@ -915,7 +903,9 @@ Good luck...
                             }
                         } else
                         {
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                         break;
                     case PlayerAction.North:
@@ -932,9 +922,18 @@ Good luck...
                             _ => (rowLocation, colLocation),
                         };
 
-                        if (targetRow > CavernGrid.GetLength(1) || targetCol > CavernGrid.GetLength(0))
+                            Console.Write(targetRow);
+                        if (targetRow > 100 && targetCol == 0)
                         {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
+                        else if (targetRow > CavernGrid.GetLength(1) || targetCol > CavernGrid.GetLength(0))
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
                             Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                         else
                         {
@@ -964,15 +963,6 @@ Good luck...
                 Console.WriteLine();
             }
         }
-
-
-
-}
-
-public class Player
-{
-    // methods for every doable action?
-
 }
 
 
