@@ -232,15 +232,15 @@ You lose.");
                     break;
                 default:
                     // TODO Filter array to not include repeats?
-                    CavernLocation[] adjacentRoomsWithSideEffects = CheckAdjacentRooms();
-                    
-                    foreach (CavernLocation adjacentRoom in adjacentRoomsWithSideEffects)
-                    {
-                        adjacentRoom switch
-                        {
-                            CavernLocation.Pit => Console.WriteLine("You feel ")
-                        }
-                    }
+                    // CavernLocation[] adjacentRoomsWithSideEffects = CheckAdjacentRooms();
+                    // 
+                    // foreach (CavernLocation adjacentRoom in adjacentRoomsWithSideEffects)
+                    // {
+                    //     adjacentRoom switch
+                    //     {
+                    //         CavernLocation.Pit => Console.WriteLine("You feel ")
+                    //     };
+                    // }
                     Console.WriteLine("The room is empty.");
                     break;
             }
@@ -248,11 +248,11 @@ You lose.");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public CavernLocation[] CheckAdjacentRooms()
-        {
-            // CavernLocation[] adjacentRooms = {CavernLocation}
-            return new CavernLocation[]() { CavernLocation.Pit };
-        }
+        // public CavernLocation[] CheckAdjacentRooms()
+        // {
+        //     // CavernLocation[] adjacentRooms = {CavernLocation}
+        //     return new CavernLocation[]() { CavernLocation.Pit };
+        // }
 
         public void DescribeMenu()
         {
