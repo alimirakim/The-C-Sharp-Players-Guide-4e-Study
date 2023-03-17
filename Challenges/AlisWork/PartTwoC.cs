@@ -162,7 +162,7 @@ public static class PartTwoC
 
     public class GameMap
     {
-        public static readonly Coordinate FountainCoordinateSmall = new Coordinate(2,2);
+        public static readonly Coordinate FountainCoordinateSmall = new Coordinate(1,1);
         public static readonly Coordinate FountainCoordinateMedium = new Coordinate(4,4);
         public static readonly Coordinate FountainCoordinateLarge = new Coordinate(8,8);
 
@@ -194,7 +194,7 @@ public static class PartTwoC
             MapItem fountain = new MapItem(
                 "Fountain", 
                 "You hear water dripping in this room. The Fountain of Objects is here!", 
-                ConsoleColor.Blue
+                ConsoleColor.Cyan
             );
 
             Map[0,0] = entrance;
@@ -227,7 +227,7 @@ public static class PartTwoC
             switch (Size)
             {
                 case GameMapSize.Small:
-                    Map[1,1] = pit;
+                    Map[0,1] = pit;
                     break;
                 case GameMapSize.Medium:
                     Map[2,3] = pit;
@@ -249,6 +249,8 @@ public static class PartTwoC
 
     public enum GameMapSize { Small, Medium, Large }
     public record Coordinate(int X, int Y);
+
+    // TODO Does populating 2D array with records fill it with default records or null?
     public record MapItem(
         string Name="Empty", 
         string Description="The room is empty.", 
@@ -351,9 +353,13 @@ Good luck...
         {   
             Console.WriteLine($"You are in the room at (Row={CurrentRow} Column={CurrentCol}).");
             MapItem currentMapItem = Map.Map[CurrentRow, CurrentCol];
+            if (currentMapItem != null)
+            {
             Console.ForegroundColor = currentMapItem.Color;
             Console.WriteLine(currentMapItem.Description);
             Console.ForegroundColor = ConsoleColor.White;
+
+            }
 
 //                     if (IsFountainActive) Console.WriteLine(@"
 // You activated the Fountain of Objects and escaped with your life!
