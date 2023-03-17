@@ -105,6 +105,172 @@ public static class PartTwoC
 // ability to sense adjacent rooms
 // ability to emit side-effects for adjacent rooms
 
+    // Map
+    //   Tracks map size
+    //   Tracks location of items inside
+    //   Tracks adjacencies
+
+
+
+    // Items of interest? - entrance, fountain, pits
+    //   Tracks its state (on, off, etc)
+    //   Description (state-dependent)
+    //   Associated color
+    //   Possible interactions?
+
+    // Game
+    //   Runs game
+    //   Houses everything together
+
+    // UI
+    //   Menu options
+    //   Controls colors?
+
+    // Player
+    //   Tracks location
+    //   
+
+
+
+//public interface GameMap
+//    {
+//        public MapItem[,] Map;
+//        public GameMapSize Size;
+//
+//        public void PrintMap()
+//        public void InsertItemAt(MapItem item, Coordinate coordinate)
+//        public Coordinate FindItemCoordinate(MapItem item)
+//        public MapItem[] CheckAdjacentCoordinates(Coordinate coordinate)
+//        public void MoveItem(Coordinate itemCoordinate, Coordinate newItemCoordinate)
+//
+//    }
+
+// public interface IMapItem
+// {
+//     ConsoleColor Color { get; }
+//     string Name { get; }
+//     string Description { get; }
+// 
+//     void WriteDescription();
+// }
+// 
+// public class Fountain : IMapItem
+//     {
+//         public ConsoleColor Color { get; } = ConsoleColor.Blue;
+// 
+//     }
+
+
+public class MainGame
+    {
+        // properties
+        public GameMap Map { get; set; }
+        public bool IsGameActive { get; set; } = true;
+        
+        public void RunGame()
+        {
+            IntroduceGame();
+            Map = new GameMap(UI.PromptGameSize());
+
+            while (IsGameActive)
+            { 
+
+            }
+        }
+    }
+
+
+
+
+    public class GameMap
+    {
+        public static readonly Coordinate FountainCoordinateSmall = (2,2);
+        public static readonly Coordinate FountainCoordinateMedium = (4,4);
+        public static readonly Coordinate FountainCoordinateLarge = (8,8);
+
+        public MapItem[,] Map { get; init; }
+        public GameMapSize Size { get; init; }
+        public Coordinate FountainCoordinate { get; set; }
+
+        public GameMap(GameMapSize size)
+        {
+            Size = size;
+            Map = MapItem[size, size];
+            PopulateMap();
+        }
+
+        public void PopulateMap()
+        {
+            MapItem entrance = new MapItem(
+                "Entrance",
+                "You see light coming from the cavern entrance.",
+                ConsoleColor.Yellow
+            );
+            MapItem fountain = new MapItem(
+                "Fountain", 
+                "You hear water dripping in this room. The Fountain of Objects is here!", 
+                ConsoleColor.Blue
+            );
+
+            Map[0,0] = entrance;
+
+            FountainCoordinate = Size switch
+            {
+                GameMapSize.Small => GameMap.FountainCoordinateSmall,
+                GameMapSize.Medium => GameMap.FountainCoordinateMedium,
+                GameMapSize.Large => GameMap.FountainCoordinateLarge,
+                _ => new Coordinate(1,1);
+            };
+
+            Map[FountainCoordinate.X, FountainCoordinate.Y] = fountain;
+        }
+
+        public void EnableFountain()
+        {
+            Map[FountainCoordinate.X, FountainCoordinate.Y] = Map[FountainCoordinate.X, FountainCoordinate.Y] 
+                with { Description = "You hear the rushing waters from the Fountain of Objects. It has been reactivated!"}
+        }
+
+        public void AddPits()
+        {
+            MapItem pit = new MapItem(
+                "Pit",
+                "It was a trap! You fell into a pit and died.",
+                ConsoleColor.Red
+            );
+
+            switch (Size)
+            {
+                case GameMapSize.Small:
+                    Map[1,1] = pit;
+                    break;
+                case GameMapSize.Medium:
+                    Map[2,3] = pit;
+                    break;
+                case GameMap.Large:
+                    Map[6,6] = pit;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void PrintMap()
+        {
+            // TODO
+        }
+
+    }
+
+    public enum GameMapSize { Small, Medium, Large }
+    public record Coordinate(int X, int Y);
+    public record MapItem(
+        string Name="Empty", 
+        string Description="The room is empty.", 
+        ConsoleColor Color=ConsoleColor.Gray
+        );
+
+
 
   public static void TheFountainOfObjects()
   {
@@ -124,23 +290,17 @@ public static class PartTwoC
         public bool IsFountainActive { get; set; } = false;
         public int CurrentRow { get; set; } = 0;
         public int CurrentCol { get; set; } = 0;
-        public CavernLocation[,] Cavern { get; set; } = new CavernLocation[5,5];
+        public GameMap Map { get; set; }
 
         // constructor
-        public GameFountainOfObjects(int rowCount, int colCount, (int, int) fountainCoordinates)
-        {
-            (int x, int y) = fountainCoordinates;
-
-            Cavern = new CavernLocation[rowCount, colCount];
-            Cavern[0,0] = CavernLocation.Entrance;
-            Cavern[x,y] = CavernLocation.Fountain;
-        }
+        // Unnecessary?
 
         // methods
         public void RunGame()
         {
             IntroduceGame();
-            PromptPlayerChooseGameSize();
+            GameMap Map = PromptPlayerChooseGameSize();
+            Map.AddPits();
             
              while (IsGameActive)
             {
@@ -205,54 +365,23 @@ Good luck...
         public void DescribeRoom()
         {   
             Console.WriteLine($"You are in the room at (Row={CurrentRow} Column={CurrentCol}).");
+            Map[CurrentRow, CurrentCol].WriteDescription();
 
-            CavernLocation location = Cavern[CurrentRow, CurrentCol];
-            switch (location)
-            {
-                case CavernLocation.Entrance:
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("You see light coming from the cavern entrance. ");
+//                     if (IsFountainActive) Console.WriteLine(@"
+// You activated the Fountain of Objects and escaped with your life!
+// You win!");
+//                     break;
+// 
+//                 case CavernLocation.Fountain:
+//                     Console.ForegroundColor = ConsoleColor.Blue;
+//                     if (IsFountainActive) Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
+//                     else Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
+// 
+//                     Console.WriteLine(@"
+// It was a trap! You fell into a pit and died.
+// You lose.");
 
-                    if (IsFountainActive) Console.WriteLine(@"
-You activated the Fountain of Objects and escaped with your life!
-You win!");
-                    break;
-
-                case CavernLocation.Fountain:
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    if (IsFountainActive) Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
-                    else Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
-                    break;
-
-                case CavernLocation.Pit:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(@"
-It was a trap! You fell into a pit and died.
-You lose.");
-                    break;
-                default:
-                    // TODO Filter array to not include repeats?
-                    // CavernLocation[] adjacentRoomsWithSideEffects = CheckAdjacentRooms();
-                    // 
-                    // foreach (CavernLocation adjacentRoom in adjacentRoomsWithSideEffects)
-                    // {
-                    //     adjacentRoom switch
-                    //     {
-                    //         CavernLocation.Pit => Console.WriteLine("You feel ")
-                    //     };
-                    // }
-                    Console.WriteLine("The room is empty.");
-                    break;
-            }
-
-            Console.ForegroundColor = ConsoleColor.White;
         }
-
-        // public CavernLocation[] CheckAdjacentRooms()
-        // {
-        //     // CavernLocation[] adjacentRooms = {CavernLocation}
-        //     return new CavernLocation[]() { CavernLocation.Pit };
-        // }
 
         public void DescribeMenu()
         {
@@ -290,7 +419,7 @@ You lose.");
 
         public void AttemptEnableFountain()
         {
-            bool isFountainHere = Cavern[CurrentRow, CurrentCol] == CavernLocation.Fountain;
+            bool isFountainHere = Map[CurrentRow, CurrentCol].Name == "Fountain";
 
             Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -299,6 +428,11 @@ You lose.");
                 if (!IsFountainActive) {
                     IsFountainActive = true;
                     Console.WriteLine("You activated the Fountain of Objects! Good job!");
+                    Map[CurrentRow, CurrentCol] = new MapItem(
+                        "Fountain",
+                        "You hear the rushing waters from the Fountain of Objects. It has been reactivated!",
+                        ConsoleColor.Blue
+                        );
                 }
                 else Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
             }
@@ -339,7 +473,7 @@ You lose.");
 
         public bool CheckWin()
         {
-            bool isPlayerAtEntrance = Cavern[CurrentRow, CurrentCol] == CavernLocation.Entrance;
+            bool isPlayerAtEntrance = CurrentRow == 0 && CurrentCol == 0;
             return IsFountainActive && isPlayerAtEntrance;
         }
 
@@ -351,30 +485,17 @@ You lose.");
 3 - Large (8x8)
 ");
             
-            bool isOptionValid = false;
-
-            while (!isOptionValid)
+            while (true)
             {
                 string option = Console.ReadLine();
                 switch (option)
                 {
                     case "1":
-                        Cavern = new CavernLocation[4,4];
-                        Cavern[1,1] = CavernLocation.Fountain;
-                        isOptionValid = true;
-                        break;
+                        return GameMapSize.Small;
                     case "2":
-                        Cavern = new CavernLocation[6,6];
-                        Cavern[0,0] = CavernLocation.Entrance;
-                        Cavern[3,5] = CavernLocation.Fountain;
-                        isOptionValid = true;
-                        break;
+                        return GameMapSize.Medium;
                     case "3":
-                        Cavern = new CavernLocation[8,8];
-                        Cavern[0,0] = CavernLocation.Entrance;
-                        Cavern[8,0] = CavernLocation.Fountain;
-                        isOptionValid = true;
-                        break;
+                        return GameMapSize.Large;
                     default:
                         Console.WriteLine("That's not an option.");
                         break;
@@ -382,7 +503,6 @@ You lose.");
                 }
                 
             }
-            Cavern[0,0] = CavernLocation.Entrance;
         }
 
     }
