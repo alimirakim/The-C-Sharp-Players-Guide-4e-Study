@@ -1,5 +1,6 @@
 
 using System;
+using static Complete.PartTwoC;
 using static System.Console;
 
 namespace Complete;
@@ -160,7 +161,16 @@ public static class PartTwoC
 // 
 //     }
 
-    public class GameMap
+
+  public static void TheFountainOfObjects()
+  {
+    WriteTitle("The Fountain of Objects");
+
+    GameFountainOfObjects game = new GameFountainOfObjects();
+    game.RunGame();
+  }
+
+        public class GameMap
     {
         public static readonly Vector FountainCoordinateSmall = new Vector(1,1);
         public static readonly Vector FountainCoordinateMedium = new Vector(4,4);
@@ -240,6 +250,14 @@ public static class PartTwoC
             }
         }
 
+        public void CheckAdjacentRooms(Vector coordinate)
+        {
+            // TODO
+            // Check NSWE for content
+            // Return bool yes/no if pits are found.
+            // Create separate methods for every type of detectable adjacent hazard.
+        }
+
         public void PrintMap()
         {
             // TODO
@@ -271,8 +289,13 @@ public static class PartTwoC
         }
     }
 
-    public enum GameMapSize { Small, Medium, Large }
-    public record Vector(int X, int Y);
+public enum Direction { North, East, South, West }
+
+public enum GameMapSize { Small, Medium, Large }
+
+public record Vector(int X, int Y);
+
+public record GamePlayer(Vector Coordinate, bool IsAlive);
 
     // TODO Does populating 2D array with records fill it with default records or null?
     public record MapItem(
@@ -281,71 +304,209 @@ public static class PartTwoC
         ConsoleColor Color=ConsoleColor.Gray
         );
 
-public enum Direction { North, East, South, West }
+public enum GameColorStatus { Default, Death, Prompt, PlayerInput, Water, Light, Descriptive }
 
-public class GamePlayer
+public static class GameUI
     {
-        // properties
-        public Vector Coordinate { get; set; } = new Vector(0,0);
-        public bool IsAlive { get; set; } = true;
+        // methods
+        public static void IntroduceGame()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("");
+            Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
+            Console.WriteLine("============================");
+            Console.WriteLine(@"
+Welcome, hero. You have entered a cavern filled with maze-like rooms.
+You must find the fountain of objects, activate, and return to the entrance safely to win.
+Good luck...
+");
+            SetGameColor();
 
-        // constructor
-        // N/A
+            Console.WriteLine("menu:");
+            DescribeMenu();
+        }
+
+        public static GameMapSize PromptPlayerChooseGameSize()
+        {
+            Console.WriteLine(@"What size map do you want to play in?
+1 - Small (4x4)
+2 - Medium (6x6)
+3 - Large (8x8)
+");
+            
+            while (true)
+            {
+                SetGameColor(GameColorStatus.PlayerInput);
+                string option = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (option)
+                {
+                    case "1":
+                        return GameMapSize.Small;
+                    case "2":
+                        return GameMapSize.Medium;
+                    case "3":
+                        return GameMapSize.Large;
+                    default:
+                        Console.WriteLine("That's not an option.");
+                        break;
+                        
+                }
+
+                SetGameColor();
+                DrawBorder();
+            }
+        }
+
+        public static void DescribePlayerCoordinate(Vector coordinate)
+        {
+            Console.WriteLine($"You are in the room at (Row={coordinate.X} Column={coordinate.Y}).");
+        }
+
+        public static void SetGameColor(GameColorStatus status=GameColorStatus.Default)
+        {
+            Console.ForegroundColor = status switch
+            {
+                GameColorStatus.Death => ConsoleColor.Red,
+                GameColorStatus.Prompt => ConsoleColor.DarkMagenta,
+                GameColorStatus.PlayerInput => ConsoleColor.Magenta,
+                GameColorStatus.Water => ConsoleColor.Cyan,
+                GameColorStatus.Light => ConsoleColor.Yellow,
+                GameColorStatus.Descriptive => ConsoleColor.DarkGray,
+                _ => ConsoleColor.White,
+            };
+        }
+
+        public static void DescribeRoom(MapItem roomContent)
+        {   
+            if (roomContent == null)
+            {
+                SetGameColor(GameColorStatus.Descriptive);
+                Console.WriteLine("The room is empty.");
+            } else
+            {
+                Console.ForegroundColor = roomContent.Color;
+                Console.WriteLine(roomContent.Description);
+            }
+
+            SetGameColor();
+        }
+
+        public static void DescribeWin()
+        {
+            SetGameColor(GameColorStatus.Light);
+            Console.WriteLine(@"
+You activated the Fountain of Objects and escaped with your life!
+You win!");
+        }
+
+        public static void DescribeLoss()
+        {
+            SetGameColor(GameColorStatus.Death);
+            Console.WriteLine("You lose.");
+
+        }
+
+        public static void DescribeEnableFountain(bool isAbsent, bool isDisabled)
+        {
+            SetGameColor(GameColorStatus.Descriptive);
+            if (isAbsent && isDisabled)
+                Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
+            else if (isDisabled)
+                Console.WriteLine("You activated the Fountain of Objects! Good job!");
+            else 
+                Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
+            SetGameColor();
+            Console.WriteLine();
+        }
+
+        public static void DescribeAttemptMove(bool isAttemptingExit, bool isAttemptingOutOfBounds, Direction direction)
+        {
+            SetGameColor(GameColorStatus.Descriptive);
+
+            if (isAttemptingExit) 
+                Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
+            else if (isAttemptingOutOfBounds) 
+                Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
+            else
+                Console.WriteLine("You walk into the " + direction + " room.");
+
+            Console.WriteLine();
+            SetGameColor();
+        }
+
+        public static void DescribeDenyAction()
+        {
+            SetGameColor(GameColorStatus.Descriptive);
+            Console.WriteLine("You can't do that.");
+            Console.WriteLine();
+            SetGameColor();
+        }
+
+        public static void DescribeMenu()
+        {
+            SetGameColor(GameColorStatus.Descriptive);
+            Console.WriteLine("quit | menu | go north | go east | go south | go west | enable fountain");
+            Console.WriteLine();
+            SetGameColor();
+        }
+
+        public static string PromptPlayerAction()
+        {
+            SetGameColor(GameColorStatus.Prompt);
+            Console.Write("What do you want to do? ");
+            
+            SetGameColor(GameColorStatus.PlayerInput);
+            string action = Console.ReadLine().ToLowerInvariant();
+
+            SetGameColor();
+            DrawBorder();
+
+            return action;
+        }
+
+        public static void DrawBorder()
+        {
+            Console.WriteLine("=================================");
+
+        }
     }
-
-
-  public static void TheFountainOfObjects()
-  {
-    WriteTitle("The Fountain of Objects");
-
-    GameFountainOfObjects game = new GameFountainOfObjects();
-    game.RunGame();
-  }
-
-    public enum CavernLocation { Unknown, Entrance, Fountain, Pit }
-    public enum PlayerAction { Unknown, Menu, Quit, North, South, East, West, EnableFountain }
 
     public class GameFountainOfObjects
     {
         // properties
         public bool IsGameActive { get; set; } = true;
         public bool IsFountainActive { get; set; } = false;
-        public GamePlayer Player { get; } = new GamePlayer(); 
-        public int CurrentRow { get; set; } = 0;
-        public int CurrentCol { get; set; } = 0;
+        public GamePlayer Player { get; set; } = new GamePlayer(new Vector(0,0), true); 
         public GameMap Map { get; set; }
-
-        // constructor
-        // Unnecessary?
 
         // methods
         public void RunGame()
         {
-            IntroduceGame();
-            Map = new GameMap(PromptPlayerChooseGameSize());
+            GameUI.IntroduceGame();
+            Map = new GameMap(GameUI.PromptPlayerChooseGameSize());
             Map.AddPits();
             
              while (IsGameActive)
             {
-                DescribeRoom();
+                GameUI.DescribePlayerCoordinate(Player.Coordinate);
+                GameUI.DescribeRoom(Map.Map[Player.Coordinate.X, Player.Coordinate.Y]);
 
                 if (CheckWin()) 
                 {
-                    Console.WriteLine(@"
-You activated the Fountain of Objects and escaped with your life!
-You win!");
+                    GameUI.DescribeWin();
                     IsGameActive = false;
                     break;
                 }
                 if (CheckLoss())
                 {
-                    Console.WriteLine("You lose.");
+                    GameUI.DescribeLoss();
                     IsGameActive = false;
                     break;
-
                 }
 
-                string action = PromptPlayerAction();
+                string action = GameUI.PromptPlayerAction();
                 switch (action)
                 {
                     case "quit":
@@ -353,7 +514,7 @@ You win!");
                         break;
 
                     case "menu":
-                        DescribeMenu();
+                        GameUI.DescribeMenu();
                         break;
 
                     case "enable fountain":
@@ -374,130 +535,37 @@ You win!");
                         break;
 
                     default:
-                        Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.WriteLine("You can't do that.");
-                        Console.WriteLine("");
-                        Console.ForegroundColor = ConsoleColor.White;
+                        GameUI.DescribeDenyAction();
                         break;
                 }
             }
              Console.ReadLine();
         }
 
-        public void IntroduceGame()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("");
-            Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
-            Console.WriteLine("============================");
-            Console.WriteLine(@"
-Welcome, hero. You have entered a cavern filled with maze-like runes.
-You must find the fountain of objects, activate, and return to the entrance safely to win.
-Good luck...
-");
-            Console.ForegroundColor = ConsoleColor.White;
-
-            Console.WriteLine("menu:");
-            DescribeMenu();
-        }
-
-        public void DescribeRoom()
-        {   
-            Console.WriteLine($"You are in the room at (Row={Player.Coordinate.X} Column={Player.Coordinate.Y}).");
-
-            MapItem currentMapItem = Map.Map[Player.Coordinate.X, Player.Coordinate.Y];
-
-            if (currentMapItem == null)
-            {
-                Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("The room is empty.");
-            } else
-            {
-                Console.ForegroundColor = currentMapItem.Color;
-                Console.WriteLine(currentMapItem.Description);
-            }
-
-            Console.ForegroundColor = ConsoleColor.White;
-
-//                     if (IsFountainActive) Console.WriteLine(@"
-// You activated the Fountain of Objects and escaped with your life!
-// You win!");
-//                     break;
-// 
-//                 case CavernLocation.Fountain:
-//                     Console.ForegroundColor = ConsoleColor.Blue;
-//                     if (IsFountainActive) Console.WriteLine("You hear the rushing waters from the Fountain of Objects. It has been reactivated!");
-//                     else Console.WriteLine("You hear water dripping in this room. The Fountain of Objects is here!");
-// 
-//                     Console.WriteLine(@"
-// It was a trap! You fell into a pit and died.
-// You lose.");
-
-        }
-
-        public void DescribeMenu()
-        {
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("quit | menu | go north | go east | go south | go west | enable fountain");
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        public string PromptPlayerAction()
-        {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("What do you want to do? ");
-            
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            string action = Console.ReadLine().ToLowerInvariant();
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("=================================");
-
-            return action;
-        }
-
-
         public void AttemptEnableFountain()
         {
-            bool isFountainHere = Map.Map[Player.Coordinate.X, Player.Coordinate.Y]?.Name == "Fountain";
+            bool isFountainHere = CheckLocation() == "Fountain";
 
-            Console.ForegroundColor = ConsoleColor.Gray;
+            // Must do this before changing IsFountainActive status.
+            GameUI.DescribeEnableFountain(!isFountainHere, !IsFountainActive);
 
-            if (isFountainHere)
+            if (isFountainHere && !IsFountainActive) 
             {
-                if (!IsFountainActive) {
-                    IsFountainActive = true;
-                    Map.EnableFountain();
-                    Console.WriteLine("You activated the Fountain of Objects! Good job!");
-                }
-                else Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
+                IsFountainActive = true;
+                Map.EnableFountain();
             }
-            else Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
-
-            Console.WriteLine("");
-            Console.ForegroundColor = ConsoleColor.White;
+            
         }
             
         public void AttemptMove(Direction direction)
         {
             Vector originalCoordinate = Player.Coordinate;
-            Player.Coordinate = Map.AttemptMove(Player.Coordinate, direction);
+            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, direction) };
 
             bool isTargetOutside = Map.CheckIsMovingOutside(originalCoordinate, direction);
             bool isTargetOutOfBounds = originalCoordinate == Player.Coordinate;
 
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-
-            if (isTargetOutside) 
-                Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
-            else if (isTargetOutOfBounds) 
-                Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
-            else
-                Console.WriteLine("You walk into the " + direction + " room.");
-
-            Console.WriteLine("");
-            Console.ForegroundColor = ConsoleColor.White;
+            GameUI.DescribeAttemptMove(isTargetOutside, isTargetOutOfBounds, direction);
         }
 
         public string CheckLocation()
@@ -513,37 +581,9 @@ Good luck...
 
         public bool CheckWin()
         {
-            bool isPlayerAtEntrance = Player.Coordinate.X == 0 && Player.Coordinate.Y == 0;
-            return IsFountainActive && isPlayerAtEntrance;
+            return IsFountainActive && CheckLocation() == "Entrance";
         }
 
-        public GameMapSize PromptPlayerChooseGameSize()
-        {
-            Console.WriteLine(@"What size map do you want to play in?
-1 - Small (4x4)
-2 - Medium (6x6)
-3 - Large (8x8)
-");
-            
-            while (true)
-            {
-                string option = Console.ReadLine();
-                switch (option)
-                {
-                    case "1":
-                        return GameMapSize.Small;
-                    case "2":
-                        return GameMapSize.Medium;
-                    case "3":
-                        return GameMapSize.Large;
-                    default:
-                        Console.WriteLine("That's not an option.");
-                        break;
-                        
-                }
-                
-            }
-        }
 
     }
 
