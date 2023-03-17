@@ -160,33 +160,11 @@ public static class PartTwoC
 // 
 //     }
 
-
-public class MainGame
-    {
-        // properties
-        public GameMap Map { get; set; }
-        public bool IsGameActive { get; set; } = true;
-        
-        public void RunGame()
-        {
-            IntroduceGame();
-            Map = new GameMap(UI.PromptGameSize());
-
-            while (IsGameActive)
-            { 
-
-            }
-        }
-    }
-
-
-
-
     public class GameMap
     {
-        public static readonly Coordinate FountainCoordinateSmall = (2,2);
-        public static readonly Coordinate FountainCoordinateMedium = (4,4);
-        public static readonly Coordinate FountainCoordinateLarge = (8,8);
+        public static readonly Coordinate FountainCoordinateSmall = new Coordinate(2,2);
+        public static readonly Coordinate FountainCoordinateMedium = new Coordinate(4,4);
+        public static readonly Coordinate FountainCoordinateLarge = new Coordinate(8,8);
 
         public MapItem[,] Map { get; init; }
         public GameMapSize Size { get; init; }
@@ -195,7 +173,14 @@ public class MainGame
         public GameMap(GameMapSize size)
         {
             Size = size;
-            Map = MapItem[size, size];
+
+            int dimension = size switch
+            {
+                GameMapSize.Small => 4,
+                GameMapSize.Medium => 6,
+                GameMapSize.Large => 8,
+            };
+            Map = new MapItem[dimension, dimension];
             PopulateMap();
         }
 
@@ -219,7 +204,7 @@ public class MainGame
                 GameMapSize.Small => GameMap.FountainCoordinateSmall,
                 GameMapSize.Medium => GameMap.FountainCoordinateMedium,
                 GameMapSize.Large => GameMap.FountainCoordinateLarge,
-                _ => new Coordinate(1,1);
+                _ => new Coordinate(1,1)
             };
 
             Map[FountainCoordinate.X, FountainCoordinate.Y] = fountain;
@@ -228,7 +213,7 @@ public class MainGame
         public void EnableFountain()
         {
             Map[FountainCoordinate.X, FountainCoordinate.Y] = Map[FountainCoordinate.X, FountainCoordinate.Y] 
-                with { Description = "You hear the rushing waters from the Fountain of Objects. It has been reactivated!"}
+                with { Description = "You hear the rushing waters from the Fountain of Objects. It has been reactivated!"};
         }
 
         public void AddPits()
@@ -247,7 +232,7 @@ public class MainGame
                 case GameMapSize.Medium:
                     Map[2,3] = pit;
                     break;
-                case GameMap.Large:
+                case GameMapSize.Large:
                     Map[6,6] = pit;
                     break;
                 default:
@@ -276,7 +261,7 @@ public class MainGame
   {
     WriteTitle("The Fountain of Objects");
 
-    GameFountainOfObjects game = new GameFountainOfObjects(5, 4, (1, 1));
+    GameFountainOfObjects game = new GameFountainOfObjects();
     game.RunGame();
   }
 
@@ -299,7 +284,7 @@ public class MainGame
         public void RunGame()
         {
             IntroduceGame();
-            GameMap Map = PromptPlayerChooseGameSize();
+            Map = new GameMap(PromptPlayerChooseGameSize());
             Map.AddPits();
             
              while (IsGameActive)
@@ -365,7 +350,10 @@ Good luck...
         public void DescribeRoom()
         {   
             Console.WriteLine($"You are in the room at (Row={CurrentRow} Column={CurrentCol}).");
-            Map[CurrentRow, CurrentCol].WriteDescription();
+            MapItem currentMapItem = Map.Map[CurrentRow, CurrentCol];
+            Console.ForegroundColor = currentMapItem.Color;
+            Console.WriteLine(currentMapItem.Description);
+            Console.ForegroundColor = ConsoleColor.White;
 
 //                     if (IsFountainActive) Console.WriteLine(@"
 // You activated the Fountain of Objects and escaped with your life!
@@ -419,7 +407,7 @@ Good luck...
 
         public void AttemptEnableFountain()
         {
-            bool isFountainHere = Map[CurrentRow, CurrentCol].Name == "Fountain";
+            bool isFountainHere = Map.Map[CurrentRow, CurrentCol].Name == "Fountain";
 
             Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -427,12 +415,8 @@ Good luck...
             {
                 if (!IsFountainActive) {
                     IsFountainActive = true;
+                    Map.EnableFountain();
                     Console.WriteLine("You activated the Fountain of Objects! Good job!");
-                    Map[CurrentRow, CurrentCol] = new MapItem(
-                        "Fountain",
-                        "You hear the rushing waters from the Fountain of Objects. It has been reactivated!",
-                        ConsoleColor.Blue
-                        );
                 }
                 else Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
             }
@@ -454,7 +438,7 @@ Good luck...
             };
             
             bool isTargetOutside = targetRow == -1 && targetCol == 0;
-            bool isTargetOutOfBounds = targetRow > Cavern.GetLength(1) || targetRow < 0 || targetCol > Cavern.GetLength(0) || targetCol < 0;
+            bool isTargetOutOfBounds = targetRow > Map.Map.GetLength(1) || targetRow < 0 || targetCol > Map.Map.GetLength(0) || targetCol < 0;
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
 
@@ -477,7 +461,7 @@ Good luck...
             return IsFountainActive && isPlayerAtEntrance;
         }
 
-        public void PromptPlayerChooseGameSize()
+        public GameMapSize PromptPlayerChooseGameSize()
         {
             Console.WriteLine(@"What size map do you want to play in?
 1 - Small (4x4)
