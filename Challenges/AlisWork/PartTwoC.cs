@@ -162,13 +162,13 @@ public static class PartTwoC
 
     public class GameMap
     {
-        public static readonly Coordinate FountainCoordinateSmall = new Coordinate(1,1);
-        public static readonly Coordinate FountainCoordinateMedium = new Coordinate(4,4);
-        public static readonly Coordinate FountainCoordinateLarge = new Coordinate(8,8);
+        public static readonly Vector FountainCoordinateSmall = new Vector(1,1);
+        public static readonly Vector FountainCoordinateMedium = new Vector(4,4);
+        public static readonly Vector FountainCoordinateLarge = new Vector(8,8);
 
         public MapItem[,] Map { get; init; }
         public GameMapSize Size { get; init; }
-        public Coordinate FountainCoordinate { get; set; }
+        public Vector FountainCoordinate { get; set; }
 
         public GameMap(GameMapSize size)
         {
@@ -204,7 +204,7 @@ public static class PartTwoC
                 GameMapSize.Small => GameMap.FountainCoordinateSmall,
                 GameMapSize.Medium => GameMap.FountainCoordinateMedium,
                 GameMapSize.Large => GameMap.FountainCoordinateLarge,
-                _ => new Coordinate(1,1)
+                _ => new Vector(1,1)
             };
 
             Map[FountainCoordinate.X, FountainCoordinate.Y] = fountain;
@@ -245,10 +245,34 @@ public static class PartTwoC
             // TODO
         }
 
+        // Return new coordinate if move in direction is valid on map.
+        // Else return original coordinate.
+        public Vector AttemptMove(Vector coordinate, Direction direction)
+        {
+            Vector newCoordinate = direction switch
+            {
+                Direction.North => coordinate with { X = coordinate.X + 1 },
+                Direction.East => coordinate with { Y = coordinate.Y + 1 },
+                Direction.South => coordinate with { X = coordinate.X - 1 },
+                Direction.West => coordinate with { Y = coordinate.Y - 1 },
+            };
+
+            if (newCoordinate.X < 0 || newCoordinate.X > Map.GetLength(0) || newCoordinate.Y < 0 || newCoordinate.Y > Map.GetLength(1)) 
+                return coordinate;
+            else return newCoordinate;
+        }
+
+        public bool CheckIsMovingOutside(Vector coordinate, Direction direction)
+        {
+            if (coordinate.X == 0 && coordinate.Y == 0 && direction == Direction.South) 
+                return true;
+            else
+                return false;
+        }
     }
 
     public enum GameMapSize { Small, Medium, Large }
-    public record Coordinate(int X, int Y);
+    public record Vector(int X, int Y);
 
     // TODO Does populating 2D array with records fill it with default records or null?
     public record MapItem(
@@ -257,6 +281,17 @@ public static class PartTwoC
         ConsoleColor Color=ConsoleColor.Gray
         );
 
+public enum Direction { North, East, South, West }
+
+public class GamePlayer
+    {
+        // properties
+        public Vector Coordinate { get; set; } = new Vector(0,0);
+        public bool IsAlive { get; set; } = true;
+
+        // constructor
+        // N/A
+    }
 
 
   public static void TheFountainOfObjects()
@@ -275,6 +310,7 @@ public static class PartTwoC
         // properties
         public bool IsGameActive { get; set; } = true;
         public bool IsFountainActive { get; set; } = false;
+        public GamePlayer Player { get; } = new GamePlayer(); 
         public int CurrentRow { get; set; } = 0;
         public int CurrentCol { get; set; } = 0;
         public GameMap Map { get; set; }
@@ -295,30 +331,46 @@ public static class PartTwoC
 
                 if (CheckWin()) 
                 {
+                    Console.WriteLine(@"
+You activated the Fountain of Objects and escaped with your life!
+You win!");
                     IsGameActive = false;
                     break;
                 }
+                if (CheckLoss())
+                {
+                    Console.WriteLine("You lose.");
+                    IsGameActive = false;
+                    break;
 
-                PlayerAction action = PromptPlayerAction();
+                }
+
+                string action = PromptPlayerAction();
                 switch (action)
                 {
-                    case PlayerAction.Quit:
+                    case "quit":
                         IsGameActive = false;
                         break;
 
-                    case PlayerAction.Menu:
+                    case "menu":
                         DescribeMenu();
                         break;
 
-                    case PlayerAction.EnableFountain:
+                    case "enable fountain":
                         AttemptEnableFountain();
                         break;
 
-                    case PlayerAction.North:
-                    case PlayerAction.East:
-                    case PlayerAction.South:
-                    case PlayerAction.West:
-                        AttemptMove(action);
+                    case "go north":
+                        AttemptMove(Direction.North);
+                        break;
+                    case "go east":
+                        AttemptMove(Direction.East);
+                        break;
+                    case "go south":
+                        AttemptMove(Direction.South);
+                        break;
+                    case "go west":
+                        AttemptMove(Direction.West);
                         break;
 
                     default:
@@ -351,15 +403,21 @@ Good luck...
 
         public void DescribeRoom()
         {   
-            Console.WriteLine($"You are in the room at (Row={CurrentRow} Column={CurrentCol}).");
-            MapItem currentMapItem = Map.Map[CurrentRow, CurrentCol];
-            if (currentMapItem != null)
-            {
-            Console.ForegroundColor = currentMapItem.Color;
-            Console.WriteLine(currentMapItem.Description);
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"You are in the room at (Row={Player.Coordinate.X} Column={Player.Coordinate.Y}).");
 
+            MapItem currentMapItem = Map.Map[Player.Coordinate.X, Player.Coordinate.Y];
+
+            if (currentMapItem == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("The room is empty.");
+            } else
+            {
+                Console.ForegroundColor = currentMapItem.Color;
+                Console.WriteLine(currentMapItem.Description);
             }
+
+            Console.ForegroundColor = ConsoleColor.White;
 
 //                     if (IsFountainActive) Console.WriteLine(@"
 // You activated the Fountain of Objects and escaped with your life!
@@ -385,25 +443,13 @@ Good luck...
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public PlayerAction PromptPlayerAction()
+        public string PromptPlayerAction()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write("What do you want to do? ");
             
             Console.ForegroundColor = ConsoleColor.Magenta;
-            string playerMove = Console.ReadLine();
-
-            PlayerAction action = playerMove switch
-            {
-                "go north" => PlayerAction.North,
-                "go east" => PlayerAction.East,
-                "go south" => PlayerAction.South,
-                "go west" => PlayerAction.West,
-                "enable fountain" => PlayerAction.EnableFountain,
-                "menu" => PlayerAction.Menu,
-                "quit" => PlayerAction.Quit,
-                _ => PlayerAction.Unknown,
-            };
+            string action = Console.ReadLine().ToLowerInvariant();
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("=================================");
@@ -411,9 +457,10 @@ Good luck...
             return action;
         }
 
+
         public void AttemptEnableFountain()
         {
-            bool isFountainHere = Map.Map[CurrentRow, CurrentCol].Name == "Fountain";
+            bool isFountainHere = Map.Map[Player.Coordinate.X, Player.Coordinate.Y]?.Name == "Fountain";
 
             Console.ForegroundColor = ConsoleColor.Gray;
 
@@ -432,38 +479,41 @@ Good luck...
             Console.ForegroundColor = ConsoleColor.White;
         }
             
-        public void AttemptMove(PlayerAction action)
+        public void AttemptMove(Direction direction)
         {
-            (int targetRow, int targetCol) = action switch
-            {
-                PlayerAction.North => (CurrentRow + 1, CurrentCol),
-                PlayerAction.East => (CurrentRow, CurrentCol + 1),
-                PlayerAction.South => (CurrentRow - 1, CurrentCol),
-                PlayerAction.West => (CurrentRow, CurrentCol - 1),
-                _ => (CurrentRow, CurrentCol)
-            };
-            
-            bool isTargetOutside = targetRow == -1 && targetCol == 0;
-            bool isTargetOutOfBounds = targetRow > Map.Map.GetLength(1) || targetRow < 0 || targetCol > Map.Map.GetLength(0) || targetCol < 0;
+            Vector originalCoordinate = Player.Coordinate;
+            Player.Coordinate = Map.AttemptMove(Player.Coordinate, direction);
+
+            bool isTargetOutside = Map.CheckIsMovingOutside(originalCoordinate, direction);
+            bool isTargetOutOfBounds = originalCoordinate == Player.Coordinate;
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
 
-            if (isTargetOutside) Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
-            else if (isTargetOutOfBounds) Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
+            if (isTargetOutside) 
+                Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
+            else if (isTargetOutOfBounds) 
+                Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
             else
-            {
-                CurrentRow = targetRow;
-                CurrentCol = targetCol;
-                Console.WriteLine("You walk into the " + action + " room.");
-            }
+                Console.WriteLine("You walk into the " + direction + " room.");
 
             Console.WriteLine("");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
+        public string CheckLocation()
+        {
+            return Map.Map[Player.Coordinate.X, Player.Coordinate.Y]?.Name;
+        }
+
+        public bool CheckLoss()
+        {
+            if (CheckLocation() == "Pit") return true;
+            else return false;
+        }
+
         public bool CheckWin()
         {
-            bool isPlayerAtEntrance = CurrentRow == 0 && CurrentCol == 0;
+            bool isPlayerAtEntrance = Player.Coordinate.X == 0 && Player.Coordinate.Y == 0;
             return IsFountainActive && isPlayerAtEntrance;
         }
 
