@@ -9,9 +9,9 @@ using System;
 // Comment out levels that you don't need to see anymore.
 
 // ALMYKI'S CHALLENGE ANSWERS
-// Complete.PartOne.CallAll();
-// Complete.PartTwoA.CallAll();
-// Complete.PartTwoB.CallAll();
+Complete.PartOne.CallAll();
+Complete.PartTwoA.CallAll();
+Complete.PartTwoB.CallAll();
 Complete.PartTwoC.CallAll();
 
 //Book book = new Book();
