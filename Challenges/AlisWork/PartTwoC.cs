@@ -163,9 +163,11 @@ public static class PartTwoC
 
 public enum Direction { North, East, South, West }
 
-public enum GameMapSize { Small, Medium, Large }
+public enum GameMapSize { None, Small, Medium, Large }
 
-public enum GameColorStatus { Default, Death, Prompt, PlayerInput, Water, Light, Descriptive }
+public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
+
+public enum RoomType { Empty, Entrance, Fountain, Pit }
 
 public record Vector(int X, int Y);
 
@@ -173,7 +175,7 @@ public record GamePlayer(Vector Coordinate, bool IsAlive);
 
 // TODO Does populating 2D array with records fill it with default records or null?
 public record MapItem(
-    string Name="Empty", 
+    RoomType Type=RoomType.Empty,
     string Description="The room is empty.", 
     ConsoleColor Color=ConsoleColor.Gray
     );
@@ -205,12 +207,12 @@ public class GameMap
         public void PopulateMap()
         {
             MapItem entrance = new MapItem(
-                "Entrance",
+                RoomType.Entrance,
                 "You see light coming from the cavern entrance.",
                 ConsoleColor.Yellow
             );
             MapItem fountain = new MapItem(
-                "Fountain", 
+                RoomType.Fountain,
                 "You hear water dripping in this room. The Fountain of Objects is here!", 
                 ConsoleColor.Cyan
             );
@@ -237,7 +239,7 @@ public class GameMap
         public void AddPits()
         {
             MapItem pit = new MapItem(
-                "Pit",
+                RoomType.Pit,
                 "It was a trap! You fell into a pit and died.",
                 ConsoleColor.Red
             );
@@ -258,12 +260,28 @@ public class GameMap
             }
         }
 
-        public void CheckAdjacentRooms(Vector coordinate)
+        public RoomType GetAdjacentRoomType(Vector coordinate, Direction direction)
         {
-            // TODO
-            // Check NSWE for content
-            // Return bool yes/no if pits are found.
-            // Create separate methods for every type of detectable adjacent hazard.
+            Vector adjacentCoordinate = AttemptMove(coordinate, direction);
+
+            // prevent logic bug that treats current room as an adjacent room
+            if (coordinate == adjacentCoordinate) 
+                return RoomType.Empty;
+
+            return Map[adjacentCoordinate.X, adjacentCoordinate.Y]?.Type ?? RoomType.Empty;
+        }
+
+        public bool CheckAdjacentRoomsForPits(Vector coordinate)
+        {
+            RoomType northRoom = GetAdjacentRoomType(coordinate, Direction.North);
+            RoomType eastRoom = GetAdjacentRoomType(coordinate, Direction.East);
+            RoomType southRoom = GetAdjacentRoomType(coordinate, Direction.South);
+            RoomType westRoom = GetAdjacentRoomType(coordinate, Direction.West);
+            RoomType[] adjacentRoomTypes = { northRoom, eastRoom, southRoom, westRoom };
+
+            bool isNearPit = Array.Exists(adjacentRoomTypes, roomType => roomType == RoomType.Pit);
+
+            return isNearPit;
         }
 
         public void PrintMap()
@@ -285,7 +303,8 @@ public class GameMap
 
             if (newCoordinate.X < 0 || newCoordinate.X > Map.GetLength(0) || newCoordinate.Y < 0 || newCoordinate.Y > Map.GetLength(1)) 
                 return coordinate;
-            else return newCoordinate;
+            else 
+                return newCoordinate;
         }
 
         public bool CheckIsMovingOutside(Vector coordinate, Direction direction)
@@ -319,35 +338,41 @@ Good luck...
 
         public static GameMapSize PromptPlayerChooseGameSize()
         {
-            Console.WriteLine(@"What size map do you want to play in?
-1 - Small (4x4)
+            Console.WriteLine(@"1 - Small (4x4)
 2 - Medium (6x6)
 3 - Large (8x8)
 ");
-            
-            while (true)
+
+            GameMapSize selectedMapSize = default(GameMapSize);
+
+            while (selectedMapSize == GameMapSize.None)
             {
+                SetGameColor(GameColorStatus.Prompt);
+                Console.Write("What size map do you want to play in? ");
                 SetGameColor(GameColorStatus.PlayerInput);
                 string option = Console.ReadLine();
-                Console.WriteLine();
+                SetGameColor();
 
                 switch (option)
                 {
                     case "1":
-                        return GameMapSize.Small;
+                        selectedMapSize = GameMapSize.Small;
+                        break;
                     case "2":
-                        return GameMapSize.Medium;
+                        selectedMapSize = GameMapSize.Medium;
+                        break;
                     case "3":
-                        return GameMapSize.Large;
+                        selectedMapSize = GameMapSize.Large;
+                        break;
                     default:
                         Console.WriteLine("That's not an option.");
                         break;
-                        
                 }
 
-                SetGameColor();
                 DrawBorder();
+                Console.WriteLine();
             }
+            return selectedMapSize;
         }
 
         public static void DescribePlayerCoordinate(Vector coordinate)
@@ -359,6 +384,7 @@ Good luck...
         {
             Console.ForegroundColor = status switch
             {
+                GameColorStatus.Warning => ConsoleColor.DarkRed,
                 GameColorStatus.Death => ConsoleColor.Red,
                 GameColorStatus.Prompt => ConsoleColor.DarkMagenta,
                 GameColorStatus.PlayerInput => ConsoleColor.Magenta,
@@ -382,6 +408,18 @@ Good luck...
             }
 
             SetGameColor();
+        }
+
+        public static void DescribeNearbyHazard(RoomType nearbyRoomType)
+        {
+            if (nearbyRoomType == RoomType.Pit)
+            {
+                Console.WriteLine();
+                SetGameColor(GameColorStatus.Warning);
+                Console.WriteLine("You feel a draft. There is a pit in a nearby  room....");
+                SetGameColor();
+                Console.WriteLine();
+            }
         }
 
         public static void DescribeWin()
@@ -483,6 +521,9 @@ You win!");
             {
                 GameUI.DescribePlayerCoordinate(Player.Coordinate);
                 GameUI.DescribeRoom(Map.Map[Player.Coordinate.X, Player.Coordinate.Y]);
+                bool isNearbyPit = Map.CheckAdjacentRoomsForPits(Player.Coordinate);
+                
+                GameUI.DescribeNearbyHazard(isNearbyPit ? RoomType.Pit : RoomType.Empty);
 
                 if (CheckWin()) 
                 {
@@ -535,7 +576,7 @@ You win!");
 
         public void AttemptEnableFountain()
         {
-            bool isFountainHere = CheckLocation() == "Fountain";
+            bool isFountainHere = CheckLocation() == RoomType.Fountain;
 
             // Must do this before changing IsFountainActive status.
             GameUI.DescribeEnableFountain(!isFountainHere, !IsFountainActive);
@@ -559,20 +600,20 @@ You win!");
             GameUI.DescribeAttemptMove(isTargetOutside, isTargetOutOfBounds, direction);
         }
 
-        public string CheckLocation()
+        public RoomType? CheckLocation()
         {
-            return Map.Map[Player.Coordinate.X, Player.Coordinate.Y]?.Name;
+            return Map.Map[Player.Coordinate.X, Player.Coordinate.Y]?.Type;
         }
 
         public bool CheckLoss()
         {
-            if (CheckLocation() == "Pit") return true;
+            if (CheckLocation() == RoomType.Pit) return true;
             else return false;
         }
 
         public bool CheckWin()
         {
-            return IsFountainActive && CheckLocation() == "Entrance";
+            return IsFountainActive && CheckLocation() == RoomType.Entrance;
         }
     }
 
