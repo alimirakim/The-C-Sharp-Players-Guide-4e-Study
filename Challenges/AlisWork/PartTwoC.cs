@@ -161,16 +161,24 @@ public static class PartTwoC
 // 
 //     }
 
+public enum Direction { North, East, South, West }
 
-  public static void TheFountainOfObjects()
-  {
-    WriteTitle("The Fountain of Objects");
+public enum GameMapSize { Small, Medium, Large }
 
-    GameFountainOfObjects game = new GameFountainOfObjects();
-    game.RunGame();
-  }
+public enum GameColorStatus { Default, Death, Prompt, PlayerInput, Water, Light, Descriptive }
 
-        public class GameMap
+public record Vector(int X, int Y);
+
+public record GamePlayer(Vector Coordinate, bool IsAlive);
+
+// TODO Does populating 2D array with records fill it with default records or null?
+public record MapItem(
+    string Name="Empty", 
+    string Description="The room is empty.", 
+    ConsoleColor Color=ConsoleColor.Gray
+    );
+
+public class GameMap
     {
         public static readonly Vector FountainCoordinateSmall = new Vector(1,1);
         public static readonly Vector FountainCoordinateMedium = new Vector(4,4);
@@ -288,23 +296,6 @@ public static class PartTwoC
                 return false;
         }
     }
-
-public enum Direction { North, East, South, West }
-
-public enum GameMapSize { Small, Medium, Large }
-
-public record Vector(int X, int Y);
-
-public record GamePlayer(Vector Coordinate, bool IsAlive);
-
-    // TODO Does populating 2D array with records fill it with default records or null?
-    public record MapItem(
-        string Name="Empty", 
-        string Description="The room is empty.", 
-        ConsoleColor Color=ConsoleColor.Gray
-        );
-
-public enum GameColorStatus { Default, Death, Prompt, PlayerInput, Water, Light, Descriptive }
 
 public static class GameUI
     {
@@ -583,9 +574,20 @@ You win!");
         {
             return IsFountainActive && CheckLocation() == "Entrance";
         }
-
-
     }
+
+  public static void TheFountainOfObjects()
+  {
+    WriteTitle("The Fountain of Objects");
+
+    GameFountainOfObjects game = new GameFountainOfObjects();
+    game.RunGame();
+  }
+
+
+
+
+
 
   // *************************************************************************************************
 
