@@ -167,7 +167,7 @@ public enum GameMapSize { None, Small, Medium, Large }
 
 public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
 
-public enum RoomType { Empty, Entrance, Fountain, Pit }
+public enum RoomType { Empty, Entrance, Fountain, Pit, Maelstrom }
 
 public record Vector(int X, int Y);
 
@@ -182,81 +182,105 @@ public record MapItem(
 
 public class GameMap
     {
-        public static readonly Vector FountainCoordinateSmall = new Vector(1,1);
-        public static readonly Vector FountainCoordinateMedium = new Vector(4,4);
-        public static readonly Vector FountainCoordinateLarge = new Vector(8,8);
-
+        // properties
         public MapItem[,] Map { get; init; }
-        public GameMapSize Size { get; init; }
-        public Vector FountainCoordinate { get; set; }
+        public GameMapSize Size { get; init; } = GameMapSize.Small;
+        public bool IsFountainEnabled { get; set; } = false;
 
+        // constructor
         public GameMap(GameMapSize size)
         {
             Size = size;
-
-            int dimension = size switch
-            {
-                GameMapSize.Small => 4,
-                GameMapSize.Medium => 6,
-                GameMapSize.Large => 8,
-            };
-            Map = new MapItem[dimension, dimension];
-            PopulateMap();
+            Map = GetPopulatedMap();
         }
 
-        public void PopulateMap()
+        // methods
+        public MapItem[,] GetPopulatedMap()
         {
-            MapItem entrance = new MapItem(
-                RoomType.Entrance,
-                "You see light coming from the cavern entrance.",
-                ConsoleColor.Yellow
-            );
-            MapItem fountain = new MapItem(
-                RoomType.Fountain,
-                "You hear water dripping in this room. The Fountain of Objects is here!", 
-                ConsoleColor.Cyan
-            );
+            MapItem _ = GetRoomOfType(RoomType.Empty);
+            MapItem E = GetRoomOfType(RoomType.Entrance);
+            MapItem F = GetRoomOfType(RoomType.Fountain);
+            MapItem P = GetRoomOfType(RoomType.Pit);
+            MapItem M = GetRoomOfType(RoomType.Maelstrom);
 
-            Map[0,0] = entrance;
-
-            FountainCoordinate = Size switch
+            switch (Size)
             {
-                GameMapSize.Small => GameMap.FountainCoordinateSmall,
-                GameMapSize.Medium => GameMap.FountainCoordinateMedium,
-                GameMapSize.Large => GameMap.FountainCoordinateLarge,
-                _ => new Vector(1,1)
-            };
-
-            Map[FountainCoordinate.X, FountainCoordinate.Y] = fountain;
+                case GameMapSize.Large:
+                    return new MapItem[8,8] {
+                        { M, _, _, _, _, _, _, _ },
+                        { _, _, _, _, _, _, _, _ },
+                        { _, _, _, M, _, M, _, _ },
+                        { _, _, _, _, F, _, _, _ },
+                        { _, _, _, _, _, _, _, _ },
+                        { _, _, P, _, _, _, P, _ },
+                        { _, _, _, _, _, _, _, _ },
+                        { _, _, _, _, E, _, _, P },
+                    };
+                case GameMapSize.Medium:
+                    return new MapItem[6,6] {
+                        { _, _, _, _, _, _ },
+                        { _, M, _, _, _, _ },
+                        { _, _, _, F, _, _ },
+                        { _, _, _, _, P, _ },
+                        { _, _, P, _, _, _ },
+                        { _, E, _, _, M, _ },
+                    };
+                default:
+                    return new MapItem[4,4] {
+                        { _, _, _, _ },
+                        { M, _, _, _ },
+                        { _, F, _, _ },
+                        { E, P, _, _ },
+                    };
+            }
         }
 
         public void EnableFountain()
         {
-            Map[FountainCoordinate.X, FountainCoordinate.Y] = Map[FountainCoordinate.X, FountainCoordinate.Y] 
-                with { Description = "You hear the rushing waters from the Fountain of Objects. It has been reactivated!"};
+            for (int row = 0; row < Map.GetLength(0); row++)
+            {
+                for (int col = 0; col < Map.GetLength(1); col++)
+                {
+                    if (Map[row,col].Type == RoomType.Fountain)
+                    {
+                        IsFountainEnabled = true;
+                        Map[row,col] = GetRoomOfType(RoomType.Fountain) 
+                            with { Description = "You hear the rushing waters from the Fountain of Objects. It has been reactivated!"};
+                    }
+                }
+            }
         }
 
-        public void AddPits()
+        public MapItem GetRoomOfType(RoomType type)
         {
-            MapItem pit = new MapItem(
-                RoomType.Pit,
-                "It was a trap! You fell into a pit and died.",
-                ConsoleColor.Red
-            );
-
-            switch (Size)
+            switch (type)
             {
-                case GameMapSize.Small:
-                    Map[0,1] = pit;
-                    break;
-                case GameMapSize.Medium:
-                    Map[2,3] = pit;
-                    break;
-                case GameMapSize.Large:
-                    Map[6,6] = pit;
-                    break;
+                case RoomType.Entrance:
+                    return new MapItem(
+                        RoomType.Entrance,
+                        "You see light coming from the cavern entrance.",
+                        ConsoleColor.Yellow
+                        );
+                case RoomType.Fountain:
+                    return new MapItem(
+                        RoomType.Fountain,
+                        "You hear water dripping in this room. The Fountain of Objects is here!", 
+                        ConsoleColor.Cyan
+                        );
+                case RoomType.Pit:
+                    return new MapItem(
+                        RoomType.Pit,
+                        "It was a trap! You fell into a pit and died.",
+                        ConsoleColor.Red
+                        );
+                case RoomType.Maelstrom:
+                    return new MapItem(
+                        RoomType.Maelstrom,
+                        "You encounter a maelstrom in the room! It blows you away!",
+                        ConsoleColor.Cyan
+                        );
                 default:
-                    break;
+                    return new MapItem();
             }
         }
 
@@ -271,22 +295,36 @@ public class GameMap
             return Map[adjacentCoordinate.X, adjacentCoordinate.Y]?.Type ?? RoomType.Empty;
         }
 
-        public bool CheckAdjacentRoomsForPits(Vector coordinate)
+        public RoomType[] GetAdjacentRoomTypes(Vector coordinate)
         {
             RoomType northRoom = GetAdjacentRoomType(coordinate, Direction.North);
             RoomType eastRoom = GetAdjacentRoomType(coordinate, Direction.East);
             RoomType southRoom = GetAdjacentRoomType(coordinate, Direction.South);
             RoomType westRoom = GetAdjacentRoomType(coordinate, Direction.West);
-            RoomType[] adjacentRoomTypes = { northRoom, eastRoom, southRoom, westRoom };
+            return new RoomType[] { northRoom, eastRoom, southRoom, westRoom };
+        }
 
-            bool isNearPit = Array.Exists(adjacentRoomTypes, roomType => roomType == RoomType.Pit);
+        public bool CheckAdjacentRoomsForType(Vector coordinate, RoomType type)
+        {
+            RoomType[] adjacentRoomTypes = GetAdjacentRoomTypes(coordinate);
+            bool isNearRoomType = Array.Exists(adjacentRoomTypes, roomType => roomType == type);
 
-            return isNearPit;
+            return isNearRoomType;
         }
 
         public void PrintMap()
         {
-            // TODO
+            Console.WriteLine("{ MAP }");
+            for (int row = 0; row < Map.GetLength(0); row++)
+            {
+                for (int col = 0; col < Map.GetLength(1); col++)
+                {
+                    Console.Write(" ");
+                    Console.Write(Map[row,col].Type);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
         }
 
         // Return new coordinate if move in direction is valid on map.
@@ -420,6 +458,14 @@ Good luck...
                 SetGameColor();
                 Console.WriteLine();
             }
+            if (nearbyRoomType == RoomType.Maelstrom)
+            {
+                Console.WriteLine();
+                SetGameColor(GameColorStatus.Warning);
+                Console.WriteLine("You hear the growling and groaning of a maelstrom nearby.");
+                SetGameColor();
+                Console.WriteLine();
+            }
         }
 
         public static void DescribeWin()
@@ -515,15 +561,18 @@ You win!");
         {
             GameUI.IntroduceGame();
             Map = new GameMap(GameUI.PromptPlayerChooseGameSize());
-            Map.AddPits();
+            Map.PrintMap();
             
              while (IsGameActive)
             {
                 GameUI.DescribePlayerCoordinate(Player.Coordinate);
                 GameUI.DescribeRoom(Map.Map[Player.Coordinate.X, Player.Coordinate.Y]);
-                bool isNearbyPit = Map.CheckAdjacentRoomsForPits(Player.Coordinate);
-                
+
+                bool isNearbyPit = Map.CheckAdjacentRoomsForType(Player.Coordinate, RoomType.Pit);
                 GameUI.DescribeNearbyHazard(isNearbyPit ? RoomType.Pit : RoomType.Empty);
+                
+                bool isNearbyMaelstrom = Map.CheckAdjacentRoomsForType(Player.Coordinate, RoomType.Maelstrom);
+                GameUI.DescribeNearbyHazard(isNearbyMaelstrom ? RoomType.Maelstrom : RoomType.Empty);
 
                 if (CheckWin()) 
                 {
@@ -600,6 +649,14 @@ You win!");
             GameUI.DescribeAttemptMove(isTargetOutside, isTargetOutOfBounds, direction);
         }
 
+        public void BlowMaelstrom()
+        {
+            // Move player one north, two east
+            // Move maelstrom one south, two west
+            // Ensure pieces stay within the map
+
+        }
+
         public RoomType? CheckLocation()
         {
             return Map.Map[Player.Coordinate.X, Player.Coordinate.Y]?.Type;
@@ -617,6 +674,11 @@ You win!");
         }
     }
 
+
+    // TODO
+    // Refactor map to enable multiple elements to be in one room
+    // Refactor map to track player location
+    // Refactor map items to be their own classes that contain their relevant behaviors fully
   public static void TheFountainOfObjects()
   {
     WriteTitle("The Fountain of Objects");
@@ -638,8 +700,8 @@ You win!");
   /// The larger the Cavern of Objects is, the more difficult the game becomes. The basic game only requires a small 4x4 world, but we will add a medium 6x6 world and a larger 8x8 world to complete this challenge.
   /// 
   /// **Objectives:** 
-  /// [] Before the game begins, ask the player whether they want to play a small, medium, or large game. Create a 4x4 world if they choose a small world, a 6x6 world if they choose a medium world, and an 8x8 world if they choose a large world.
-  /// [] Pick an appropriate location for both the Fountain Room and the Entrance room.
+  /// [x] Before the game begins, ask the player whether they want to play a small, medium, or large game. Create a 4x4 world if they choose a small world, a 6x6 world if they choose a medium world, and an 8x8 world if they choose a large world.
+  /// [x] Pick an appropriate location for both the Fountain Room and the Entrance room.
   /// - Note: When combined with the Amaroks, Maelstroms, or Pits challenges, you will need to adapt the game to handle adding amaroks, maelstroms, and pits to all three sizes.
   /// </summary>
   public static void SmallMediumOrLarge()
@@ -657,9 +719,9 @@ You win!");
   /// The Cavern of Objects is a dangerous place. Some rooms upen up to bottomless pits. Entering a pit means death. The player can sense a pit is  in an adjacent room decause a draft of air pushes through the pits into adjacent rooms. Add pit rooms to the game and end the game if the player   stumbles into one.
   /// 
   /// **Objectives:** 
-  /// [] Add a pit room to your 4x4 cavern in a location of your choice, except the fountain and entrance rooms.
-  /// [] Players can sense the draft pushing out of pits in adjacent rooms (all eight directions): "You feel a draft. There is a pit in a nearby  room."
-  /// [] If a player ends their turn in a room with a pit, they lose the game.
+  /// [x] Add a pit room to your 4x4 cavern in a location of your choice, except the fountain and entrance rooms.
+  /// [x] Players can sense the draft pushing out of pits in adjacent rooms (all eight directions): "You feel a draft. There is a pit in a nearby  room."
+  /// [x] If a player ends their turn in a room with a pit, they lose the game.
   /// [] Note: When combined with the Small, Medium, or Large challenge, add one pit to the 4x4 world, two pits to the 6x6 world, and four pits to  the 8x8 world, in locations of your choice.
   /// </summary>
   public static void Pits()
@@ -677,9 +739,10 @@ You win!");
   /// TODO Add description
   /// 
   /// **Objectives:** 
-  /// [] Add a maelstrom to the small 4x4 game in a location of your choice.
-  /// [] The player can sense maelstroms by hearing them in adjacent rooms. ("You hear the growling and groaning of a maelstrom nearby.")
-  /// If a player enters a room with a maelstrom, the player moves one space north and two spaces east, while the maelstrom moves one space south   and two spaces west. When the player is moved like this, tell them so. If this would move the player or maelstrom beyond the map's edge, ensure they stay on the map.
+  /// [X] Add a maelstrom to the small 4x4 game in a location of your choice.
+  /// [X] The player can sense maelstroms by hearing them in adjacent rooms. ("You hear the growling and groaning of a maelstrom nearby.")
+  /// If a player enters a room with a maelstrom, the player moves one space north and two spaces east, while the maelstrom moves one space south and two spaces west.
+  /// When the player is moved like this, tell them so. If this would move the player or maelstrom beyond the map's edge, ensure they stay on the map.
   /// [] Note: When combined with the Small, Medium, or Large challenge, place one maelstrom into the medium-sized game and two into the  large-sized game.
   /// </summary>
   public static void Maelstroms()
