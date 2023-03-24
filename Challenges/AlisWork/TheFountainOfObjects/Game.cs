@@ -6,6 +6,8 @@
 // commands
 // 
 
+public enum GameMapSize { Small, Medium, Large }
+
 public class Game
 {
     // properties
@@ -14,39 +16,35 @@ public class Game
     // methods
     public void Run()
     {
-        Prompt promptForGameSize = new Prompt (
+        Prompt promptForGameSize = new Prompt(
             "Game Size Options"
-            "What size game do you want? ",
-            "That's not an option. ",
+            "What size map do you want to play in? ",
             new PromptOption[]
             {
                 new PromptOption("1", "Small (4x4)"),
-                new PromptOption("2", "Medium"),
-                new PromptOption("3", "Large"),
+                new PromptOption("2", "Medium (6x6)"),
+                new PromptOption("3", "Large (8x8)"),
             };
             );
         
         Prompt promptForCommand = new Prompt(
             "Help",
             "What do you want to do? ",
-            "Nope ",
             new PromptOption[];
             {
-                new PromptOption("help", "help"),
-                new PromptOption("go north", "go north"),
-                new PromptOption("go east", "go east"),
-                new PromptOption("go south", "go south"),
-                new PromptOption("go west", "go west"),
-                new PromptOption("enable fountain", "enable fountain"),
+                new PromptOption("help", "See all command options"),
+                new PromptOption("go north", "Go up one room"),
+                new PromptOption("go east", "Go right one room"),
+                new PromptOption("go south", "Go down one room"),
+                new PromptOption("go west", "Go left one room"),
+                new PromptOption("enable fountain", "Turn on the fountain (only works if it's in the room)"),
             };
             );
 
         promptForGameSize.PrintOptionsFull();
-        string sizeOption = promptForGameSize.PromptPlayer();
+        GameMapSize mapSize = promptForGameSize.PromptPlayer();
 
-        // TODO Use sizeOption to create map of correct size
-        // TODO Populate map with entities based on size
-        Map map = new Map(new IRoom[4,4], new IMoveableEntity[]);
+        Map map = new Map(mapSize);
 
         while (IsActive)
         {
@@ -63,13 +61,13 @@ public record PromptOption(string Input, string Description);
 public class Prompt
 {
     // properties
-    string Title { get; }
-    string DescriptionPrompt { get; }
-    string DescriptionInvalidInput { get; }
-    PromptOption[] Options { get; }
+    string Title { get; init; }
+    string DescriptionPrompt { get; init; }
+    string DescriptionInvalidInput { get; init; }
+    PromptOption[] Options { get; init; }
 
     // constructor
-    void Prompt(string title, string descriptionPrompt, string descriptionInvalidInput, PromptOption[] options)
+    void Prompt(string title, string descriptionPrompt, PromptOption[] options, string descriptionInvalidInput="That's not an option. ")
     {
         Title = title;
         DescriptionPrompt = descriptionPrompt;
@@ -77,6 +75,7 @@ public class Prompt
         Options = options;
     }
 
+    // methods
     public string PromptPlayer()
     {
         string input;
@@ -110,8 +109,6 @@ public class Prompt
             if (i != Options.Length - 1) Console.Write(" | ");
         }
     }
-
-    public string GetValidInput
 }
 
 record Vector(int X=0, int Y=0)
@@ -144,8 +141,85 @@ record Player(Vector Location, bool IsAlive=true) : IMoveableEntity
     }
 }
 
-record Map(IRoom [,] Matrix, IMoveableEntity[] MoveableEntities)
+record Map()
 {
+    // properties
+    IRoom[,] Matrix { get; init; }
+    IMoveableEntity[] MoveableEntities { get; set; }
+
+    // constructor
+    void Map(GameMapSize size)
+    {
+        IRoom _ = new RoomEmpty();
+        IRoom E = new RoomEntrance();
+        IRoom F = new RoomFountain();
+        IRoom P = new RoomPit();
+
+        switch (size)
+        {
+            case GameMapSize.Large:
+                Matrix = new IRoom[,]
+                {
+                    { _, _, _, _, _, _, _, _ },
+                    { F, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { P, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { _, P, _, _, _, _, _, _ },
+                    { E, _, _, _, _, _, _, _ },
+                };
+
+                MoveableEntities = new IMoveableEntity[]
+                {
+                    new Player(new Vector()),
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+                };
+
+                break;
+            
+            case GameMapSize.Medium:
+                Matrix = new IRoom[,]
+            {
+                { _, _, _, _, _, _ },
+                { _, _, _, _, _, _ },
+                { _, _, _, _, _, _ },
+                { _, _, F, _, _, _ },
+                { _, P, _, _, _, _ },
+                { E, _, _, _, _, _ },
+            };
+
+                MoveableEntities = new IMoveableEntity[]
+                {
+                    new Player(new Vector()),
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+                };
+
+                break;
+            case GameMapSize.Small:
+                Matrix = new IRoom[,]
+            {
+                { _, _, _, _ },
+                { _, _, _, _ },
+                { _, F, _, _ },
+                { E, P, _, _ },
+            };
+
+                MoveableEntities = new IMoveableEntity[]
+                {
+                    new Player(new Vector()),
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+                };
+
+                break;
+        }
+        
+    }
+
+    // methods
     public bool MoveItem(IMoveableEntity item, Vector direction)
     {
         for (int i = 0; i < MoveableEntities.Length; i++)
@@ -174,41 +248,43 @@ interface IRoom
 
 record RoomEntrance() : IRoom
 {
-    public string Description => "Entrance...";
+    public string Description => "You see light coming from the cavern entrance.";
     public ConsoleColor Color => ConsoleColor.Yellow;
 }
 
 record RoomEmpty() : IRoom
 {
-    public string Description => "Empty...";
+    public string Description => "The room is empty. ";
     public ConsoleColor Color => ConsoleColor.DarkGray;
 }
 
 record RoomPit() : IRoom
 {
-    public string Description => "Pit...";
+    public string Description => "It was a trap! You fell into a pit and died.";
     public ConsoleColor Color => ConsoleColor.Red;
 }
 
 record RoomFountain(bool IsEnabled=false) : IRoom
 {
-    public string Description => "Fountain...";
+    public string Description => "You hear water dripping in this room. The Fountain of Objects is here!";
     public ConsoleColor Color => ConsoleColor.Cyan;
-    string DescriptionEnabled => "Enabled fountain!~!!!";
+    string DescriptionEnabled => "You hear the rushing waters from the Fountain of Objects. It has been reactivated!";
 }
 
 interface IMonster : IMoveableEntity
-    {
+{
     // properties
     string DescriptionNearby { get; }
+    string DescriptionEncounter { get; }
 
     // methods
     void CollideWithPlayerEffect();
-    }
+}
 
 record MonsterMaelstrom(Vector Location) : IMonster
 {
-    string DescriptionNearby { get; } = "Maelstrom is near...";
+    string DescriptionNearby { get; } = "You hear the growling and groaning of a maelstrom nearby.";
+    string DescriptionEncounter { get; } = "You encounter a maelstrom in the room! It blows you away!";
 
     public void CollideWithPlayerEffect()
     {
@@ -223,7 +299,8 @@ record MonsterMaelstrom(Vector Location) : IMonster
 
 record MonsterAmarok(Vector Location) : IMonster
 {
-    string DescriptionNearby { get; } = "Amarok is near...";
+    string DescriptionNearby { get; } = "You can smell the rotten stench of an amarok in a nearby room.";
+    string DescriptionEncounter { get; } = "You encounter an amarok! It chases you down and kills you."
 
     public void CollideWithPlayerEffect()
     {
