@@ -97,95 +97,51 @@ public static class PartTwoC
   /// </summary>
   /// 
 
-// Record/Interface Location??
-// type = entrance, pit, fountain
-// description
-// unique interaction??
-// effect??
-// state?? 
-// ability to sense adjacent rooms
-// ability to emit side-effects for adjacent rooms
+    // ENUMS
+    public enum Direction { North, East, South, West }
+    
+    public enum GameMapSize { None, Small, Medium, Large }
+    
+    public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
+    
+    public enum RoomType { Empty, Entrance, Fountain, Pit, Maelstrom }
+    
+    // INTERFACES
+    public interface IEntity { }
 
-    // Map
-    //   Tracks map size
-    //   Tracks location of items inside
-    //   Tracks adjacencies
+    public record Entity();
 
-
-
-    // Items of interest? - entrance, fountain, pits
-    //   Tracks its state (on, off, etc)
-    //   Description (state-dependent)
-    //   Associated color
-    //   Possible interactions?
-
-    // Game
-    //   Runs game
-    //   Houses everything together
-
-    // UI
-    //   Menu options
-    //   Controls colors?
-
-    // Player
-    //   Tracks location
-    //   
-
-
-
-//public interface GameMap
-//    {
-//        public MapItem[,] Map;
-//        public GameMapSize Size;
-//
-//        public void PrintMap()
-//        public void InsertItemAt(MapItem item, Coordinate coordinate)
-//        public Coordinate FindItemCoordinate(MapItem item)
-//        public MapItem[] CheckAdjacentCoordinates(Coordinate coordinate)
-//        public void MoveItem(Coordinate itemCoordinate, Coordinate newItemCoordinate)
-//
-//    }
-
-// public interface IMapItem
-// {
-//     ConsoleColor Color { get; }
-//     string Name { get; }
-//     string Description { get; }
-// 
-//     void WriteDescription();
-// }
-// 
-// public class Fountain : IMapItem
-//     {
-//         public ConsoleColor Color { get; } = ConsoleColor.Blue;
-// 
-//     }
-
-public enum Direction { North, East, South, West }
-
-public enum GameMapSize { None, Small, Medium, Large }
-
-public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
-
-public enum RoomType { Empty, Entrance, Fountain, Pit, Maelstrom }
-
-public record Vector(int X, int Y);
-
-public record GamePlayer(Vector Coordinate, bool IsAlive);
-
-// TODO Does populating 2D array with records fill it with default records or null?
-public record MapItem(
-    RoomType Type=RoomType.Empty,
-    string Description="The room is empty.", 
-    ConsoleColor Color=ConsoleColor.Gray
-    );
-
-public class GameMap
+    public interface IDescribable : IEntity
     {
         // properties
-        public MapItem[,] Map { get; init; }
+        RoomType Type { get; init; }
+        string Description { get; init; }
+        ConsoleColor Color { get; init; }
+    }
+
+    // RECORDS
+    public record Vector(int X, int Y);
+    
+    public record GamePlayer(Vector Coordinate, bool IsAlive) : IEntity;
+    
+    public record Describable(
+        RoomType Type=RoomType.Empty,
+        string Description="The room is empty.", 
+        ConsoleColor Color=ConsoleColor.Gray
+        ) : IDescribable;
+    
+    public record HazardEntity(string WarningDescription) : IDescribable;
+
+    public record FountainEntity(
+        bool IsEnabled=false, 
+        string EnabledDescription="You hear the rushing waters from the Fountain of Objects. It has been reactivated!"
+        ) : IDescribable;
+    
+    public class GameMap
+    {
+        // properties
+        public IEntity[][,] Map { get; init; }
         public GameMapSize Size { get; init; } = GameMapSize.Small;
-        public bool IsFountainEnabled { get; set; } = false;
 
         // constructor
         public GameMap(GameMapSize size)
@@ -195,46 +151,47 @@ public class GameMap
         }
 
         // methods
-        public MapItem[,] GetPopulatedMap()
+        public IEntity[][,] GetPopulatedMap()
         {
-            MapItem _ = GetRoomOfType(RoomType.Empty);
-            MapItem E = GetRoomOfType(RoomType.Entrance);
-            MapItem F = GetRoomOfType(RoomType.Fountain);
-            MapItem P = GetRoomOfType(RoomType.Pit);
-            MapItem M = GetRoomOfType(RoomType.Maelstrom);
+            IEntity U = GamePlayer();
+            IEntity E = GetRoomOfType(RoomType.Entrance);
+            IEntity F = GetRoomOfType(RoomType.Fountain);
+            IEntity P = GetRoomOfType(RoomType.Pit);
+            IEntity M = GetRoomOfType(RoomType.Maelstrom);
 
             switch (Size)
             {
                 case GameMapSize.Large:
-                    return new MapItem[8,8] {
-                        { M, _, _, _, _, _, _, _ },
-                        { _, _, _, _, _, _, _, _ },
-                        { _, _, _, M, _, M, _, _ },
-                        { _, _, _, _, F, _, _, _ },
-                        { _, _, _, _, _, _, _, _ },
-                        { _, _, P, _, _, _, P, _ },
-                        { _, _, _, _, _, _, _, _ },
-                        { _, _, _, _, E, _, _, P },
+                    return new IEntity[][8,8] {
+                        { { }, { }, { }, { }, { }, { }, { }, { } },
+                        { { }, { }, { }, { }, { }, { }, { }, { } },
+                        { { }, { }, { }, { }, { }, { }, { }, { } },
+                        { { }, { }, { }, { }, { }, { }, { }, { } },
+                        { { }, { }, { }, { }, { }, { }, { }, { } },
+                        { {M}, { }, { }, { }, { }, { }, { }, { } },
+                        { { }, {F}, { }, { }, { }, { }, { }, { } },
+                        { {U,E}, {P}, { }, { }, { }, { }, { }, { } },
                     };
                 case GameMapSize.Medium:
-                    return new MapItem[6,6] {
-                        { _, _, _, _, _, _ },
-                        { _, M, _, _, _, _ },
-                        { _, _, _, F, _, _ },
-                        { _, _, _, _, P, _ },
-                        { _, _, P, _, _, _ },
-                        { _, E, _, _, M, _ },
+                    return new IEntity[][6,6] {
+                        { { }, { }, { }, { }, { }, { } },
+                        { { }, { }, { }, { }, { }, { } },
+                        { { }, { }, { }, { }, { }, { } },
+                        { {M}, { }, { }, { }, { }, { } },
+                        { { }, {F}, { }, { }, { }, { } },
+                        { {U,E}, {P}, { }, { }, { }, { } },
                     };
                 default:
-                    return new MapItem[4,4] {
-                        { _, _, _, _ },
-                        { M, _, _, _ },
-                        { _, F, _, _ },
-                        { E, P, _, _ },
+                    return new IEntity[][4,4] {
+                        { { }, { }, { }, { } },
+                        { {M}, { }, { }, { } },
+                        { { }, {F}, { }, { } },
+                        { {U,E}, {P}, { }, { } },
                     };
             }
         }
 
+        // TODO GET RID OF THIS
         public void EnableFountain()
         {
             for (int row = 0; row < Map.GetLength(0); row++)
@@ -251,36 +208,38 @@ public class GameMap
             }
         }
 
-        public MapItem GetRoomOfType(RoomType type)
+        public IDescribable GetRoomOfType(RoomType type)
         {
             switch (type)
             {
                 case RoomType.Entrance:
-                    return new MapItem(
+                    return new Describable(
                         RoomType.Entrance,
                         "You see light coming from the cavern entrance.",
                         ConsoleColor.Yellow
                         );
                 case RoomType.Fountain:
-                    return new MapItem(
+                    return new Describable(
                         RoomType.Fountain,
                         "You hear water dripping in this room. The Fountain of Objects is here!", 
                         ConsoleColor.Cyan
                         );
                 case RoomType.Pit:
-                    return new MapItem(
+                    return new HazardEntity(
                         RoomType.Pit,
                         "It was a trap! You fell into a pit and died.",
-                        ConsoleColor.Red
+                        ConsoleColor.Red,
+                        HazardDescription="yada yada"
                         );
                 case RoomType.Maelstrom:
-                    return new MapItem(
+                    return new HazardEntity(
                         RoomType.Maelstrom,
                         "You encounter a maelstrom in the room! It blows you away!",
-                        ConsoleColor.Cyan
+                        ConsoleColor.Cyan,
+                        HazardDescription="blah blah"
                         );
                 default:
-                    return new MapItem();
+                    return new Describable();
             }
         }
 
@@ -362,7 +321,7 @@ public static class GameUI
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("");
             Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
-            Console.WriteLine("============================");
+            DrawBorder();
             Console.WriteLine(@"
 Welcome, hero. You have entered a cavern filled with maze-like rooms.
 You must find the fountain of objects, activate, and return to the entrance safely to win.
@@ -433,7 +392,7 @@ Good luck...
             };
         }
 
-        public static void DescribeRoom(MapItem roomContent)
+        public static void DescribeRoom(Describable roomContent)
         {   
             if (roomContent == null)
             {
@@ -652,8 +611,12 @@ You win!");
         public void BlowMaelstrom()
         {
             // Move player one north, two east
-            // Move maelstrom one south, two west
             // Ensure pieces stay within the map
+            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, Direction.North) };
+            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, Direction.East) };
+            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, Direction.East) };
+
+            // Move maelstrom one south, two west
 
         }
 
@@ -679,6 +642,33 @@ You win!");
     // Refactor map to enable multiple elements to be in one room
     // Refactor map to track player location
     // Refactor map items to be their own classes that contain their relevant behaviors fully
+
+    // CLASS
+    // Map
+    // RESPONSIBILITIES
+    // Track the size and state of the 'board' and elements within it
+    // Move element locations on the board.
+    // Report info on relative location and spacial relationships on the board.
+    // COLLABORATION
+    // Uses elements inside the board.
+
+    // CLASS
+    // UI
+    // Handle printing of all UI text content.
+    // Handle prettification like colors, borders, spacing, etc..
+
+    // CLASS
+    // Entities
+    // RESPONSIBILITIES
+    // Exist in locations on the map.
+    // Are sometimes detectable from adjacent areas.
+    // Inflict different state effects on collision like: death, moving player, moving self, etc.
+    // Can sometimes change state (ex. fountain is off/on)
+    // Can sometimes be interacted with (enable fountain)
+
+    // 
+    // 
+
   public static void TheFountainOfObjects()
   {
     WriteTitle("The Fountain of Objects");
@@ -872,3 +862,8 @@ You win!");
 
   }
 }
+
+// LOZ copy
+// Land, water, pit, cliff
+// temp: normal, hot, cold
+// 

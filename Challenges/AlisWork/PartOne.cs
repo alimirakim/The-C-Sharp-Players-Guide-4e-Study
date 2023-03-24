@@ -455,6 +455,8 @@ public static class PartOne
     Console.WriteLine(targetEast);
     Console.WriteLine(targetNorth);
     Console.Beep();
+
+        Console.ForegroundColor = ConsoleColor.White;
   }
 
   /// <summary>
