@@ -8,6 +8,9 @@
 
 public enum GameMapSize { Small, Medium, Large }
 
+public enum Command { Quit, Help, GoNorth, GoEast, GoSouth, GoWest, EnableFountain }
+
+
 public class Game
 {
     // properties
@@ -16,30 +19,8 @@ public class Game
     // methods
     public void Run()
     {
-        Prompt promptForGameSize = new Prompt(
-            "Game Size Options"
-            "What size map do you want to play in? ",
-            new PromptOption[]
-            {
-                new PromptOption("1", "Small (4x4)"),
-                new PromptOption("2", "Medium (6x6)"),
-                new PromptOption("3", "Large (8x8)"),
-            };
-            );
-        
-        Prompt promptForCommand = new Prompt(
-            "Help",
-            "What do you want to do? ",
-            new PromptOption[];
-            {
-                new PromptOption("help", "See all command options"),
-                new PromptOption("go north", "Go up one room"),
-                new PromptOption("go east", "Go right one room"),
-                new PromptOption("go south", "Go down one room"),
-                new PromptOption("go west", "Go left one room"),
-                new PromptOption("enable fountain", "Turn on the fountain (only works if it's in the room)"),
-            };
-            );
+        Prompt promptForGameSize = new Prompt("gameSize");
+        Prompt promptForCommand = new Prompt();
 
         promptForGameSize.PrintOptionsFull();
         GameMapSize mapSize = promptForGameSize.PromptPlayer();
@@ -49,25 +30,122 @@ public class Game
         while (IsActive)
         {
             string input = promptForCommand.PromptPlayer();
+            
+            switch (input)
+            {
+                case "quit":
+                    IsActive = false;
+                    break;
+                case "help":
+                    promptForCommand.PrintOptionsRibbon();
+                    break;
+                case "go north":
+                    map.MoveItem(Vector.North);
+                    break;
+                case "go east":
+                    map.MoveItem(Vector.East);
+                    break;
+                case "go south":
+                    map.MoveItem(Vector.South);
+                    break;
+                case "go west":
+                    map.MoveItem(Vector.West);
+                    break;
+            }
 
         }
     }
+}
 
+record Command(string Input, bool IsGameActive, Map GameMap)
+{
+    public static readonly string Quit = "quit";
+    public static readonly string Help = "help";
+    public static readonly string GoNorth = "go north";
+
+    public void Run()
+    {
+
+    }
 
 }
 
-public record PromptOption(string Input, string Description);
+interface ICommand
+{
+    public string Input { get; }
+
+    public void Run()
+}
+
+record CommandQuit(bool IsGameActive)
+{
+    public string Input { get; } = "quit";
+
+    public void Run() => IsGameActive = false;
+}
+
+record CommandHelp(Prompt GamePrompt)
+{
+    public string Input { get; } = "help";
+
+    public void Run() => GamePrompt.PrintOptionsRibbon;
+}
+
+record CommandGo(string Input, Map GameMap, Vector Direction)
+{
+    public void Run() => Map.MoveItem(Direction);
+}
+
+record CommandEnableFountain(RoomFountain Fountain, Map GameMap)
+{
+    public string Input = "enable fountain";
+
+    public void Run()
+    {
+        if (GameMap.GamePlayer)
+        Fountain.IsEnabled = true;
+
+    }
+
+    public record PromptOption(string Input, string Description);
 
 public class Prompt
 {
     // properties
     string Title { get; init; }
     string DescriptionPrompt { get; init; }
-    string DescriptionInvalidInput { get; init; }
+    string DescriptionInvalidInput { get; init; } = "That's not an option.";
     PromptOption[] Options { get; init; }
 
-    // constructor
-    void Prompt(string title, string descriptionPrompt, PromptOption[] options, string descriptionInvalidInput="That's not an option. ")
+    // constructorS
+    void Prompt()
+    {
+        Title = "Help";
+        DescriptionPrompt = "What do you want to do?";
+        Options = new PromptOption[]
+        {
+            new PromptOption("help", "See all command options"),
+            new PromptOption("go north", "Go up one room"),
+            new PromptOption("go east", "Go right one room"),
+            new PromptOption("go south", "Go down one room"),
+            new PromptOption("go west", "Go left one room"),
+            new PromptOption("enable fountain", "Turn on the fountain (only works if it's in the room)"),
+        };
+    }
+
+    void Prompt("gameSize")
+    {
+        Title = "Game Size Options";
+        DescriptionPrompt = "What size map do you want to play in?";
+        Options = new PromptOption[]
+        {
+            new PromptOption("1", "Small (4x4)"),
+            new PromptOption("2", "Medium (6x6)"),
+            new PromptOption("3", "Large (8x8)"),
+        };
+    }
+
+    void Prompt(string title, string descriptionPrompt, PromptOption[] options, string descriptionInvalidInput="That's not an option.")
     {
         Title = title;
         DescriptionPrompt = descriptionPrompt;
@@ -144,8 +222,9 @@ record Player(Vector Location, bool IsAlive=true) : IMoveableEntity
 record Map()
 {
     // properties
-    IRoom[,] Matrix { get; init; }
-    IMoveableEntity[] MoveableEntities { get; set; }
+    IRoom[,] Matrix { get; }
+    IMoveableEntity PlayerEntity { get; } = new Player(new Vector());
+    IMoveableEntity[] MoveableEntities { get; }
 
     // constructor
     void Map(GameMapSize size)
@@ -172,11 +251,9 @@ record Map()
 
                 MoveableEntities = new IMoveableEntity[]
                 {
-                    new Player(new Vector()),
                     new MonsterMaelstrom(new Vector(2,0)),
                     new MonsterAmarok(new Vector(0,2)),
                 };
-
                 break;
             
             case GameMapSize.Medium:
@@ -192,12 +269,11 @@ record Map()
 
                 MoveableEntities = new IMoveableEntity[]
                 {
-                    new Player(new Vector()),
                     new MonsterMaelstrom(new Vector(2,0)),
                     new MonsterAmarok(new Vector(0,2)),
                 };
-
                 break;
+
             case GameMapSize.Small:
                 Matrix = new IRoom[,]
             {
@@ -209,14 +285,11 @@ record Map()
 
                 MoveableEntities = new IMoveableEntity[]
                 {
-                    new Player(new Vector()),
                     new MonsterMaelstrom(new Vector(2,0)),
                     new MonsterAmarok(new Vector(0,2)),
                 };
-
                 break;
         }
-        
     }
 
     // methods
@@ -237,14 +310,19 @@ record Map()
         }
         return false;
     }
+
+    public bool MoveItem(Vector direction)
+    {
+        return MoveItem(PlayerEntity, direction);
+    }
 }
 
 interface IRoom 
-    {
-        //properties
-        string Description { get; }
-        ConsoleColor Color { get; }
-    }
+{
+    //properties
+    string Description { get; }
+    ConsoleColor Color { get; }
+}
 
 record RoomEntrance() : IRoom
 {
@@ -313,6 +391,4 @@ record MonsterAmarok(Vector Location) : IMonster
     }
 }
 
-record Command();
 
-record GameState();
