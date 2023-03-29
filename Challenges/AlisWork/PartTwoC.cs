@@ -97,221 +97,8 @@ public static class PartTwoC
   /// </summary>
   /// 
 
-    // ENUMS
-    public enum Direction { North, East, South, West }
-    
-    public enum GameMapSize { None, Small, Medium, Large }
-    
-    public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
-    
-    public enum RoomType { Empty, Entrance, Fountain, Pit, Maelstrom }
-    
-    // INTERFACES
-    public interface IEntity { }
 
-    public record Entity();
-
-    public interface IDescribable : IEntity
-    {
-        // properties
-        RoomType Type { get; init; }
-        string Description { get; init; }
-        ConsoleColor Color { get; init; }
-    }
-
-    // RECORDS
-    public record Vector(int X, int Y);
-    
-    public record GamePlayer(Vector Coordinate, bool IsAlive) : IEntity;
-    
-    public record Describable(
-        RoomType Type=RoomType.Empty,
-        string Description="The room is empty.", 
-        ConsoleColor Color=ConsoleColor.Gray
-        ) : IDescribable;
-    
-    public record HazardEntity(string WarningDescription) : IDescribable;
-
-    public record FountainEntity(
-        bool IsEnabled=false, 
-        string EnabledDescription="You hear the rushing waters from the Fountain of Objects. It has been reactivated!"
-        ) : IDescribable;
-    
-    public class GameMap
-    {
-        // properties
-        public IEntity[][,] Map { get; init; }
-        public GameMapSize Size { get; init; } = GameMapSize.Small;
-
-        // constructor
-        public GameMap(GameMapSize size)
-        {
-            Size = size;
-            Map = GetPopulatedMap();
-        }
-
-        // methods
-        public IEntity[][,] GetPopulatedMap()
-        {
-            IEntity U = GamePlayer();
-            IEntity E = GetRoomOfType(RoomType.Entrance);
-            IEntity F = GetRoomOfType(RoomType.Fountain);
-            IEntity P = GetRoomOfType(RoomType.Pit);
-            IEntity M = GetRoomOfType(RoomType.Maelstrom);
-
-            switch (Size)
-            {
-                case GameMapSize.Large:
-                    return new IEntity[][8,8] {
-                        { { }, { }, { }, { }, { }, { }, { }, { } },
-                        { { }, { }, { }, { }, { }, { }, { }, { } },
-                        { { }, { }, { }, { }, { }, { }, { }, { } },
-                        { { }, { }, { }, { }, { }, { }, { }, { } },
-                        { { }, { }, { }, { }, { }, { }, { }, { } },
-                        { {M}, { }, { }, { }, { }, { }, { }, { } },
-                        { { }, {F}, { }, { }, { }, { }, { }, { } },
-                        { {U,E}, {P}, { }, { }, { }, { }, { }, { } },
-                    };
-                case GameMapSize.Medium:
-                    return new IEntity[][6,6] {
-                        { { }, { }, { }, { }, { }, { } },
-                        { { }, { }, { }, { }, { }, { } },
-                        { { }, { }, { }, { }, { }, { } },
-                        { {M}, { }, { }, { }, { }, { } },
-                        { { }, {F}, { }, { }, { }, { } },
-                        { {U,E}, {P}, { }, { }, { }, { } },
-                    };
-                default:
-                    return new IEntity[][4,4] {
-                        { { }, { }, { }, { } },
-                        { {M}, { }, { }, { } },
-                        { { }, {F}, { }, { } },
-                        { {U,E}, {P}, { }, { } },
-                    };
-            }
-        }
-
-        // TODO GET RID OF THIS
-        public void EnableFountain()
-        {
-            for (int row = 0; row < Map.GetLength(0); row++)
-            {
-                for (int col = 0; col < Map.GetLength(1); col++)
-                {
-                    if (Map[row,col].Type == RoomType.Fountain)
-                    {
-                        IsFountainEnabled = true;
-                        Map[row,col] = GetRoomOfType(RoomType.Fountain) 
-                            with { Description = "You hear the rushing waters from the Fountain of Objects. It has been reactivated!"};
-                    }
-                }
-            }
-        }
-
-        public IDescribable GetRoomOfType(RoomType type)
-        {
-            switch (type)
-            {
-                case RoomType.Entrance:
-                    return new Describable(
-                        RoomType.Entrance,
-                        "You see light coming from the cavern entrance.",
-                        ConsoleColor.Yellow
-                        );
-                case RoomType.Fountain:
-                    return new Describable(
-                        RoomType.Fountain,
-                        "You hear water dripping in this room. The Fountain of Objects is here!", 
-                        ConsoleColor.Cyan
-                        );
-                case RoomType.Pit:
-                    return new HazardEntity(
-                        RoomType.Pit,
-                        "It was a trap! You fell into a pit and died.",
-                        ConsoleColor.Red,
-                        HazardDescription="yada yada"
-                        );
-                case RoomType.Maelstrom:
-                    return new HazardEntity(
-                        RoomType.Maelstrom,
-                        "You encounter a maelstrom in the room! It blows you away!",
-                        ConsoleColor.Cyan,
-                        HazardDescription="blah blah"
-                        );
-                default:
-                    return new Describable();
-            }
-        }
-
-        public RoomType GetAdjacentRoomType(Vector coordinate, Direction direction)
-        {
-            Vector adjacentCoordinate = AttemptMove(coordinate, direction);
-
-            // prevent logic bug that treats current room as an adjacent room
-            if (coordinate == adjacentCoordinate) 
-                return RoomType.Empty;
-
-            return Map[adjacentCoordinate.X, adjacentCoordinate.Y]?.Type ?? RoomType.Empty;
-        }
-
-        public RoomType[] GetAdjacentRoomTypes(Vector coordinate)
-        {
-            RoomType northRoom = GetAdjacentRoomType(coordinate, Direction.North);
-            RoomType eastRoom = GetAdjacentRoomType(coordinate, Direction.East);
-            RoomType southRoom = GetAdjacentRoomType(coordinate, Direction.South);
-            RoomType westRoom = GetAdjacentRoomType(coordinate, Direction.West);
-            return new RoomType[] { northRoom, eastRoom, southRoom, westRoom };
-        }
-
-        public bool CheckAdjacentRoomsForType(Vector coordinate, RoomType type)
-        {
-            RoomType[] adjacentRoomTypes = GetAdjacentRoomTypes(coordinate);
-            bool isNearRoomType = Array.Exists(adjacentRoomTypes, roomType => roomType == type);
-
-            return isNearRoomType;
-        }
-
-        public void PrintMap()
-        {
-            Console.WriteLine("{ MAP }");
-            for (int row = 0; row < Map.GetLength(0); row++)
-            {
-                for (int col = 0; col < Map.GetLength(1); col++)
-                {
-                    Console.Write(" ");
-                    Console.Write(Map[row,col].Type);
-                }
-                Console.WriteLine();
-            }
-            Console.WriteLine();
-        }
-
-        // Return new coordinate if move in direction is valid on map.
-        // Else return original coordinate.
-        public Vector AttemptMove(Vector coordinate, Direction direction)
-        {
-            Vector newCoordinate = direction switch
-            {
-                Direction.North => coordinate with { X = coordinate.X + 1 },
-                Direction.East => coordinate with { Y = coordinate.Y + 1 },
-                Direction.South => coordinate with { X = coordinate.X - 1 },
-                Direction.West => coordinate with { Y = coordinate.Y - 1 },
-            };
-
-            if (newCoordinate.X < 0 || newCoordinate.X > Map.GetLength(0) || newCoordinate.Y < 0 || newCoordinate.Y > Map.GetLength(1)) 
-                return coordinate;
-            else 
-                return newCoordinate;
-        }
-
-        public bool CheckIsMovingOutside(Vector coordinate, Direction direction)
-        {
-            if (coordinate.X == 0 && coordinate.Y == 0 && direction == Direction.South) 
-                return true;
-            else
-                return false;
-        }
-    }
+public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
 
 public static class GameUI
     {
@@ -328,53 +115,32 @@ You must find the fountain of objects, activate, and return to the entrance safe
 Good luck...
 ");
             SetGameColor();
-
-            Console.WriteLine("menu:");
-            DescribeMenu();
         }
 
-        public static GameMapSize PromptPlayerChooseGameSize()
+        public static GameMapSize PromptPlayerChooseGameSize(Prompt prompt)
         {
-            Console.WriteLine(@"1 - Small (4x4)
-2 - Medium (6x6)
-3 - Large (8x8)
-");
+            SetGameColor();
+            prompt.PrintOptionsFull();
 
-            GameMapSize selectedMapSize = default(GameMapSize);
+            SetGameColor(GameColorStatus.Prompt);
+            string option = prompt.PromptPlayer();
+            SetGameColor();
 
-            while (selectedMapSize == GameMapSize.None)
+            GameMapSize selectedMapSize = option switch
             {
-                SetGameColor(GameColorStatus.Prompt);
-                Console.Write("What size map do you want to play in? ");
-                SetGameColor(GameColorStatus.PlayerInput);
-                string option = Console.ReadLine();
-                SetGameColor();
+                "1" => GameMapSize.Small,
+                "2" => GameMapSize.Medium,
+                "3" => GameMapSize.Large,
+            };
 
-                switch (option)
-                {
-                    case "1":
-                        selectedMapSize = GameMapSize.Small;
-                        break;
-                    case "2":
-                        selectedMapSize = GameMapSize.Medium;
-                        break;
-                    case "3":
-                        selectedMapSize = GameMapSize.Large;
-                        break;
-                    default:
-                        Console.WriteLine("That's not an option.");
-                        break;
-                }
-
-                DrawBorder();
-                Console.WriteLine();
-            }
             return selectedMapSize;
         }
 
         public static void DescribePlayerCoordinate(Vector coordinate)
         {
+            SetGameColor(GameColorStatus.Descriptive);
             Console.WriteLine($"You are in the room at (Row={coordinate.X} Column={coordinate.Y}).");
+            SetGameColor();
         }
 
         public static void SetGameColor(GameColorStatus status=GameColorStatus.Default)
@@ -392,40 +158,32 @@ Good luck...
             };
         }
 
-        public static void DescribeRoom(Describable roomContent)
+        public static void DescribeRoom(IRoom room)
         {   
-            if (roomContent == null)
-            {
-                SetGameColor(GameColorStatus.Descriptive);
-                Console.WriteLine("The room is empty.");
-            } else
-            {
-                Console.ForegroundColor = roomContent.Color;
-                Console.WriteLine(roomContent.Description);
-            }
-
+            Console.ForegroundColor = room.Color;
+            Console.WriteLine(room.Description);
             SetGameColor();
         }
 
-        public static void DescribeNearbyHazard(RoomType nearbyRoomType)
-        {
-            if (nearbyRoomType == RoomType.Pit)
-            {
-                Console.WriteLine();
-                SetGameColor(GameColorStatus.Warning);
-                Console.WriteLine("You feel a draft. There is a pit in a nearby  room....");
-                SetGameColor();
-                Console.WriteLine();
-            }
-            if (nearbyRoomType == RoomType.Maelstrom)
-            {
-                Console.WriteLine();
-                SetGameColor(GameColorStatus.Warning);
-                Console.WriteLine("You hear the growling and groaning of a maelstrom nearby.");
-                SetGameColor();
-                Console.WriteLine();
-            }
-        }
+        //public static void DescribeNearbyHazard(RoomType nearbyRoomType)
+        //{
+        //    if (nearbyRoomType == RoomType.Pit)
+        //    {
+        //        Console.WriteLine();
+        //        SetGameColor(GameColorStatus.Warning);
+        //        Console.WriteLine("You feel a draft. There is a pit in a nearby  room....");
+        //        SetGameColor();
+        //        Console.WriteLine();
+        //    }
+        //    if (nearbyRoomType == RoomType.Maelstrom)
+        //    {
+        //        Console.WriteLine();
+        //        SetGameColor(GameColorStatus.Warning);
+        //        Console.WriteLine("You hear the growling and groaning of a maelstrom nearby.");
+        //        SetGameColor();
+        //        Console.WriteLine();
+        //    }
+        //}
 
         public static void DescribeWin()
         {
@@ -439,7 +197,6 @@ You win!");
         {
             SetGameColor(GameColorStatus.Death);
             Console.WriteLine("You lose.");
-
         }
 
         public static void DescribeEnableFountain(bool isAbsent, bool isDisabled)
@@ -455,7 +212,7 @@ You win!");
             Console.WriteLine();
         }
 
-        public static void DescribeAttemptMove(bool isAttemptingExit, bool isAttemptingOutOfBounds, Direction direction)
+        public static void DescribeAttemptMove(bool isAttemptingExit, bool isAttemptingOutOfBounds, Vector direction)
         {
             SetGameColor(GameColorStatus.Descriptive);
 
@@ -470,6 +227,7 @@ You win!");
             SetGameColor();
         }
 
+        // TODO decide if i keep this or not
         public static void DescribeDenyAction()
         {
             SetGameColor(GameColorStatus.Descriptive);
@@ -478,6 +236,7 @@ You win!");
             SetGameColor();
         }
 
+        // TODO decide if i keep this or not
         public static void DescribeMenu()
         {
             SetGameColor(GameColorStatus.Descriptive);
@@ -507,174 +266,434 @@ You win!");
         }
     }
 
-    public class GameFountainOfObjects
+
+public enum GameMapSize { Small, Medium, Large }
+
+public class Game
+{
+    // properties
+    public bool IsActive { get; set; } = true;
+
+    // methods
+    public void Run()
     {
-        // properties
-        public bool IsGameActive { get; set; } = true;
-        public bool IsFountainActive { get; set; } = false;
-        public GamePlayer Player { get; set; } = new GamePlayer(new Vector(0,0), true); 
-        public GameMap Map { get; set; }
 
-        // methods
-        public void RunGame()
+        Prompt promptForGameSize = new Prompt("gameSize");
+        Prompt promptForCommand = new Prompt();
+        GameUI.IntroduceGame();
+
+        GameMapSize mapSize = GameUI.PromptPlayerChooseGameSize(promptForGameSize);
+        Map map = new Map(mapSize);
+
+        while (IsActive)
         {
-            GameUI.IntroduceGame();
-            Map = new GameMap(GameUI.PromptPlayerChooseGameSize());
-            Map.PrintMap();
+            Vector playerLocation = map.PlayerEntity.Location;
+
+            GameUI.DrawBorder();
+            GameUI.DescribePlayerCoordinate(playerLocation);
+            GameUI.DescribeRoom(map.Matrix[playerLocation.X, playerLocation.Y]);
+            string input = promptForCommand.PromptPlayer();
             
-             while (IsGameActive)
+            switch (input)
             {
-                GameUI.DescribePlayerCoordinate(Player.Coordinate);
-                GameUI.DescribeRoom(Map.Map[Player.Coordinate.X, Player.Coordinate.Y]);
-
-                bool isNearbyPit = Map.CheckAdjacentRoomsForType(Player.Coordinate, RoomType.Pit);
-                GameUI.DescribeNearbyHazard(isNearbyPit ? RoomType.Pit : RoomType.Empty);
-                
-                bool isNearbyMaelstrom = Map.CheckAdjacentRoomsForType(Player.Coordinate, RoomType.Maelstrom);
-                GameUI.DescribeNearbyHazard(isNearbyMaelstrom ? RoomType.Maelstrom : RoomType.Empty);
-
-                if (CheckWin()) 
-                {
-                    GameUI.DescribeWin();
-                    IsGameActive = false;
+                //case Command.Quit:
+                case "quit":
+                    IsActive = false;
                     break;
-                }
-                if (CheckLoss())
-                {
-                    GameUI.DescribeLoss();
-                    IsGameActive = false;
+                case "help":
+                    promptForCommand.PrintOptionsRibbon();
                     break;
-                }
-
-                string action = GameUI.PromptPlayerAction();
-                switch (action)
-                {
-                    case "quit":
-                        IsGameActive = false;
-                        break;
-
-                    case "menu":
-                        GameUI.DescribeMenu();
-                        break;
-
-                    case "enable fountain":
-                        AttemptEnableFountain();
-                        break;
-
-                    case "go north":
-                        AttemptMove(Direction.North);
-                        break;
-                    case "go east":
-                        AttemptMove(Direction.East);
-                        break;
-                    case "go south":
-                        AttemptMove(Direction.South);
-                        break;
-                    case "go west":
-                        AttemptMove(Direction.West);
-                        break;
-
-                    default:
-                        GameUI.DescribeDenyAction();
-                        break;
-                }
+                case "go north":
+                    bool isMoveValid = map.MoveItem(Vector.North);
+                    break;
+                case "go east":
+                    map.MoveItem(Vector.East);
+                    break;
+                case "go south":
+                    map.MoveItem(Vector.South);
+                    break;
+                case "go west":
+                    map.MoveItem(Vector.West);
+                    break;
             }
-             Console.ReadLine();
+
+        }
+    }
+}
+
+
+
+public record Command()
+{
+    public static readonly string Quit = "quit";
+    public static readonly string Help = "help";
+    public static readonly string GoNorth = "go north";
+    public static readonly string GoEast = "go east";
+    public static readonly string GoSouth = "go south";
+    public static readonly string GoWest = "go west";
+    public static readonly string EnableFountain = "enable fountain";
+}
+
+// interface ICommand
+// {
+//     public string Input { get; }
+// 
+//     public void Run();
+// }
+// 
+//     record Command
+//     {
+//         public static readonly string Quit = "quit";
+//     }
+// 
+// record CommandQuit(bool IsGameActive)
+// {
+//     public string Input { get; } = "quit";
+// 
+//     public void Run() => IsGameActive = false;
+// }
+// 
+// record CommandHelp(Prompt GamePrompt)
+// {
+//     public string Input { get; } = "help";
+// 
+//     public void Run() => GamePrompt.PrintOptionsRibbon;
+// }
+// 
+// record CommandGo(string Input, Map GameMap, Vector Direction)
+// {
+//     public void Run() => Map.MoveItem(Direction);
+// }
+// 
+// record CommandEnableFountain(RoomFountain Fountain, Map GameMap)
+// {
+//     public string Input = "enable fountain";
+// 
+//     public void Run()
+//     {
+//         if (GameMap.GamePlayer)
+//         Fountain.IsEnabled = true;
+// 
+//     }
+
+public record PromptOption(string Input, string Description);
+
+public class Prompt
+{
+    // properties
+    string Title { get; init; }
+    string DescriptionPrompt { get; init; }
+    string DescriptionInvalidInput { get; init; } = "That's not an option.";
+    PromptOption[] Options { get; init; }
+
+    // constructors
+    public Prompt()
+    {
+        Title = "Commands";
+        DescriptionPrompt = "What do you want to do?";
+        Options = new PromptOption[]
+        {
+            new PromptOption(Command.Quit, "Quit the game"),
+            new PromptOption(Command.Help, "See all command options"),
+            new PromptOption(Command.GoNorth, "Go up one room"),
+            new PromptOption(Command.GoEast, "Go right one room"),
+            new PromptOption(Command.GoSouth, "Go down one room"),
+            new PromptOption(Command.GoWest, "Go left one room"),
+            new PromptOption(Command.EnableFountain, "Turn on the fountain (only works if it's in the room)"),
+        };
+    }
+
+    // TODO Make this less jank
+    // void Prompt(string "gameSize")
+    public Prompt(string promptType)
+    {
+
+        Title = "Game Size Options";
+        DescriptionPrompt = "What size map do you want to play in?";
+        Options = new PromptOption[]
+        {
+            new PromptOption("1", "Small (4x4)"),
+            new PromptOption("2", "Medium (6x6)"),
+            new PromptOption("3", "Large (8x8)"),
+        };
+    }
+
+    public Prompt(string title, string descriptionPrompt, PromptOption[] options, string descriptionInvalidInput="That's not an option.")
+    {
+        Title = title;
+        DescriptionPrompt = descriptionPrompt;
+        DescriptionInvalidInput = descriptionInvalidInput;
+        Options = options;
+    }
+
+    // methods
+    public string PromptPlayer()
+    {
+        string input = null;
+        bool isInputValid = false;
+
+        while (!isInputValid)
+        {
+            GameUI.SetGameColor(GameColorStatus.Prompt);
+            Console.WriteLine();
+            Console.Write(DescriptionPrompt + " ");
+
+            GameUI.SetGameColor(GameColorStatus.PlayerInput);
+            input = Console.ReadLine();
+            GameUI.SetGameColor();
+
+            isInputValid = Array.Exists(Options, option => option.Input == input);
+            if (!isInputValid) Console.WriteLine(DescriptionInvalidInput);
         }
 
-        public void AttemptEnableFountain()
+        return input;
+    }
+
+    public void PrintOptionsFull()
+    {
+        Console.WriteLine();
+        Console.WriteLine(Title);
+
+        foreach (PromptOption option in Options)
+            Console.WriteLine("    " + option.Input + " - " + option.Description);
+        Console.WriteLine();
+    }
+
+    public void PrintOptionsRibbon()
+    {
+        Console.WriteLine();
+        Console.WriteLine(Title);
+
+        for (int i = 0; i < Options.Length; i++)
         {
-            bool isFountainHere = CheckLocation() == RoomType.Fountain;
+            Console.Write(Options[i].Input);
+            if (i != Options.Length - 1) Console.Write(" | ");
+        }
+        Console.WriteLine();
+    }
+}
 
-            // Must do this before changing IsFountainActive status.
-            GameUI.DescribeEnableFountain(!isFountainHere, !IsFountainActive);
+public record Vector(int X=0, int Y=0)
+{
+    public static readonly Vector Origin = new Vector(0, 0);
+    public static readonly Vector North = new Vector(1, 0);
+    public static readonly Vector East = new Vector(0, 1);
+    public static readonly Vector South = new Vector(-1, 0);
+    public static readonly Vector West = new Vector(0, -1);
 
-            if (isFountainHere && !IsFountainActive) 
+    public Vector Add(Vector vector) => this with { X=this.X + vector.X, Y=this.Y + vector.Y };
+
+    public bool CheckIsValid(int mapSize) => !(X < 0 || Y < 0 || X >= mapSize || Y >= mapSize);
+}
+
+public interface IMoveableEntity 
+{ 
+    // properties
+    public Vector Location { get; }
+
+    // methods
+    public IMoveableEntity Move(Vector direction);
+}
+
+public record Player(Vector Location, bool IsAlive=true) : IMoveableEntity
+{
+    public IMoveableEntity Move(Vector direction) => this with { Location = this.Location.Add(direction) };
+}
+
+public struct Map
+{
+    // properties
+    public IRoom[,] Matrix { get; init; }
+    public IMoveableEntity PlayerEntity { get; set; } = new Player(new Vector());
+    public IMoveableEntity[] MoveableEntities { get; }
+
+    // constructor
+    public Map(GameMapSize size)
+    {
+        IRoom _ = new RoomEmpty();
+        IRoom E = new RoomEntrance();
+        IRoom F = new RoomFountain();
+        IRoom P = new RoomPit();
+
+        switch (size)
+        {
+            case GameMapSize.Large:
+                Matrix = new IRoom[,]
+                {
+                    { E, _, _, _, _, _, _, _ },
+                    { F, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { P, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { _, P, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                };
+
+                MoveableEntities = new IMoveableEntity[]
+                {
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+                };
+                break;
+            
+            case GameMapSize.Medium:
+                Matrix = new IRoom[,]
             {
-                IsFountainActive = true;
-                Map.EnableFountain();
-            }
-            
-        }
-            
-        public void AttemptMove(Direction direction)
-        {
-            Vector originalCoordinate = Player.Coordinate;
-            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, direction) };
+                { E, _, _, _, _, _ },
+                { _, _, _, _, _, _ },
+                { _, _, _, _, _, _ },
+                { _, _, F, _, _, _ },
+                { _, P, _, _, _, _ },
+                { _, _, _, _, _, _ },
+            };
 
-            bool isTargetOutside = Map.CheckIsMovingOutside(originalCoordinate, direction);
-            bool isTargetOutOfBounds = originalCoordinate == Player.Coordinate;
+                MoveableEntities = new IMoveableEntity[]
+                {
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+                };
+                break;
 
-            GameUI.DescribeAttemptMove(isTargetOutside, isTargetOutOfBounds, direction);
-        }
+            default:
+                Matrix = new IRoom[,]
+            {
+                { E, P, _, _ },
+                { _, F, _, _ },
+                { _, _, _, _ },
+                { _, _, _, _ },
+            };
 
-        public void BlowMaelstrom()
-        {
-            // Move player one north, two east
-            // Ensure pieces stay within the map
-            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, Direction.North) };
-            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, Direction.East) };
-            Player = Player with { Coordinate = Map.AttemptMove(Player.Coordinate, Direction.East) };
-
-            // Move maelstrom one south, two west
-
-        }
-
-        public RoomType? CheckLocation()
-        {
-            return Map.Map[Player.Coordinate.X, Player.Coordinate.Y]?.Type;
-        }
-
-        public bool CheckLoss()
-        {
-            if (CheckLocation() == RoomType.Pit) return true;
-            else return false;
-        }
-
-        public bool CheckWin()
-        {
-            return IsFountainActive && CheckLocation() == RoomType.Entrance;
+                MoveableEntities = new IMoveableEntity[]
+                {
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+                };
+                break;
         }
     }
 
+    // methods
+    public bool MoveItem(IMoveableEntity item, Vector direction)
+    {
+        for (int i = 0; i < MoveableEntities.Length; i++)
+        {
+            if (item != MoveableEntities[i])
+                continue;
 
-    // TODO
-    // Refactor map to enable multiple elements to be in one room
-    // Refactor map to track player location
-    // Refactor map items to be their own classes that contain their relevant behaviors fully
+            IMoveableEntity updatedItem = item.Move(direction);
+            bool isMoveValid = updatedItem.Location.CheckIsValid(Matrix.GetLength(0));
+            
+            if (isMoveValid)
+                MoveableEntities[i] = updatedItem;
+            
+            return isMoveValid;
+        }
+        return false;
+    }
 
-    // CLASS
-    // Map
-    // RESPONSIBILITIES
-    // Track the size and state of the 'board' and elements within it
-    // Move element locations on the board.
-    // Report info on relative location and spacial relationships on the board.
-    // COLLABORATION
-    // Uses elements inside the board.
+    public bool MoveItem(Vector direction)
+    {
+        IMoveableEntity updatedPlayerEntity = PlayerEntity.Move(direction);
+        bool isMoveValid = updatedPlayerEntity.Location.CheckIsValid(Matrix.GetLength(0));
 
-    // CLASS
-    // UI
-    // Handle printing of all UI text content.
-    // Handle prettification like colors, borders, spacing, etc..
+        if (isMoveValid)
+                PlayerEntity = updatedPlayerEntity;
 
-    // CLASS
-    // Entities
-    // RESPONSIBILITIES
-    // Exist in locations on the map.
-    // Are sometimes detectable from adjacent areas.
-    // Inflict different state effects on collision like: death, moving player, moving self, etc.
-    // Can sometimes change state (ex. fountain is off/on)
-    // Can sometimes be interacted with (enable fountain)
+        return isMoveValid;
+    }
 
-    // 
-    // 
+    public void DescribePlayerLocation()
+        {
+            Console.WriteLine($"You are in the room at (Row={PlayerEntity.Location.X} Column={PlayerEntity.Location.Y}).");
+        }
+}
+
+public interface IRoom 
+{
+    //properties
+    public string Description { get; }
+    public ConsoleColor Color { get; }
+}
+
+public record RoomEntrance() : IRoom
+{
+    public string Description => "You see light coming from the cavern entrance.";
+    public ConsoleColor Color => ConsoleColor.Yellow;
+}
+
+public record RoomEmpty() : IRoom
+{
+    public string Description => "The room is empty. ";
+    public ConsoleColor Color => ConsoleColor.DarkGray;
+}
+
+public record RoomPit() : IRoom
+{
+    public string Description => "It was a trap! You fell into a pit and died.";
+    public ConsoleColor Color => ConsoleColor.Red;
+}
+
+public record RoomFountain(bool IsEnabled=false) : IRoom
+{
+    public string Description => "You hear water dripping in this room. The Fountain of Objects is here!";
+    public ConsoleColor Color => ConsoleColor.Cyan;
+    string DescriptionEnabled => "You hear the rushing waters from the Fountain of Objects. It has been reactivated!";
+}
+
+interface IMonster : IMoveableEntity
+{
+    // properties
+    string DescriptionNearby { get; }
+    string DescriptionEncounter { get; }
+
+    // methods
+    void CollideWithPlayerEffect();
+}
+
+public record MonsterMaelstrom(Vector Location) : IMonster
+{
+    public string DescriptionNearby { get; } = "You hear the growling and groaning of a maelstrom nearby.";
+    public string DescriptionEncounter { get; } = "You encounter a maelstrom in the room! It blows you away!";
+
+    public void CollideWithPlayerEffect()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMoveableEntity Move(Vector direction) => this with
+    {
+        Location = this.Location.Add(direction)
+    };
+}
+
+public record MonsterAmarok(Vector Location) : IMonster
+{
+    public string DescriptionNearby { get; } = "You can smell the rotten stench of an amarok in a nearby room.";
+    public string DescriptionEncounter { get; } = "You encounter an amarok! It chases you down and kills you.";
+
+    public void CollideWithPlayerEffect()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IMoveableEntity Move(Vector direction) => this with
+    {
+        Location = this.Location.Add(direction)
+    };
+}
+
+
+
 
   public static void TheFountainOfObjects()
   {
     WriteTitle("The Fountain of Objects");
+    
+            new Game().Run();
 
-    GameFountainOfObjects game = new GameFountainOfObjects();
-    game.RunGame();
+    // GameFountainOfObjects game = new GameFountainOfObjects();
+    // game.RunGame();
   }
 
 
@@ -751,7 +770,8 @@ You win!");
   /// 
   /// **Objectives:** 
   /// [] The placement of amaroks is at your discretion. Pick a room to place an amarok aside from the entrance or fountain room in the small 4x4   world.
-  /// [] When a player is in one of the eight spaces adjacent to an amarok, a message should be displayed when sensing surrounding that indicate  that the player can smell the amarok nearby. For example, "You can smell the rotten stench of an amarok in a nearby room."
+  /// [] When a player is in one of the eight spaces adjacent to an amarok, a message should be displayed when sensing surrounding that indicate  that the player can smell the amarok nearby. 
+  /// For example, "You can smell the rotten stench of an amarok in a nearby room."
   /// [] When a player enters a room with an amarok, the player dies and loses the game.
   /// [] Note: When combined with the Small, Medium, or Large challenge, place two amaroks in the medium level and three in the large level in  locations of your choosing.
   /// </summary>
