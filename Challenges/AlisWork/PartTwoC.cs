@@ -216,21 +216,23 @@ You win!");
         {
             SetGameColor(GameColorStatus.Descriptive);
 
-            string directionWord = direction switch
-            {
-                Vector.North => "north",
-                Vector.East => "east",
-                Vector.South => "south",
-                Vector.West => "west",
-                _ => "unknown",
-            };
+            string directionWord = "next";
+            // TODO Ask green why this doesn't work. 'a constant value is expected'.
+            // string directionWord = direction switch
+            // {
+            //     Vector.North => "north",
+            //     Vector.East => "east",
+            //     Vector.South => "south",
+            //     Vector.West => "west",
+            //     _ => "unknown",
+            // };
 
             if (isAttemptingExit) 
                 Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
             else if (isAttemptingOutOfBounds) 
                 Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
             else
-                Console.WriteLine("You walk into the " + direction + " room.");
+                Console.WriteLine("You walk into the " + directionWord + " room.");
 
             Console.WriteLine();
             SetGameColor();
@@ -254,6 +256,7 @@ You win!");
             SetGameColor();
         }
 
+        // TODO decide if i keep this or not
         public static string PromptPlayerAction()
         {
             SetGameColor(GameColorStatus.Prompt);
@@ -270,8 +273,7 @@ You win!");
 
         public static void DrawBorder()
         {
-            Console.WriteLine("=================================");
-
+            Console.WriteLine("===================================================");
         }
     }
 
@@ -296,9 +298,15 @@ public class Game
 
         while (IsActive)
         {
+            // TODO Refactor fountain/location logic into their own methods
+            // TODO Trigger win/loss states
             Vector playerLocation = map.PlayerEntity.Location;
+            Vector fountainLocation = map.GetFountainLocation();
+            bool isAtFountain = playerLocation == fountainLocation;
+            RoomFountain fountain = (RoomFountain)map.Matrix[fountainLocation.X, fountainLocation.Y];
+            bool isFountainEnabled = fountain.IsEnabled;
 
-            GameUI.DrawBorder();
+            GameUI.DrawBorder(); 
             GameUI.DescribePlayerCoordinate(playerLocation);
             GameUI.DescribeRoom(map.Matrix[playerLocation.X, playerLocation.Y]);
             string input = promptForCommand.PromptPlayer();
@@ -325,19 +333,23 @@ public class Game
                 case "go west":
                     direction = Vector.West;
                     break;
+                case "enable fountain":
+                    GameUI.DescribeEnableFountain(!isAtFountain, !isFountainEnabled);
+                    if (isAtFountain)
+                        map.Matrix[fountainLocation.X, fountainLocation.Y] = fountain with { IsEnabled = true };
+                    break;
             }
+
             if (direction != null)
-                {
-            bool isMoveValid = map.MoveItem(direction);
-            bool isAttemptingOutOfBounds = playerLocation == new Vector(0,0) && direction == Vector.South;
-            GameUI.DescribeAttemptMove(isAttemptingOutOfBounds, !isMoveValid, direction);
-                }
+            {
+                bool isMoveValid = map.MoveItem(direction);
+                bool isAttemptingOutOfBounds = playerLocation == new Vector(0,0) && direction == Vector.South;
+                GameUI.DescribeAttemptMove(isAttemptingOutOfBounds, !isMoveValid, direction);
+            }
 
         }
     }
 }
-
-
 
 public record Command()
 {
@@ -590,6 +602,22 @@ public struct Map
     }
 
     // methods
+    public Vector GetFountainLocation()
+        {
+            for (int x = 0; x < Matrix.GetLength(0); x++)
+            {
+                for (int y = 0; y < Matrix.GetLength(1); y++)
+                {
+                    if (Matrix[x,y] is RoomFountain)
+                        return new Vector(x,y);
+                }
+            }
+
+            // TODO This is to avoid error for not returning a value, but game logic means there should always be a fountain to find
+            // How to deal with such situations?
+            return new Vector(1,1);
+        }
+
     public bool MoveItem(IMoveableEntity item, Vector direction)
     {
         for (int i = 0; i < MoveableEntities.Length; i++)
