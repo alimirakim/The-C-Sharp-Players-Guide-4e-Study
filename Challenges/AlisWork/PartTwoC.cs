@@ -216,6 +216,15 @@ You win!");
         {
             SetGameColor(GameColorStatus.Descriptive);
 
+            string directionWord = direction switch
+            {
+                Vector.North => "north",
+                Vector.East => "east",
+                Vector.South => "south",
+                Vector.West => "west",
+                _ => "unknown",
+            };
+
             if (isAttemptingExit) 
                 Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
             else if (isAttemptingOutOfBounds) 
@@ -293,6 +302,7 @@ public class Game
             GameUI.DescribePlayerCoordinate(playerLocation);
             GameUI.DescribeRoom(map.Matrix[playerLocation.X, playerLocation.Y]);
             string input = promptForCommand.PromptPlayer();
+            Vector? direction = null;
             
             switch (input)
             {
@@ -304,18 +314,24 @@ public class Game
                     promptForCommand.PrintOptionsRibbon();
                     break;
                 case "go north":
-                    bool isMoveValid = map.MoveItem(Vector.North);
+                    direction = Vector.North;
                     break;
                 case "go east":
-                    map.MoveItem(Vector.East);
+                    direction = Vector.East;
                     break;
                 case "go south":
-                    map.MoveItem(Vector.South);
+                    direction = Vector.South;
                     break;
                 case "go west":
-                    map.MoveItem(Vector.West);
+                    direction = Vector.West;
                     break;
             }
+            if (direction != null)
+                {
+            bool isMoveValid = map.MoveItem(direction);
+            bool isAttemptingOutOfBounds = playerLocation == new Vector(0,0) && direction == Vector.South;
+            GameUI.DescribeAttemptMove(isAttemptingOutOfBounds, !isMoveValid, direction);
+                }
 
         }
     }
