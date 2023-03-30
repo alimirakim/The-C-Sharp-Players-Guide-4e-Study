@@ -301,10 +301,6 @@ public class Game
             // TODO Refactor fountain/location logic into their own methods
             // TODO Trigger win/loss states
             Vector playerLocation = map.PlayerEntity.Location;
-            Vector fountainLocation = map.GetFountainLocation();
-            bool isAtFountain = playerLocation == fountainLocation;
-            RoomFountain fountain = (RoomFountain)map.Matrix[fountainLocation.X, fountainLocation.Y];
-            bool isFountainEnabled = fountain.IsEnabled;
 
             GameUI.DrawBorder(); 
             GameUI.DescribePlayerCoordinate(playerLocation);
@@ -334,9 +330,9 @@ public class Game
                     direction = Vector.West;
                     break;
                 case "enable fountain":
+                    bool isAtFountain = map.AttemptEnableFountain();
+                    bool isFountainEnabled = map.CheckIsFountainEnabled();
                     GameUI.DescribeEnableFountain(!isAtFountain, !isFountainEnabled);
-                    if (isAtFountain)
-                        map.Matrix[fountainLocation.X, fountainLocation.Y] = fountain with { IsEnabled = true };
                     break;
             }
 
@@ -602,6 +598,28 @@ public struct Map
     }
 
     // methods
+
+    public bool CheckIsFountainEnabled()
+        {
+            Vector fountainLocation = GetFountainLocation();
+            return Matrix[fountainLocation.X,fountainLocation.Y].IsEnabled;
+        }
+
+    public bool AttemptEnableFountain()
+        {
+
+            Vector fountainLocation = GetFountainLocation();
+            bool isAtFountain = PlayerEntity.Location == fountainLocation;
+
+            if (isAtFountain)
+            {
+                Matrix[fountainLocation.X,fountainLocation.Y] = new RoomFountain(true);
+                return true;
+            }
+            else
+                return false;
+        }
+
     public Vector GetFountainLocation()
         {
             for (int x = 0; x < Matrix.GetLength(0); x++)
