@@ -33,14 +33,14 @@ public static class PartTwoC
     ListsOfCommands();
   }
 
-  // *************************************************************************************************
+  // ***********************************************************************************************
 
   ///<summary>
   /// LEVEL 31: The Fountain of Objects 
   /// Boss Battle (Core) 1/7: The Fountain of Objects 
   /// The game The Fountain of Objects is a 2D grid-based world full of rooms. Most rooms are empty, but a few are unique rooms. One room is the cavern entrance. One room is the fountain room, containing the Fountain of Objects.
   /// 
-  /// The player moves through the cavern system, one room at a time to find the Fountain of Objects. They activate it and then return to the entrance room. If they do this without falling into a pit, they win the game.
+  /// The player moves through the cavern system, one room at a time to find the Fountain of Objets. They activate it and then return to the entrance room. If they do this without falling into a pit, they win the game.
   /// 
   /// Unnatural darkness pervades the caverns, preventing both natural and human-made light. The player must navigate the caverns in the dark, relying on their sense of smell and hearing to determine what room they are in and what dangers lurk in nearby rooms.
   /// 
@@ -98,257 +98,22 @@ public static class PartTwoC
   /// 
 
 
-public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
 
-public static class GameUI
-    {
-        // methods
-        public static void IntroduceGame()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("");
-            Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
-            DrawBorder();
-            Console.WriteLine(@"
-Welcome, hero. You have entered a cavern filled with maze-like rooms.
-You must find the fountain of objects, activate, and return to the entrance safely to win.
-Good luck...
-");
-            SetGameColor();
-        }
+  // ###############################################################################################
+  // ENUMS
+  public enum GameColorStatus { Default, Warning, Death, Prompt, PlayerInput, Water, Light, Descriptive }
 
-        public static GameMapSize PromptPlayerChooseGameSize(Prompt prompt)
-        {
-            SetGameColor();
-            prompt.PrintOptionsFull();
+  public enum GameMapSize { Small, Medium, Large }
 
-            SetGameColor(GameColorStatus.Prompt);
-            string option = prompt.PromptPlayer();
-            SetGameColor();
+  public enum GameStatus { Inactive, Active, Won, Lost }
 
-            GameMapSize selectedMapSize = option switch
-            {
-                "1" => GameMapSize.Small,
-                "2" => GameMapSize.Medium,
-                "3" => GameMapSize.Large,
-            };
+  // ###############################################################################################
+  // RECORDS
+  public record PromptOption(string Input, string Description);
 
-            return selectedMapSize;
-        }
-
-        public static void DescribePlayerCoordinate(Vector coordinate)
-        {
-            SetGameColor(GameColorStatus.Descriptive);
-            Console.WriteLine($"You are in the room at (Row={coordinate.X} Column={coordinate.Y}).");
-            SetGameColor();
-        }
-
-        public static void SetGameColor(GameColorStatus status=GameColorStatus.Default)
-        {
-            Console.ForegroundColor = status switch
-            {
-                GameColorStatus.Warning => ConsoleColor.DarkRed,
-                GameColorStatus.Death => ConsoleColor.Red,
-                GameColorStatus.Prompt => ConsoleColor.DarkMagenta,
-                GameColorStatus.PlayerInput => ConsoleColor.Magenta,
-                GameColorStatus.Water => ConsoleColor.Cyan,
-                GameColorStatus.Light => ConsoleColor.Yellow,
-                GameColorStatus.Descriptive => ConsoleColor.DarkGray,
-                _ => ConsoleColor.White,
-            };
-        }
-
-        public static void DescribeRoom(IRoom room)
-        {   
-            Console.ForegroundColor = room.Color;
-            Console.WriteLine(room.Description);
-            SetGameColor();
-        }
-
-        //public static void DescribeNearbyHazard(RoomType nearbyRoomType)
-        //{
-        //    if (nearbyRoomType == RoomType.Pit)
-        //    {
-        //        Console.WriteLine();
-        //        SetGameColor(GameColorStatus.Warning);
-        //        Console.WriteLine("You feel a draft. There is a pit in a nearby  room....");
-        //        SetGameColor();
-        //        Console.WriteLine();
-        //    }
-        //    if (nearbyRoomType == RoomType.Maelstrom)
-        //    {
-        //        Console.WriteLine();
-        //        SetGameColor(GameColorStatus.Warning);
-        //        Console.WriteLine("You hear the growling and groaning of a maelstrom nearby.");
-        //        SetGameColor();
-        //        Console.WriteLine();
-        //    }
-        //}
-
-        public static void DescribeWin()
-        {
-            SetGameColor(GameColorStatus.Light);
-            Console.WriteLine(@"
-You activated the Fountain of Objects and escaped with your life!
-You win!");
-        }
-
-        public static void DescribeLoss()
-        {
-            SetGameColor(GameColorStatus.Death);
-            Console.WriteLine("You lose.");
-        }
-
-        public static void DescribeEnableFountain(bool isAbsent, bool isDisabled)
-        {
-            SetGameColor(GameColorStatus.Descriptive);
-            if (isAbsent && isDisabled)
-                Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
-            else if (isDisabled)
-                Console.WriteLine("You activated the Fountain of Objects! Good job!");
-            else 
-                Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
-            SetGameColor();
-            Console.WriteLine();
-        }
-
-        public static void DescribeAttemptMove(bool isAttemptingExit, bool isAttemptingOutOfBounds, Vector direction)
-        {
-            SetGameColor(GameColorStatus.Descriptive);
-
-            string directionWord = "next";
-            // TODO Ask green why this doesn't work. 'a constant value is expected'.
-            // string directionWord = direction switch
-            // {
-            //     Vector.North => "north",
-            //     Vector.East => "east",
-            //     Vector.South => "south",
-            //     Vector.West => "west",
-            //     _ => "unknown",
-            // };
-
-            if (isAttemptingExit) 
-                Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
-            else if (isAttemptingOutOfBounds) 
-                Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
-            else
-                Console.WriteLine("You walk into the " + directionWord + " room.");
-
-            Console.WriteLine();
-            SetGameColor();
-        }
-
-        // TODO decide if i keep this or not
-        public static void DescribeDenyAction()
-        {
-            SetGameColor(GameColorStatus.Descriptive);
-            Console.WriteLine("You can't do that.");
-            Console.WriteLine();
-            SetGameColor();
-        }
-
-        // TODO decide if i keep this or not
-        public static void DescribeMenu()
-        {
-            SetGameColor(GameColorStatus.Descriptive);
-            Console.WriteLine("quit | menu | go north | go east | go south | go west | enable fountain");
-            Console.WriteLine();
-            SetGameColor();
-        }
-
-        // TODO decide if i keep this or not
-        public static string PromptPlayerAction()
-        {
-            SetGameColor(GameColorStatus.Prompt);
-            Console.Write("What do you want to do? ");
-            
-            SetGameColor(GameColorStatus.PlayerInput);
-            string action = Console.ReadLine().ToLowerInvariant();
-
-            SetGameColor();
-            DrawBorder();
-
-            return action;
-        }
-
-        public static void DrawBorder()
-        {
-            Console.WriteLine("===================================================");
-        }
-    }
-
-
-public enum GameMapSize { Small, Medium, Large }
-
-public class Game
-{
-    // properties
-    public bool IsActive { get; set; } = true;
-
-    // methods
-    public void Run()
-    {
-
-        Prompt promptForGameSize = new Prompt("gameSize");
-        Prompt promptForCommand = new Prompt();
-        GameUI.IntroduceGame();
-
-        GameMapSize mapSize = GameUI.PromptPlayerChooseGameSize(promptForGameSize);
-        Map map = new Map(mapSize);
-
-        while (IsActive)
-        {
-            // TODO Refactor fountain/location logic into their own methods
-            // TODO Trigger win/loss states
-            Vector playerLocation = map.PlayerEntity.Location;
-
-            GameUI.DrawBorder(); 
-            GameUI.DescribePlayerCoordinate(playerLocation);
-            GameUI.DescribeRoom(map.Matrix[playerLocation.X, playerLocation.Y]);
-            string input = promptForCommand.PromptPlayer();
-            Vector? direction = null;
-            
-            switch (input)
-            {
-                //case Command.Quit:
-                case "quit":
-                    IsActive = false;
-                    break;
-                case "help":
-                    promptForCommand.PrintOptionsRibbon();
-                    break;
-                case "go north":
-                    direction = Vector.North;
-                    break;
-                case "go east":
-                    direction = Vector.East;
-                    break;
-                case "go south":
-                    direction = Vector.South;
-                    break;
-                case "go west":
-                    direction = Vector.West;
-                    break;
-                case "enable fountain":
-                    bool isAtFountain = map.AttemptEnableFountain();
-                    bool isFountainEnabled = map.CheckIsFountainEnabled();
-                    GameUI.DescribeEnableFountain(!isAtFountain, !isFountainEnabled);
-                    break;
-            }
-
-            if (direction != null)
-            {
-                bool isMoveValid = map.MoveItem(direction);
-                bool isAttemptingOutOfBounds = playerLocation == new Vector(0,0) && direction == Vector.South;
-                GameUI.DescribeAttemptMove(isAttemptingOutOfBounds, !isMoveValid, direction);
-            }
-
-        }
-    }
-}
-
-public record Command()
-{
+  // TODO Ask greem why this doesn't work; get a 'constant needed' type error
+  public record Command()
+  {
     public static readonly string Quit = "quit";
     public static readonly string Help = "help";
     public static readonly string GoNorth = "go north";
@@ -356,54 +121,575 @@ public record Command()
     public static readonly string GoSouth = "go south";
     public static readonly string GoWest = "go west";
     public static readonly string EnableFountain = "enable fountain";
-}
+  }
 
-// interface ICommand
-// {
-//     public string Input { get; }
-// 
-//     public void Run();
-// }
-// 
-//     record Command
-//     {
-//         public static readonly string Quit = "quit";
-//     }
-// 
-// record CommandQuit(bool IsGameActive)
-// {
-//     public string Input { get; } = "quit";
-// 
-//     public void Run() => IsGameActive = false;
-// }
-// 
-// record CommandHelp(Prompt GamePrompt)
-// {
-//     public string Input { get; } = "help";
-// 
-//     public void Run() => GamePrompt.PrintOptionsRibbon;
-// }
-// 
-// record CommandGo(string Input, Map GameMap, Vector Direction)
-// {
-//     public void Run() => Map.MoveItem(Direction);
-// }
-// 
-// record CommandEnableFountain(RoomFountain Fountain, Map GameMap)
-// {
-//     public string Input = "enable fountain";
-// 
-//     public void Run()
-//     {
-//         if (GameMap.GamePlayer)
-//         Fountain.IsEnabled = true;
-// 
-//     }
+  public record Vector(int X = 0, int Y = 0)
+  {
+    public static readonly Vector Origin = new Vector(0, 0);
+    public static readonly Vector North = new Vector(1, 0);
+    public static readonly Vector East = new Vector(0, 1);
+    public static readonly Vector South = new Vector(-1, 0);
+    public static readonly Vector West = new Vector(0, -1);
+    public static readonly Vector[] Directions = { North, East, South, West };
 
-public record PromptOption(string Input, string Description);
+    public Vector Add(Vector vector) => this with { X = this.X + vector.X, Y = this.Y + vector.Y };
 
-public class Prompt
-{
+    public bool CheckIsValid(int mapSize) => !(X < 0 || Y < 0 || X >= mapSize || Y >= mapSize);
+  }
+
+  public record Player(Vector Location, bool IsAlive = true) : IMoveableEntity
+  {
+    public IMoveableEntity Move(Vector direction) => this with { Location = this.Location.Add(direction) };
+  }
+
+  public record RoomEmpty() : IDescriptive
+  {
+    public string Description => "The room is empty. ";
+    public ConsoleColor Color => ConsoleColor.DarkGray;
+  }
+
+  public record RoomEntrance() : IDescriptive
+  {
+    public string Description => "You see light coming from the cavern entrance.";
+    public ConsoleColor Color => ConsoleColor.Yellow;
+  }
+
+  public record RoomPit() : IDescriptive, IHazard
+  {
+    public string Description => "It was a trap! You fell into a pit and died.";
+    public string DescriptionNearby { get; } = "You feel a draft. There is a pit in a nearby  room....";
+    public ConsoleColor Color => ConsoleColor.Red;
+  }
+
+  public record RoomFountain(bool IsEnabled = false) : IDescriptive
+  {
+    public string Description => "You hear water dripping in this room. The Fountain of Objects is here!";
+    public string DescriptionEnabled => "You hear the rushing waters from the Fountain of Objects. It has been reactivated!";
+    public ConsoleColor Color => ConsoleColor.Cyan;
+  }
+
+  public record MonsterMaelstrom(Vector Location) : IMonster
+  {
+    public string DescriptionNearby { get; } = "You hear the growling and groaning of a maelstrom nearby.";
+    public string Description { get; } = "You encounter a maelstrom in the room! It blows you away!";
+    public ConsoleColor Color => ConsoleColor.Red;
+
+    public void CollideWithPlayerEffect()
+    {
+      throw new NotImplementedException();
+    }
+
+    public IMoveableEntity Move(Vector direction) => this with
+    {
+      Location = this.Location.Add(direction)
+    };
+  }
+
+  public record MonsterAmarok(Vector Location) : IMonster
+  {
+
+    public string DescriptionNearby { get; } = "You can smell the rotten stench of an amarok in a nearby room.";
+    public string Description { get; } = "You encounter an amarok! It chases you down and kills you.";
+    public ConsoleColor Color => ConsoleColor.Red;
+
+    public void CollideWithPlayerEffect()
+    {
+      throw new NotImplementedException();
+    }
+
+    public IMoveableEntity Move(Vector direction) => this with
+    {
+      Location = this.Location.Add(direction)
+    };
+  }
+
+  public struct Map
+  {
+    // properties
+    public IDescriptive[,] Matrix { get; init; }
+    public IMoveableEntity PlayerEntity { get; set; } = new Player(new Vector());
+    public IMoveableEntity[] MoveableEntities { get; }
+
+    // constructor
+    public Map(GameMapSize size)
+    {
+      IDescriptive _ = new RoomEmpty();
+      IDescriptive E = new RoomEntrance();
+      IDescriptive F = new RoomFountain();
+      IDescriptive P = new RoomPit();
+
+      switch (size)
+      {
+        case GameMapSize.Large:
+          Matrix = new IDescriptive[,]
+          {
+                    { E, _, _, _, _, _, _, _ },
+                    { F, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { P, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+                    { _, P, _, _, _, _, _, _ },
+                    { _, _, _, _, _, _, _, _ },
+          };
+
+          MoveableEntities = new IMoveableEntity[]
+          {
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+          };
+          break;
+
+        case GameMapSize.Medium:
+          Matrix = new IDescriptive[,]
+      {
+                { E, _, _, _, _, _ },
+                { _, _, _, _, _, _ },
+                { _, _, _, _, _, _ },
+                { _, _, F, _, _, _ },
+                { _, P, _, _, _, _ },
+                { _, _, _, _, _, _ },
+      };
+
+          MoveableEntities = new IMoveableEntity[]
+          {
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+          };
+          break;
+
+        default:
+          Matrix = new IDescriptive[,]
+      {
+                { E, P, _, _ },
+                { _, F, _, _ },
+                { _, _, _, _ },
+                { _, _, _, _ },
+      };
+
+          MoveableEntities = new IMoveableEntity[]
+          {
+                    new MonsterMaelstrom(new Vector(2,0)),
+                    new MonsterAmarok(new Vector(0,2)),
+          };
+          break;
+      }
+    }
+
+    // methods
+
+    public bool CheckIsFountainEnabled()
+    {
+      Vector fountainLocation = GetFountainLocation();
+      // TY denexapp this is how to explicitly cast inline
+      return ((RoomFountain)Matrix[fountainLocation.X, fountainLocation.Y]).IsEnabled;
+    }
+
+    public bool AttemptEnableFountain()
+    {
+
+      Vector fountainLocation = GetFountainLocation();
+      bool isAtFountain = PlayerEntity.Location == fountainLocation;
+
+      if (isAtFountain)
+      {
+        Matrix[fountainLocation.X, fountainLocation.Y] = new RoomFountain(true);
+        return true;
+      }
+      else
+        return false;
+    }
+
+    public Vector GetFountainLocation()
+    {
+      for (int x = 0; x < Matrix.GetLength(0); x++)
+      {
+        for (int y = 0; y < Matrix.GetLength(1); y++)
+        {
+          if (Matrix[x, y] is RoomFountain)
+          {
+            return new Vector(x, y);
+          }
+        }
+      }
+
+      // TODO This is to avoid error for not returning a value, but game logic means there should always be a fountain to find
+      // How to deal with such situations?
+      return new Vector(1, 1);
+    }
+
+    public bool MoveItem(IMoveableEntity item, Vector direction)
+    {
+      for (int i = 0; i < MoveableEntities.Length; i++)
+      {
+        if (item != MoveableEntities[i])
+          continue;
+
+        IMoveableEntity updatedItem = item.Move(direction);
+        bool isMoveValid = updatedItem.Location.CheckIsValid(Matrix.GetLength(0));
+
+        if (isMoveValid)
+          MoveableEntities[i] = updatedItem;
+
+        return isMoveValid;
+      }
+      return false;
+    }
+
+    public bool MovePlayer(Vector direction)
+    {
+      IMoveableEntity updatedPlayerEntity = PlayerEntity.Move(direction);
+      bool isMoveValid = updatedPlayerEntity.Location.CheckIsValid(Matrix.GetLength(0));
+
+      if (isMoveValid)
+        PlayerEntity = updatedPlayerEntity;
+
+      return isMoveValid;
+    }
+
+    public void DescribePlayerLocation()
+    {
+      Console.WriteLine($"You are in the room at (Row={PlayerEntity.Location.X} Column={PlayerEntity.Location.Y}).");
+    }
+
+    public bool CheckAdjacentRoomsForT<T>(Vector location)
+    {
+      Vector[] directions = { Vector.North, Vector.East, Vector.South, Vector.West };
+      IDescriptive[] adjacentRooms = new IDescriptive[4];
+
+      for (int i = 0; i < directions.Length; i++)
+      {
+        Vector adjacentLocation = PlayerEntity.Location.Add(directions[i]);
+        bool isAdjacentLocationValid = adjacentLocation.CheckIsValid(Matrix.GetLength(0));
+        adjacentRooms[i] = isAdjacentLocationValid
+          ? Matrix[adjacentLocation.X, adjacentLocation.Y]
+          : new RoomEmpty();
+      }
+
+      bool isAdjacentRoomT = Array.Exists(adjacentRooms, room => room is T);
+      return isAdjacentRoomT;
+    }
+  }
+
+  // interface ICommand
+  // {
+  //     public string Input { get; }
+  // 
+  //     public void Run();
+  // }
+  // 
+  //     record Command
+  //     {
+  //         public static readonly string Quit = "quit";
+  //     }
+  // 
+  // record CommandQuit(bool IsGameActive)
+  // {
+  //     public string Input { get; } = "quit";
+  // 
+  //     public void Run() => IsGameActive = false;
+  // }
+  // 
+  // record CommandHelp(Prompt GamePrompt)
+  // {
+  //     public string Input { get; } = "help";
+  // 
+  //     public void Run() => GamePrompt.PrintOptionsRibbon;
+  // }
+  // 
+  // record CommandGo(string Input, Map GameMap, Vector Direction)
+  // {
+  //     public void Run() => Map.MoveItem(Direction);
+  // }
+  // 
+  // record CommandEnableFountain(RoomFountain Fountain, Map GameMap)
+  // {
+  //     public string Input = "enable fountain";
+  // 
+  //     public void Run()
+  //     {
+  //         if (GameMap.GamePlayer)
+  //         Fountain.IsEnabled = true;
+  // 
+  //     }
+
+  public interface IDescriptive
+  {
+    //properties
+    public string Description { get; }
+    public ConsoleColor Color { get; }
+  }
+
+  public interface IMoveableEntity
+  {
+    // properties
+    public Vector Location { get; }
+
+    // methods
+    public IMoveableEntity Move(Vector direction);
+  }
+
+  public interface IHazard : IDescriptive
+  {
+    // properties
+    public string DescriptionNearby { get; }
+  }
+
+  public interface IMonster : IMoveableEntity, IHazard
+  {
+    // methods
+    public void CollideWithPlayerEffect();
+  }
+
+  public static class GameUI
+  {
+    // methods
+    public static void IntroduceGame()
+    {
+      Console.ForegroundColor = ConsoleColor.Red;
+      Console.WriteLine("");
+      Console.WriteLine("THE FOUNTAIN OF OBJECTS GAME");
+      DrawBorder();
+      Console.WriteLine(@"
+Welcome, hero. You have entered a cavern filled with maze-like rooms.
+You must find the fountain of objects, activate, and return to the entrance safely to win.
+Good luck...
+");
+      SetGameColor();
+    }
+
+    public static GameMapSize PromptPlayerChooseGameSize(Prompt prompt)
+    {
+      SetGameColor();
+      prompt.PrintOptionsFull();
+
+      SetGameColor(GameColorStatus.Prompt);
+      string option = prompt.PromptPlayer();
+      SetGameColor();
+
+      GameMapSize selectedMapSize = option switch
+      {
+        "1" => GameMapSize.Small,
+        "2" => GameMapSize.Medium,
+        "3" => GameMapSize.Large,
+      };
+
+      return selectedMapSize;
+    }
+
+    public static void DescribePlayerCoordinate(Vector coordinate)
+    {
+      SetGameColor(GameColorStatus.Descriptive);
+      Console.WriteLine($"You are in the room at (Row={coordinate.X} Column={coordinate.Y}).");
+      SetGameColor();
+    }
+
+    public static void SetGameColor(GameColorStatus status = GameColorStatus.Default)
+    {
+      Console.ForegroundColor = status switch
+      {
+        GameColorStatus.Warning => ConsoleColor.DarkRed,
+        GameColorStatus.Death => ConsoleColor.Red,
+        GameColorStatus.Prompt => ConsoleColor.DarkMagenta,
+        GameColorStatus.PlayerInput => ConsoleColor.Magenta,
+        GameColorStatus.Water => ConsoleColor.Cyan,
+        GameColorStatus.Light => ConsoleColor.Yellow,
+        GameColorStatus.Descriptive => ConsoleColor.DarkGray,
+        _ => ConsoleColor.White,
+      };
+    }
+
+    public static void DescribeRoom(IDescriptive room)
+    {
+      Console.ForegroundColor = room.Color;
+      if (room is RoomFountain && ((RoomFountain)room).IsEnabled)
+        Console.WriteLine(((RoomFountain)room).DescriptionEnabled);
+      else
+        Console.WriteLine(room.Description);
+      SetGameColor();
+    }
+
+    public static void DescribeNearbyHazard(IHazard nearbyHazard)
+    {
+        Console.WriteLine();
+        Console.ForegroundColor = nearbyHazard.Color;
+        Console.WriteLine(nearbyHazard.DescriptionNearby);
+        SetGameColor();
+    }
+
+    public static void DescribeWin()
+    {
+      SetGameColor(GameColorStatus.Light);
+      Console.WriteLine(@"
+You activated the Fountain of Objects and escaped with your life!
+You win!");
+      Console.ReadLine();
+    }
+
+    public static void DescribeLoss()
+    {
+      SetGameColor(GameColorStatus.Death);
+      Console.WriteLine("You lose.");
+      Console.ReadLine();
+    }
+
+    public static void DescribeEnableFountain(bool isAbsent, bool isDisabled)
+    {
+      SetGameColor(GameColorStatus.Descriptive);
+      if (isAbsent && isDisabled)
+        Console.WriteLine("The Fountain of Objects isn't here. Keep searching!");
+      else if (isDisabled)
+        Console.WriteLine("You activated the Fountain of Objects! Good job!");
+      else
+        Console.WriteLine("You already activated the Fountain of Objects. Now find your way out!");
+      SetGameColor();
+      Console.WriteLine();
+    }
+
+    public static void DescribeAttemptMove(bool isAttemptingExit, bool isAttemptingOutOfBounds, Vector direction)
+    {
+      SetGameColor(GameColorStatus.Descriptive);
+
+      string directionWord = "next";
+      // TODO Ask green why this doesn't work. 'a constant value is expected'.
+      // string directionWord = direction switch
+      // {
+      //     Vector.North => "north",
+      //     Vector.East => "east",
+      //     Vector.South => "south",
+      //     Vector.West => "west",
+      //     _ => "unknown",
+      // };
+
+      if (isAttemptingExit)
+        Console.WriteLine("You can't leave! You haven't activated the Fountain of Objects yet!");
+      else if (isAttemptingOutOfBounds)
+        Console.WriteLine("You feel a wall in the way. You can't go in that direction.");
+      else
+        Console.WriteLine("You walk into the " + directionWord + " room.");
+
+      Console.WriteLine();
+      SetGameColor();
+    }
+
+    // TODO decide if i keep this or not
+    public static string PromptPlayerAction()
+    {
+      SetGameColor(GameColorStatus.Prompt);
+      Console.Write("What do you want to do? ");
+
+      SetGameColor(GameColorStatus.PlayerInput);
+      string action = Console.ReadLine().ToLowerInvariant();
+
+      SetGameColor();
+      DrawBorder();
+
+      return action;
+    }
+
+    public static void DrawBorder()
+    {
+      Console.WriteLine("===================================================");
+    }
+  }
+
+
+  public class Game
+  {
+    // properties
+    public GameStatus Status { get; set; } = GameStatus.Active;
+
+    // methods
+    public void Run()
+    {
+
+      Prompt promptForGameSize = new Prompt("gameSize");
+      Prompt promptForCommand = new Prompt();
+      GameUI.IntroduceGame();
+
+      GameMapSize mapSize = GameUI.PromptPlayerChooseGameSize(promptForGameSize);
+      Map map = new Map(mapSize);
+
+      while (Status == GameStatus.Active)
+      {
+        // TODO Refactor fountain/location logic into their own methods
+        Vector playerLocation = map.PlayerEntity.Location;
+
+        GameUI.DrawBorder();
+        GameUI.DescribePlayerCoordinate(playerLocation);
+        GameUI.DescribeRoom(map.Matrix[playerLocation.X, playerLocation.Y]);
+        bool isNearPit = map.CheckAdjacentRoomsForT<RoomPit>(playerLocation);
+        if (isNearPit) GameUI.DescribeNearbyHazard(new RoomPit());
+
+        string input = promptForCommand.PromptPlayer();
+        Vector? direction = null;
+        bool isFountainEnabled = map.CheckIsFountainEnabled();
+
+        switch (input)
+        {
+          //case Command.Quit:
+          case "quit":
+            Status = GameStatus.Inactive;
+            break;
+          case "help":
+            promptForCommand.PrintOptionsRibbon();
+            break;
+          case "go north":
+            direction = Vector.North;
+            break;
+          case "go east":
+            direction = Vector.East;
+            break;
+          case "go south":
+            direction = Vector.South;
+            break;
+          case "go west":
+            direction = Vector.West;
+            break;
+          case "enable fountain":
+            bool isAtFountain = map.AttemptEnableFountain();
+            GameUI.DescribeEnableFountain(!isAtFountain, !isFountainEnabled);
+            isFountainEnabled = map.CheckIsFountainEnabled();
+            break;
+        }
+
+        if (direction != null)
+        {
+          bool isMoveValid = map.MovePlayer(direction);
+          bool isAttemptingOutOfBounds = playerLocation == new Vector(0, 0) && direction == Vector.South;
+          GameUI.DescribeAttemptMove(isAttemptingOutOfBounds, !isMoveValid, direction);
+
+          playerLocation = map.PlayerEntity.Location;
+          IDescriptive currentRoom = map.Matrix[playerLocation.X, playerLocation.Y];
+          bool isInPit = currentRoom is RoomPit;
+          bool hasWon = isFountainEnabled && playerLocation == new Vector(0, 0);
+
+          if (isInPit)
+            Status = GameStatus.Lost;
+          else if (hasWon)
+            Status = GameStatus.Won;
+
+          switch (Status)
+          {
+            case GameStatus.Lost:
+              GameUI.DescribeRoom(currentRoom);
+              GameUI.DescribeLoss();
+              Status = GameStatus.Inactive;
+              break;
+            case GameStatus.Won:
+              GameUI.DescribeRoom(currentRoom);
+              GameUI.DescribeWin();
+              Status = GameStatus.Inactive;
+              break;
+          }
+        }
+
+      }
+    }
+  }
+
+  public class Prompt
+  {
     // properties
     string Title { get; init; }
     string DescriptionPrompt { get; init; }
@@ -413,10 +699,10 @@ public class Prompt
     // constructors
     public Prompt()
     {
-        Title = "Commands";
-        DescriptionPrompt = "What do you want to do?";
-        Options = new PromptOption[]
-        {
+      Title = "Commands";
+      DescriptionPrompt = "What do you want to do?";
+      Options = new PromptOption[]
+      {
             new PromptOption(Command.Quit, "Quit the game"),
             new PromptOption(Command.Help, "See all command options"),
             new PromptOption(Command.GoNorth, "Go up one room"),
@@ -424,7 +710,7 @@ public class Prompt
             new PromptOption(Command.GoSouth, "Go down one room"),
             new PromptOption(Command.GoWest, "Go left one room"),
             new PromptOption(Command.EnableFountain, "Turn on the fountain (only works if it's in the room)"),
-        };
+      };
     }
 
     // TODO Make this less jank
@@ -432,327 +718,78 @@ public class Prompt
     public Prompt(string promptType)
     {
 
-        Title = "Game Size Options";
-        DescriptionPrompt = "What size map do you want to play in?";
-        Options = new PromptOption[]
-        {
+      Title = "Game Size Options";
+      DescriptionPrompt = "What size map do you want to play in?";
+      Options = new PromptOption[]
+      {
             new PromptOption("1", "Small (4x4)"),
             new PromptOption("2", "Medium (6x6)"),
             new PromptOption("3", "Large (8x8)"),
-        };
+      };
     }
 
-    public Prompt(string title, string descriptionPrompt, PromptOption[] options, string descriptionInvalidInput="That's not an option.")
+    public Prompt(string title, string descriptionPrompt, PromptOption[] options, string descriptionInvalidInput = "That's not an option.")
     {
-        Title = title;
-        DescriptionPrompt = descriptionPrompt;
-        DescriptionInvalidInput = descriptionInvalidInput;
-        Options = options;
+      Title = title;
+      DescriptionPrompt = descriptionPrompt;
+      DescriptionInvalidInput = descriptionInvalidInput;
+      Options = options;
     }
 
     // methods
     public string PromptPlayer()
     {
-        string input = null;
-        bool isInputValid = false;
+      string input = null;
+      bool isInputValid = false;
 
-        while (!isInputValid)
-        {
-            GameUI.SetGameColor(GameColorStatus.Prompt);
-            Console.WriteLine();
-            Console.Write(DescriptionPrompt + " ");
+      while (!isInputValid)
+      {
+        GameUI.SetGameColor(GameColorStatus.Prompt);
+        Console.WriteLine();
+        Console.Write(DescriptionPrompt + " ");
 
-            GameUI.SetGameColor(GameColorStatus.PlayerInput);
-            input = Console.ReadLine();
-            GameUI.SetGameColor();
+        GameUI.SetGameColor(GameColorStatus.PlayerInput);
+        input = Console.ReadLine();
+        GameUI.SetGameColor();
 
-            isInputValid = Array.Exists(Options, option => option.Input == input);
-            if (!isInputValid) Console.WriteLine(DescriptionInvalidInput);
-        }
+        isInputValid = Array.Exists(Options, option => option.Input == input);
+        if (!isInputValid) Console.WriteLine(DescriptionInvalidInput);
+      }
 
-        return input;
+      return input;
     }
 
     public void PrintOptionsFull()
     {
-        Console.WriteLine();
-        Console.WriteLine(Title);
+      Console.WriteLine();
+      Console.WriteLine(Title);
 
-        foreach (PromptOption option in Options)
-            Console.WriteLine("    " + option.Input + " - " + option.Description);
-        Console.WriteLine();
+      foreach (PromptOption option in Options)
+        Console.WriteLine("    " + option.Input + " - " + option.Description);
+      Console.WriteLine();
     }
 
     public void PrintOptionsRibbon()
     {
-        Console.WriteLine();
-        Console.WriteLine(Title);
+      Console.WriteLine();
+      Console.WriteLine(Title);
 
-        for (int i = 0; i < Options.Length; i++)
-        {
-            Console.Write(Options[i].Input);
-            if (i != Options.Length - 1) Console.Write(" | ");
-        }
-        Console.WriteLine();
+      for (int i = 0; i < Options.Length; i++)
+      {
+        Console.Write(Options[i].Input);
+        if (i != Options.Length - 1) Console.Write(" | ");
+      }
+      Console.WriteLine();
     }
-}
-
-public record Vector(int X=0, int Y=0)
-{
-    public static readonly Vector Origin = new Vector(0, 0);
-    public static readonly Vector North = new Vector(1, 0);
-    public static readonly Vector East = new Vector(0, 1);
-    public static readonly Vector South = new Vector(-1, 0);
-    public static readonly Vector West = new Vector(0, -1);
-
-    public Vector Add(Vector vector) => this with { X=this.X + vector.X, Y=this.Y + vector.Y };
-
-    public bool CheckIsValid(int mapSize) => !(X < 0 || Y < 0 || X >= mapSize || Y >= mapSize);
-}
-
-public interface IMoveableEntity 
-{ 
-    // properties
-    public Vector Location { get; }
-
-    // methods
-    public IMoveableEntity Move(Vector direction);
-}
-
-public record Player(Vector Location, bool IsAlive=true) : IMoveableEntity
-{
-    public IMoveableEntity Move(Vector direction) => this with { Location = this.Location.Add(direction) };
-}
-
-public struct Map
-{
-    // properties
-    public IRoom[,] Matrix { get; init; }
-    public IMoveableEntity PlayerEntity { get; set; } = new Player(new Vector());
-    public IMoveableEntity[] MoveableEntities { get; }
-
-    // constructor
-    public Map(GameMapSize size)
-    {
-        IRoom _ = new RoomEmpty();
-        IRoom E = new RoomEntrance();
-        IRoom F = new RoomFountain();
-        IRoom P = new RoomPit();
-
-        switch (size)
-        {
-            case GameMapSize.Large:
-                Matrix = new IRoom[,]
-                {
-                    { E, _, _, _, _, _, _, _ },
-                    { F, _, _, _, _, _, _, _ },
-                    { _, _, _, _, _, _, _, _ },
-                    { P, _, _, _, _, _, _, _ },
-                    { _, _, _, _, _, _, _, _ },
-                    { _, _, _, _, _, _, _, _ },
-                    { _, P, _, _, _, _, _, _ },
-                    { _, _, _, _, _, _, _, _ },
-                };
-
-                MoveableEntities = new IMoveableEntity[]
-                {
-                    new MonsterMaelstrom(new Vector(2,0)),
-                    new MonsterAmarok(new Vector(0,2)),
-                };
-                break;
-            
-            case GameMapSize.Medium:
-                Matrix = new IRoom[,]
-            {
-                { E, _, _, _, _, _ },
-                { _, _, _, _, _, _ },
-                { _, _, _, _, _, _ },
-                { _, _, F, _, _, _ },
-                { _, P, _, _, _, _ },
-                { _, _, _, _, _, _ },
-            };
-
-                MoveableEntities = new IMoveableEntity[]
-                {
-                    new MonsterMaelstrom(new Vector(2,0)),
-                    new MonsterAmarok(new Vector(0,2)),
-                };
-                break;
-
-            default:
-                Matrix = new IRoom[,]
-            {
-                { E, P, _, _ },
-                { _, F, _, _ },
-                { _, _, _, _ },
-                { _, _, _, _ },
-            };
-
-                MoveableEntities = new IMoveableEntity[]
-                {
-                    new MonsterMaelstrom(new Vector(2,0)),
-                    new MonsterAmarok(new Vector(0,2)),
-                };
-                break;
-        }
-    }
-
-    // methods
-
-    public bool CheckIsFountainEnabled()
-        {
-            Vector fountainLocation = GetFountainLocation();
-            return Matrix[fountainLocation.X,fountainLocation.Y].IsEnabled;
-        }
-
-    public bool AttemptEnableFountain()
-        {
-
-            Vector fountainLocation = GetFountainLocation();
-            bool isAtFountain = PlayerEntity.Location == fountainLocation;
-
-            if (isAtFountain)
-            {
-                Matrix[fountainLocation.X,fountainLocation.Y] = new RoomFountain(true);
-                return true;
-            }
-            else
-                return false;
-        }
-
-    public Vector GetFountainLocation()
-        {
-            for (int x = 0; x < Matrix.GetLength(0); x++)
-            {
-                for (int y = 0; y < Matrix.GetLength(1); y++)
-                {
-                    if (Matrix[x,y] is RoomFountain)
-                        return new Vector(x,y);
-                }
-            }
-
-            // TODO This is to avoid error for not returning a value, but game logic means there should always be a fountain to find
-            // How to deal with such situations?
-            return new Vector(1,1);
-        }
-
-    public bool MoveItem(IMoveableEntity item, Vector direction)
-    {
-        for (int i = 0; i < MoveableEntities.Length; i++)
-        {
-            if (item != MoveableEntities[i])
-                continue;
-
-            IMoveableEntity updatedItem = item.Move(direction);
-            bool isMoveValid = updatedItem.Location.CheckIsValid(Matrix.GetLength(0));
-            
-            if (isMoveValid)
-                MoveableEntities[i] = updatedItem;
-            
-            return isMoveValid;
-        }
-        return false;
-    }
-
-    public bool MoveItem(Vector direction)
-    {
-        IMoveableEntity updatedPlayerEntity = PlayerEntity.Move(direction);
-        bool isMoveValid = updatedPlayerEntity.Location.CheckIsValid(Matrix.GetLength(0));
-
-        if (isMoveValid)
-                PlayerEntity = updatedPlayerEntity;
-
-        return isMoveValid;
-    }
-
-    public void DescribePlayerLocation()
-        {
-            Console.WriteLine($"You are in the room at (Row={PlayerEntity.Location.X} Column={PlayerEntity.Location.Y}).");
-        }
-}
-
-public interface IRoom 
-{
-    //properties
-    public string Description { get; }
-    public ConsoleColor Color { get; }
-}
-
-public record RoomEntrance() : IRoom
-{
-    public string Description => "You see light coming from the cavern entrance.";
-    public ConsoleColor Color => ConsoleColor.Yellow;
-}
-
-public record RoomEmpty() : IRoom
-{
-    public string Description => "The room is empty. ";
-    public ConsoleColor Color => ConsoleColor.DarkGray;
-}
-
-public record RoomPit() : IRoom
-{
-    public string Description => "It was a trap! You fell into a pit and died.";
-    public ConsoleColor Color => ConsoleColor.Red;
-}
-
-public record RoomFountain(bool IsEnabled=false) : IRoom
-{
-    public string Description => "You hear water dripping in this room. The Fountain of Objects is here!";
-    public ConsoleColor Color => ConsoleColor.Cyan;
-    string DescriptionEnabled => "You hear the rushing waters from the Fountain of Objects. It has been reactivated!";
-}
-
-interface IMonster : IMoveableEntity
-{
-    // properties
-    string DescriptionNearby { get; }
-    string DescriptionEncounter { get; }
-
-    // methods
-    void CollideWithPlayerEffect();
-}
-
-public record MonsterMaelstrom(Vector Location) : IMonster
-{
-    public string DescriptionNearby { get; } = "You hear the growling and groaning of a maelstrom nearby.";
-    public string DescriptionEncounter { get; } = "You encounter a maelstrom in the room! It blows you away!";
-
-    public void CollideWithPlayerEffect()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IMoveableEntity Move(Vector direction) => this with
-    {
-        Location = this.Location.Add(direction)
-    };
-}
-
-public record MonsterAmarok(Vector Location) : IMonster
-{
-    public string DescriptionNearby { get; } = "You can smell the rotten stench of an amarok in a nearby room.";
-    public string DescriptionEncounter { get; } = "You encounter an amarok! It chases you down and kills you.";
-
-    public void CollideWithPlayerEffect()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IMoveableEntity Move(Vector direction) => this with
-    {
-        Location = this.Location.Add(direction)
-    };
-}
-
+  }
 
 
 
   public static void TheFountainOfObjects()
   {
     WriteTitle("The Fountain of Objects");
-    
-            new Game().Run();
+
+    new Game().Run();
 
     // GameFountainOfObjects game = new GameFountainOfObjects();
     // game.RunGame();
