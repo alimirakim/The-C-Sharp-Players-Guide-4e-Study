@@ -97,7 +97,9 @@ public static class PartTwoC
   /// </summary>
   /// 
 
-
+  // TODO Make monster hazards functional
+  // Must check map for IMoveableEntity in rooms through map array
+  // Must make maelstroms have collision effect of moving player and self
 
   // ###############################################################################################
   // ENUMS
@@ -203,6 +205,9 @@ public static class PartTwoC
     };
   }
 
+  // ###############################################################################################
+  // STRUCTS
+
   public struct Map
   {
     // properties
@@ -277,7 +282,6 @@ public static class PartTwoC
     }
 
     // methods
-
     public bool CheckIsFountainEnabled()
     {
       Vector fountainLocation = GetFountainLocation();
@@ -352,7 +356,7 @@ public static class PartTwoC
       Console.WriteLine($"You are in the room at (Row={PlayerEntity.Location.X} Column={PlayerEntity.Location.Y}).");
     }
 
-    public bool CheckAdjacentRoomsForT<T>(Vector location)
+    public bool CheckAdjacentRoomsForRoomT<T>(Vector location)
     {
       Vector[] directions = { Vector.North, Vector.East, Vector.South, Vector.West };
       IDescriptive[] adjacentRooms = new IDescriptive[4];
@@ -369,50 +373,27 @@ public static class PartTwoC
       bool isAdjacentRoomT = Array.Exists(adjacentRooms, room => room is T);
       return isAdjacentRoomT;
     }
+
+    public bool CheckAdjacentRoomsForEntityT<T>(Vector location)
+    {
+      Vector[] directions = { Vector.North, Vector.East, Vector.South, Vector.West };
+      IDescriptive[] adjacentRooms = new IDescriptive[4];
+
+      for (int i = 0; i < directions.Length; i++)
+      {
+        Vector adjacentLocation = PlayerEntity.Location.Add(directions[i]);
+        foreach (IMoveableEntity monster in MoveableEntities)
+        {
+          if (monster is T && monster.Location == adjacentLocation) return true;
+        }
+      }
+
+      return false;
+    }
   }
 
-  // interface ICommand
-  // {
-  //     public string Input { get; }
-  // 
-  //     public void Run();
-  // }
-  // 
-  //     record Command
-  //     {
-  //         public static readonly string Quit = "quit";
-  //     }
-  // 
-  // record CommandQuit(bool IsGameActive)
-  // {
-  //     public string Input { get; } = "quit";
-  // 
-  //     public void Run() => IsGameActive = false;
-  // }
-  // 
-  // record CommandHelp(Prompt GamePrompt)
-  // {
-  //     public string Input { get; } = "help";
-  // 
-  //     public void Run() => GamePrompt.PrintOptionsRibbon;
-  // }
-  // 
-  // record CommandGo(string Input, Map GameMap, Vector Direction)
-  // {
-  //     public void Run() => Map.MoveItem(Direction);
-  // }
-  // 
-  // record CommandEnableFountain(RoomFountain Fountain, Map GameMap)
-  // {
-  //     public string Input = "enable fountain";
-  // 
-  //     public void Run()
-  //     {
-  //         if (GameMap.GamePlayer)
-  //         Fountain.IsEnabled = true;
-  // 
-  //     }
-
+  // ###############################################################################################
+  // INTERFACES
   public interface IDescriptive
   {
     //properties
@@ -441,6 +422,8 @@ public static class PartTwoC
     public void CollideWithPlayerEffect();
   }
 
+  // ###############################################################################################
+  // CLASSES
   public static class GameUI
   {
     // methods
@@ -589,7 +572,7 @@ You win!");
 
     public static void DrawBorder()
     {
-      Console.WriteLine("===================================================");
+      Console.WriteLine("========================================================================");
     }
   }
 
@@ -618,8 +601,10 @@ You win!");
         GameUI.DrawBorder();
         GameUI.DescribePlayerCoordinate(playerLocation);
         GameUI.DescribeRoom(map.Matrix[playerLocation.X, playerLocation.Y]);
-        bool isNearPit = map.CheckAdjacentRoomsForT<RoomPit>(playerLocation);
+        bool isNearPit = map.CheckAdjacentRoomsForRoomT<RoomPit>(playerLocation);
         if (isNearPit) GameUI.DescribeNearbyHazard(new RoomPit());
+        bool isNearMaelstrom = map.CheckAdjacentRoomsForEntityT<MonsterMaelstrom>(playerLocation);
+        if (isNearMaelstrom) GameUI.DescribeNearbyHazard(new MonsterMaelstrom(new Vector()));
 
         string input = promptForCommand.PromptPlayer();
         Vector? direction = null;
@@ -683,7 +668,6 @@ You win!");
               break;
           }
         }
-
       }
     }
   }
