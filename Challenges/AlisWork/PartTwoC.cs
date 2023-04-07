@@ -390,6 +390,16 @@ public static class PartTwoC
 
       return false;
     }
+
+    public IMoveableEntity? CheckRoomForEntity()
+    {
+      foreach (IMoveableEntity monster in MoveableEntities)
+      {
+        if (monster.Location == PlayerEntity.Location) 
+          return monster;
+      }
+      return null;
+    }
   }
 
   // ###############################################################################################
@@ -605,6 +615,10 @@ You win!");
         if (isNearPit) GameUI.DescribeNearbyHazard(new RoomPit());
         bool isNearMaelstrom = map.CheckAdjacentRoomsForEntityT<MonsterMaelstrom>(playerLocation);
         if (isNearMaelstrom) GameUI.DescribeNearbyHazard(new MonsterMaelstrom(new Vector()));
+
+        // TODO Check if this works and do CollideWithPlayerEffect
+        IMonster? monster = map.CheckRoomForEntity();
+        monster?.CollideWithPlayerEffect();
 
         string input = promptForCommand.PromptPlayer();
         Vector? direction = null;
