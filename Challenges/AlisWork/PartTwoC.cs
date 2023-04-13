@@ -395,7 +395,7 @@ public static class PartTwoC
     {
       foreach (IMoveableEntity monster in MoveableEntities)
       {
-        if (monster.Location == PlayerEntity.Location) 
+        if (monster.Location == PlayerEntity.Location)
           return monster;
       }
       return null;
@@ -504,10 +504,10 @@ Good luck...
 
     public static void DescribeNearbyHazard(IHazard nearbyHazard)
     {
-        Console.WriteLine();
-        Console.ForegroundColor = nearbyHazard.Color;
-        Console.WriteLine(nearbyHazard.DescriptionNearby);
-        SetGameColor();
+      Console.WriteLine();
+      Console.ForegroundColor = nearbyHazard.Color;
+      Console.WriteLine(nearbyHazard.DescriptionNearby);
+      SetGameColor();
     }
 
     public static void DescribeWin()
