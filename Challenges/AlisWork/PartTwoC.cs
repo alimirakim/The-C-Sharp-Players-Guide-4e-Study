@@ -611,6 +611,7 @@ You win!");
         GameUI.DrawBorder();
         GameUI.DescribePlayerCoordinate(playerLocation);
         GameUI.DescribeRoom(map.Matrix[playerLocation.X, playerLocation.Y]);
+
         bool isNearPit = map.CheckAdjacentRoomsForRoomT<RoomPit>(playerLocation);
         if (isNearPit) GameUI.DescribeNearbyHazard(new RoomPit());
         bool isNearMaelstrom = map.CheckAdjacentRoomsForEntityT<MonsterMaelstrom>(playerLocation);
