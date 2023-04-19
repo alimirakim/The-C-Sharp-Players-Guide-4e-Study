@@ -21,7 +21,7 @@ public static class PartTwoC
 
   public static void CallAll()
   {
-    TheFountainOfObjects();
+    // TheFountainOfObjects();
     SmallMediumOrLarge();
     Pits();
     Maelstroms();
@@ -618,7 +618,7 @@ You win!");
         if (isNearMaelstrom) GameUI.DescribeNearbyHazard(new MonsterMaelstrom(new Vector()));
 
         // TODO Check if this works and do CollideWithPlayerEffect
-        IMonster? monster = map.CheckRoomForEntity();
+        IMonster? monster = (IMonster)map.CheckRoomForEntity();
         monster?.CollideWithPlayerEffect();
 
         string input = promptForCommand.PromptPlayer();
@@ -789,9 +789,6 @@ You win!");
     WriteTitle("The Fountain of Objects");
 
     new Game().Run();
-
-    // GameFountainOfObjects game = new GameFountainOfObjects();
-    // game.RunGame();
   }
 
 
@@ -848,8 +845,8 @@ You win!");
   /// **Objectives:** 
   /// [X] Add a maelstrom to the small 4x4 game in a location of your choice.
   /// [X] The player can sense maelstroms by hearing them in adjacent rooms. ("You hear the growling and groaning of a maelstrom nearby.")
-  /// If a player enters a room with a maelstrom, the player moves one space north and two spaces east, while the maelstrom moves one space south and two spaces west.
-  /// When the player is moved like this, tell them so. If this would move the player or maelstrom beyond the map's edge, ensure they stay on the map.
+  /// [] If a player enters a room with a maelstrom, the player moves one space north and two spaces east, while the maelstrom moves one space south and two spaces west.
+  /// [] When the player is moved like this, tell them so. If this would move the player or maelstrom beyond the map's edge, ensure they stay on the map.
   /// [] Note: When combined with the Small, Medium, or Large challenge, place one maelstrom into the medium-sized game and two into the  large-sized game.
   /// </summary>
   public static void Maelstroms()
@@ -867,8 +864,8 @@ You win!");
   /// TODO
   /// 
   /// **Objectives:** 
-  /// [] The placement of amaroks is at your discretion. Pick a room to place an amarok aside from the entrance or fountain room in the small 4x4   world.
-  /// [] When a player is in one of the eight spaces adjacent to an amarok, a message should be displayed when sensing surrounding that indicate  that the player can smell the amarok nearby. 
+  /// [x] The placement of amaroks is at your discretion. Pick a room to place an amarok aside from the entrance or fountain room in the small 4x4   world.
+  /// [x] When a player is in one of the eight spaces adjacent to an amarok, a message should be displayed when sensing surrounding that indicate  that the player can smell the amarok nearby. 
   /// For example, "You can smell the rotten stench of an amarok in a nearby room."
   /// [] When a player enters a room with an amarok, the player dies and loses the game.
   /// [] Note: When combined with the Small, Medium, or Large challenge, place two amaroks in the medium level and three in the large level in  locations of your choosing.
@@ -916,7 +913,7 @@ You win!");
   /// [] If you choose to to the Pits challenge, add the following to the description: "Look out for pits. You will feel a breeze if a pit is in  an adjacent room. If you enter a room with a pit, you will die."
   /// [] If you chose to do the Maelstroms challenge, add the following to the description: "Maelstroms are violent forces of sentient wind.  Entering a room with one could transport you to any other location in the caverns. You will be able to hear their growling and groaning in   nearby rooms."
   /// [] If you chose to do the Getting Armed challenge, add the following to the description: "You carry with you a bow and a quiver of arrows.  You can use them to shoot monsters in the caverns but be warned: you have a limited supply."
-  /// [] When the player types the command `help`, display all available commands and a short description of what each does. The complete list of   commands will depend on what challenges you complete.
+  /// [x] When the player types the command `help`, display all available commands and a short description of what each does. The complete list of   commands will depend on what challenges you complete.
   /// </summary>
   public static void GettingHelp()
   {
