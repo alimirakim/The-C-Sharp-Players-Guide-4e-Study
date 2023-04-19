@@ -937,7 +937,39 @@ You win!");
   {
     WriteTitle("The Robot Pilot");
 
+    Random random = new Random();
+    
+    // randon positive int value
+    Console.WriteLine(random.Next());
+    Console.WriteLine(random.Next());
+    Console.WriteLine(random.Next());
 
+    // random positive int value capped at arg ceiling non-inclusive
+    Console.WriteLine(random.Next(10));
+    Console.WriteLine($"Rolling a six-sided die: {random.Next(6) + 1}");
+
+    // including floor and ceiling
+    Console.WriteLine(random.Next(1, 7));
+
+    // random floating-point value between 0 to 0.99999...
+    Console.WriteLine(random.NextDouble());
+
+    // random float between 0 to 10
+    Console.WriteLine(random.NextDouble() * 10);
+
+    // random float between -10 to +10
+    Console.WriteLine(random.NextDouble() * 20 - 10);
+
+    Random seededRandom = new Random(0459);
+    Console.WriteLine(seededRandom.Next());
+    Console.WriteLine(seededRandom.Next());
+    Console.WriteLine(seededRandom.Next());
+    Random seededRandom2 = new Random(0459);
+    Console.WriteLine(seededRandom2.Next());
+    Console.WriteLine(seededRandom2.Next());
+    Console.WriteLine(seededRandom2.Next());
+    
+    Console.ReadLine();
   }
 
   // *************************************************************************************************
