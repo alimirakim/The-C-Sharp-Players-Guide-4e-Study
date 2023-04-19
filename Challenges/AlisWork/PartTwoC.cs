@@ -1,5 +1,7 @@
 
 using System;
+using System.Collections.Generic;
+using System.Text;
 using static Complete.PartTwoC;
 using static System.Console;
 
@@ -31,6 +33,8 @@ public static class PartTwoC
     TheRobotPilot();
     TimeInTheCavern();
     ListsOfCommands();
+
+    Console.ReadLine();
   }
 
   // ***********************************************************************************************
@@ -968,8 +972,6 @@ You win!");
     Console.WriteLine(seededRandom2.Next());
     Console.WriteLine(seededRandom2.Next());
     Console.WriteLine(seededRandom2.Next());
-    
-    Console.ReadLine();
   }
 
   // *************************************************************************************************
@@ -988,11 +990,79 @@ You win!");
   {
     WriteTitle("Time in the Cavern");
 
+    DateTime time1 = new DateTime(2021, 12, 31);
+    Console.WriteLine(time1);
 
+    DateTime time2 = new DateTime(2021, 12, 31, 23, 59, 55);
+    Console.WriteLine(time2);
+
+    DateTime timeNowLocal = DateTime.Now;
+    Console.WriteLine(timeNowLocal);
+
+    DateTime timeNowUtc = DateTime.UtcNow;
+    Console.WriteLine(timeNowUtc);
+
+    DateTime time = new DateTime(2021, 4, 1);
+    if (time.Month == 10) Console.WriteLine("Happy Halloween!");
+    else if (time.Month == 4 && time.Day == 1) Console.WriteLine("April Fools!");
+    else Console.WriteLine(time);
+
+    DateTime timeTomorrow = DateTime.Now.AddDays(1);
+    Console.WriteLine(timeTomorrow);
+
+    TimeSpan timeSpan1 = new TimeSpan(1, 30, 0); // 1hr, 30m, 0s
+    Console.WriteLine(timeSpan1);
+
+    TimeSpan timeSpan2 = new TimeSpan(2, 12, 0, 0); // 2d, 12h
+    Console.WriteLine(timeSpan2);
+
+    TimeSpan timeSpan3 = new TimeSpan(0, 0, 0, 500); // 500 milliseconds
+    Console.WriteLine(timeSpan3);
+
+    TimeSpan timeSpan4 = new TimeSpan(10); // 10 "ticks" == 1 microsecond
+    Console.WriteLine(timeSpan4);
+
+    TimeSpan timeSpanTicks = TimeSpan.FromTicks(200);
+    Console.WriteLine(timeSpanTicks);
+
+    TimeSpan timeSpanMilliseconds = TimeSpan.FromMilliseconds(33);
+    Console.WriteLine(timeSpanMilliseconds);
+
+    TimeSpan timeSpanSeconds = TimeSpan.FromSeconds(3.5);
+    Console.WriteLine(timeSpanSeconds);
+
+    TimeSpan timeSpanHours = TimeSpan.FromHours(2.21);
+    Console.WriteLine(timeSpanHours);
+
+    TimeSpan timeSpanDays = TimeSpan.FromDays(4.2);
+    Console.WriteLine(timeSpanDays);
+
+    TimeSpan timeLeft = new TimeSpan(1, 30, 0);
+    Console.WriteLine($"Time Left: {timeLeft.Days}d {timeLeft.Hours}h {timeLeft.Minutes}m {timeLeft.Seconds}.{timeLeft.Milliseconds}s");
+    Console.WriteLine(timeLeft.TotalHours);
+    Console.WriteLine(timeLeft.TotalMinutes);
+
+    DateTime eventTime = new DateTime(2023, 12, 4, 5, 28, 0); // 4 Dec 2021 at 5:28am
+    TimeSpan timeUntilEvent = eventTime - DateTime.Now;
+
+    // TimeSpan.Zero is no time at all
+    if (timeUntilEvent > TimeSpan.Zero) 
+      Console.WriteLine($"Time until event: {timeUntilEvent.Days}d {timeUntilEvent.Hours}h {timeUntilEvent.Minutes}m");
+    else
+      Console.WriteLine("This event has passed.");
   }
 
   // *************************************************************************************************
-
+      public static void WriteList<T>(List<T> list)
+    {
+      Write("{ ");
+      list.ForEach(i => {
+        Write(i);
+        Write(", ");
+        });
+      Write("}");
+      WriteLine("");
+    }
   ///<summary>
   /// LEVEL 32: Some Useful Types 
   /// Challenge 3/3: Lists of Commands 
@@ -1004,13 +1074,138 @@ You win!");
   /// </summary>
   public static void ListsOfCommands()
   {
+
+
+
     WriteTitle("Lists of Commands");
 
+    Guid id = Guid.NewGuid();
+    Guid existingId = new Guid("10A24EC2-3008-4678-AD86-FCCCDA8CE868");
+    Console.WriteLine(id);
+    Console.WriteLine(existingId);
 
+    List<int> numbers = new List<int>();
+    WriteList<int>(numbers);
+
+    List<int> existingNumbers = new List<int>() { 1, 2, 3 };
+    WriteList<int>(existingNumbers);
+
+    List<int> numbersWithoutParams = new List<int> { 4, 5, 6 };
+    WriteList<int>(numbersWithoutParams);
+
+    List<string> words = new List<string>() { "apple", "banana", "carrot", "durian" };
+    WriteLine(words[2]);
+    WriteList<string>(words);
+
+    words[0] = "avocado";
+    WriteList<string>(words);
+
+    words.Add("chocolate");
+    WriteList<string>(words);
+
+    words.Insert(2, "mango");
+    WriteList<string>(words);
+
+    words.AddRange(new string[] {"pine", "oak"});
+    WriteList<string>(words);
+
+    words.InsertRange(1, new string[] {"duck", "goat"});
+    WriteList<string>(words);
+
+    bool isRemoved = words.Remove("banana");
+    WriteList<string>(words);
+    WriteLine($"is Removed? {isRemoved}");
+
+    words.RemoveAt(0);
+    WriteList<string>(words);
+
+    words.Clear();
+    WriteList<string>(words);
+
+    words.AddRange(new List<string>() {"gold", "silver", "bronze"});
+    WriteList<string>(words);
+
+    foreach (string word in words)
+      WriteLine($"{word}!");
+
+    for (int i = 0; i < words.Count; i++)
+    {
+      WriteLine(words[i]);
+    }
+
+    bool hasApple = words.Contains("apple");
+    bool hasGold = words.Contains("gold");
+    WriteLine($"Has apples? {hasApple}");
+    WriteLine($"Has gold? {hasGold}");
+
+    int indexOfApple = words.IndexOf("apple");
+    WriteLine(indexOfApple);
+
+    int indexOfGold = words.IndexOf("gold");
+    WriteLine(indexOfGold);
+
+    IEnumerator<string> iterator = words.GetEnumerator();
+
+    while (iterator.MoveNext())
+    {
+      string word = iterator.Current;
+      Console.WriteLine(word);
+    }
+
+    Dictionary<string, string> dictionary = new Dictionary<string, string>();
+    dictionary["battleship"] = "a large warship with big guns";
+    dictionary["cruiser"] = "a fast but large warship";
+    dictionary["submarine"] = "a ship capable of moving under the water's surface";
+    WriteLine(dictionary);
+    WriteLine(dictionary["battleship"]);
+    
+    // WriteLine(dictionary["airplane"]); // throws a KeyNotFoundException
+    if (dictionary.ContainsKey("airplane"))
+      WriteLine(dictionary["airplane"]);
+    else if (dictionary.ContainsKey("battleship"))
+      WriteLine(dictionary["battleship"]);
+    else
+      WriteLine(dictionary.GetValueOrDefault("airplane", "unknown"));
+
+    WriteLine(dictionary.GetValueOrDefault("airplane", "unknown!"));
+
+    bool isBattleshipRemoved = dictionary.Remove("battleship");
+    WriteLine($"Is battleship removed? {isBattleshipRemoved}");
+
+    var fruitCountMap = new Dictionary<string, int>();
+    fruitCountMap["apple"] = 300;
+    fruitCountMap["orange"] = 0;
+    fruitCountMap["mango"] = 5;
+
+    Nullable<int> maybeNumber = new Nullable<int>(3);
+    Nullable<int> maybeNotNumber = new Nullable<int>();
+    WriteLine(maybeNumber);
+    WriteLine(maybeNotNumber);
+
+    if (maybeNumber.HasValue) WriteLine($"The number is: {maybeNumber.Value}");
+    else WriteLine("No number.");
+
+    int? maybeNum = 3;
+    int? maybeNotNum = null;
+
+    // operators work on nullable types, but methods and properties must be accessed first by .Value
+    maybeNum += 2;
+    WriteLine(maybeNum);
+
+    (string, int, int) myScore = ("ALMY", 234, 12);
+    WriteLine(myScore);
+
+    ValueTuple<string, int, int> score = new ValueTuple<string, int, int>("MYKI", 12312, 34);
+    WriteLine(score);
+
+    StringBuilder text = new StringBuilder();
+    while (true)
+    {
+      string input = Console.ReadLine();
+      if (input == "") break;
+      text.Append(input);
+      text.Append(" ");
+    }
+    WriteLine(text.ToString());
   }
 }
-
-// LOZ copy
-// Land, water, pit, cliff
-// temp: normal, hot, cold
-// 
